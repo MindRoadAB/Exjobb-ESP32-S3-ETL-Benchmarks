@@ -1,5 +1,13 @@
 #include <stdio.h>
+#include <string.h>
 #include <algorithm>
+#include <ctime>
+#include <experimental/random>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#include "esp_heap_caps.h"
+
 #if USE_ETL
 #include <etl/string.h>
 #define MAX_STRLN 60 
@@ -9,8 +17,16 @@ using _string = etl::string<MAX_STRLN>;
 using _string = std::string;
 #endif
 
-void string_operations(void)
+void 
+dump_heap(const char *label)
 {
+    printf("[%s] Free heap: %u bytes\n", label, heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
+}
+
+void 
+string_operations(void)
+{
+    dump_heap("START");
 
     #if USE_ETL
     printf("Using ETL...\n");
@@ -59,16 +75,38 @@ void string_operations(void)
     std::reverse(str.begin(), str.end());
     printf("str is now: %s\n", str.c_str());
     
+    str2.resize(str.size());
     std::reverse_copy(std::begin(str), std::end(str), std::begin(str2));
     printf("str2 is: %s\n", str2.c_str());
+    dump_heap("END");
+
+    i = 65;
+    str = "";
+    
+    for (; i < 124; i = std::experimental::randint(65, 123))
+    {
+        if (123 == i)
+        {
+            str += '\0';
+            break;
+        }
+        str += i;
+    }
+
+    printf("str is: %s\n", str.c_str());
 }
+
 
 extern "C" void app_main(void)
 {
-    size_t times{10};
+    dump_heap("START MAIN");
+    size_t times{50};
     while (times != 0)
     {
         string_operations();
         times--;
     }
+    
+    dump_heap("END");
+
 }
