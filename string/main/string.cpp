@@ -3,15 +3,16 @@
 #ifdef USE_ETL
 #include <etl/string.h>
 #define MAX_STRLN 30
+using _string = etl::string<MAX_STRLN>;
 #else
 #include <string>
+using _string = std::string;
 #endif
 
-using namespace std;
 
 extern "C" void app_main(void)
 {
-    const char *str_array[] = 
+    const char *c_str_array[] = 
     {
         "abcdefghijklmnopqrstuvwxyz",
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -24,14 +25,13 @@ extern "C" void app_main(void)
         "0123456789"
     };
 
-    size_t num_strings = sizeof(str_array) / sizeof(str_array[0]);
+    size_t num_strings = sizeof(c_str_array) / sizeof(c_str_array[0]);
     #ifdef USE_ETL
     printf("Using ETL...\n");
-    etl::string<MAX_STRLN> etl_str_array[num_strings]{};
     #else
     printf("Using libstdc++...\n"); 
-    std::string std_str_array[sizeof(str_array) / sizeof(str_array[0])]{};
     #endif
+    _string str_array[num_strings]{};
 
     for (size_t i = 0; i < num_strings; ++i)
     {
