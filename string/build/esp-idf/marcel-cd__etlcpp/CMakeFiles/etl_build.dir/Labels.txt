@@ -1,0 +1,13 @@
+# Target labels
+ etl_build
+# Source files and their labels
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/CMakeFiles/etl_build
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/CMakeFiles/etl_build.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/CMakeFiles/etl_build-complete.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-build.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-configure.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-download.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-install.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-mkdir.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-patch.rule
+/home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/src/etl_build-stamp/etl_build-update.rule

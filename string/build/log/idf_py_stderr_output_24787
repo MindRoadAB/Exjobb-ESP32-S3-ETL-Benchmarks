@@ -1,0 +1,8 @@
+Command: /home/warren/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/warren/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/warren/Exjobb/Tests/string/build/string.elf /home/warren/Exjobb/Tests/string/build/bootloader/bootloader.elf -m '/home/warren/.espressif/python_env/idf5.5_py3.12_env/bin/python' '/home/warren/esp/esp-idf/tools/idf.py'
+[0;33m--- esp-idf-monitor 1.6.0 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0;33m--- 0x403c8700: _stext at ??:?
+[0m
+[0;33m--- 0x403c8924: call_start_cpu0 at /home/warren/esp/esp-idf/components/bootloader/subproject/main/bootloader_start.c:25
+[0m
+[0m

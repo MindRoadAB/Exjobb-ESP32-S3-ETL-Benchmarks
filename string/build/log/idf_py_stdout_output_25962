@@ -1,0 +1,82 @@
+Command: ninja flash
+[1/19] Creating directories for 'etl_build'
+[2/19] No download step for 'etl_build'
+[3/19] No update step for 'etl_build'
+[4/19] Performing build step for 'bootloader'
+[1/1] cd /home/warren/Exjobb/Tests/string/build/bootloader/esp-idf/esptool_py && /home/warren/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/warren/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /home/warren/Exjobb/Tests/string/build/bootloader/bootloader.bin
+Bootloader binary size 0x52a0 bytes. 0x2d60 bytes (35%) free.
+[5/19] No install step for 'bootloader'
+[6/19] No patch step for 'etl_build'
+[7/19] Completed 'bootloader'
+[8/19] Performing configure step for 'etl_build'
+-- etl | Determined ETL version 20.40.0 from version.txt file
+-- The CXX compiler identification is GNU 13.3.0
+System is unknown to cmake, create:
+Platform/esp-idf to use this system, please post your config file on discourse.cmake.org so it can be added to cmake
+-- Detecting CXX compiler ABI info
+System is unknown to cmake, create:
+Platform/esp-idf to use this system, please post your config file on discourse.cmake.org so it can be added to cmake
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/warren/Exjobb/Tests/string/build/esp-idf/marcel-cd__etlcpp/etl
+[9/19] Performing build step for 'etl_build'
+ninja: no work to do.
+[10/19] No install step for 'etl_build'
+[11/19] Completed 'etl_build'
+[12/19] Building CXX object esp-idf/main/CMakeFiles/__idf_main.dir/string.cpp.obj
+[13/19] Linking C static library esp-idf/main/libmain.a
+[14/19] Generating ld/sections.ld
+[15/19] Building C object CMakeFiles/string.elf.dir/project_elf_src_esp32s3.c.obj
+[16/19] Linking CXX executable string.elf
+[17/19] Generating binary image from built executable
+esptool.py v4.9.dev6
+Creating esp32s3 image...
+Merged 2 ELF sections
+Successfully created esp32s3 image.
+Generated /home/warren/Exjobb/Tests/string/build/string.bin
+[18/19] cd /home/warren/Exjobb/Tests/string/build/esp-idf/esptool_py && /home/warren/.espressif/python_env/idf5.5_py3.12_env/bin/python /home/warren/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/warren/Exjobb/Tests/string/build/partition_table/partition-table.bin /home/warren/Exjobb/Tests/string/build/string.bin
+string.bin binary size 0x341d0 bytes. Smallest app partition is 0x100000 bytes. 0xcbe30 bytes (80%) free.
+[18/19] cd /home/warren/esp/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/warren/esp/esp-idf -D "SERIAL_TOOL=/home/warren/.espressif/python_env/idf5.5_py3.12_env/bin/python;;/home/warren/esp/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32s3" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/home/warren/Exjobb/Tests/string/build -P /home/warren/esp/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32s3 -p /dev/ttyUSB0 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 bootloader/bootloader.bin 0x10000 string.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.9.dev6
+Serial port /dev/ttyUSB0
+Connecting....
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+MAC: 8c:bf:ea:03:bb:98
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00010000 to 0x00044fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+SHA digest in image updated
+Compressed 21152 bytes to 13482...
+Writing at 0x00000000... (100 %)
+Wrote 21152 bytes (13482 compressed) at 0x00000000 in 0.6 seconds (effective 303.2 kbit/s)...
+Hash of data verified.
+Compressed 213456 bytes to 113998...
+Writing at 0x00010000... (14 %)
+Writing at 0x0001c8f9... (28 %)
+Writing at 0x00022d60... (42 %)
+Writing at 0x0002911e... (57 %)
+Writing at 0x0002f5dc... (71 %)
+Writing at 0x00037c42... (85 %)
+Writing at 0x0003dccc... (100 %)
+Wrote 213456 bytes (113998 compressed) at 0x00010000 in 2.7 seconds (effective 623.8 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 103...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (103 compressed) at 0x00008000 in 0.0 seconds (effective 624.8 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
