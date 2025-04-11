@@ -6,16 +6,52 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "esp_cpu.h"
+
 #include "esp_heap_caps.h"
 
+#define CYCLE_GET_COUNT(expr, res)                      \
+    do {                                                \
+        uint32_t __start = esp_cpu_get_cycle_count();   \
+        expr;                                           \
+        res = esp_cpu_get_cycle_count() - __start;      \
+    } while (0)
+
+    
+
+
 #if USE_ETL
-#include <etl/string.h>
-#define MAX_STRLN 60 
-using _string = etl::string<MAX_STRLN>;
+    #include <etl/string.h>
+    #define MAX_STRLN 60 
+    using _string = etl::string<MAX_STRLN>;
 #else
-#include <string>
-using _string = std::string;
+    #include <string>
+    using _string = std::string;
 #endif
+
+
+const char *c_str_array[] = 
+
+{
+    "abcdefghijklmnopqrstuvwxyz",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "abcdefghijklmnopqrstuvwxyzåäö",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzåäö",
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖabcdefghijklmnopqrstuvwxyz",
+    "0123456789"
+};
+
+uint32_t cycle_measure(void (*func)())
+{
+    uint32_t start = esp_cpu_get_cycle_count();
+    func();
+    return esp_cpu_get_cycle_count() - start;
+}
+
+
 
 void 
 dump_heap(const char *label)
@@ -28,24 +64,6 @@ string_operations(void)
 {
     dump_heap("START");
 
-    #if USE_ETL
-    printf("Using ETL...\n");
-    #else
-    printf("Using libstdc++...\n"); 
-    #endif
-    const char *c_str_array[] = 
-    
-    {
-        "abcdefghijklmnopqrstuvwxyz",
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        "abcdefghijklmnopqrstuvwxyzåäö",
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        "abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ",
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzåäö",
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖabcdefghijklmnopqrstuvwxyz",
-        "0123456789"
-    };
 
     constexpr size_t num_strings = sizeof(c_str_array) / sizeof(c_str_array[0]);
     _string str_array[num_strings]{};
@@ -56,6 +74,7 @@ string_operations(void)
         printf("%s\n", str_array[i].c_str());
         str_array[i].append(c_str_array[num_strings - 1]);
         printf("%s\n", str_array[i].c_str());
+    
     }  
     
     _string str, str2 = {""};
@@ -69,14 +88,31 @@ string_operations(void)
 
     printf("str is %s\n", str.c_str());
     
+    esp_cpu_cycle_count_t count = esp_cpu_get_cycle_count();
     std::reverse(str.begin(), str.end());
+    esp_cpu_cycle_count_t reverse_count = esp_cpu_get_cycle_count() - count;
+    printf("cycle count for reverse is: %lu\n", reverse_count);
+
+    count = esp_cpu_get_cycle_count();
+    _string s = {
+                    "Hello my name is warren and I am 39 and I live in Sweden.\n"
+                    "Hej Jag heter warren och jag är 39 och bor i Sverige."
+                }; 
+    reverse_count = esp_cpu_get_cycle_count() - count;
+    printf("cycle count for constructor is: %lu\n", reverse_count);
+    
+
     printf("str is now: %s\n", str.c_str());
+    
+   
 
     std::reverse(str.begin(), str.end());
     printf("str is now: %s\n", str.c_str());
-    
+
     str2.resize(str.size());
-    std::reverse_copy(std::begin(str), std::end(str), std::begin(str2));
+    CYCLE_GET_COUNT(std::reverse_copy(std::begin(str), std::end(str), std::begin(str2)), reverse_count);
+    printf("reverse copy cycle count: %lu\n", reverse_count);
+    
     printf("str2 is: %s\n", str2.c_str());
     dump_heap("END");
 
@@ -99,14 +135,18 @@ string_operations(void)
 
 extern "C" void app_main(void)
 {
-    dump_heap("START MAIN");
-    size_t times{50};
+#if USE_ETL
+    printf("Using ETL...\n");
+#else
+    printf("Using libstdc++...\n"); 
+#endif
+    string_operations(); 
+    size_t times{10};
     while (times != 0)
     {
+        printf("\nNow inside the loop\n"); 
         string_operations();
         times--;
     }
-    
-    dump_heap("END");
 
 }
