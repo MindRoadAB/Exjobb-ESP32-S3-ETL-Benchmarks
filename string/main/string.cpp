@@ -7,8 +7,11 @@
 #include "freertos/task.h"
 
 #include "esp_cpu.h"
-
+#include "esp_timer.h"
 #include "esp_heap_caps.h"
+
+#define MEASUREMENTS 100
+
 
 #define CYCLE_GET_COUNT(expr, res)                      \
     do {                                                \
@@ -17,18 +20,22 @@
         res = esp_cpu_get_cycle_count() - __start;      \
     } while (0)
 
-    
 
+#define TIME_TASK(expr, res)                            \
+    do {                                                \
+        uint64_t start = esp_timer_get_time(); \
+        for (int retries = 0; retries < MEASUREMENTS; retries++) { \
+            expr;   \
+        }                                       \
+        uint64_t end = esp_timer_get_time(); \
+        printf("%u iterations took %llu milliseconds (%llu microseconds per invocation)\n", \ 
+            MEASUREMENTS, (end -start)/1000, (end - start)/MEASUREMENTS);   \
+    } while (0)                                                              
 
-#if USE_ETL
-    #include <etl/string.h>
-    #define MAX_STRLN 60 
-    using _string = etl::string<MAX_STRLN>;
-#else
-    #include <string>
-    using _string = std::string;
-#endif
+StaticTask_t xTaskBuffer;
+StackType_t xStack[ 4096 ];
 
+uint64_t time_count;
 
 const char *c_str_array[] = 
 
@@ -44,14 +51,18 @@ const char *c_str_array[] =
     "0123456789"
 };
 
-uint32_t cycle_measure(void (*func)())
-{
-    uint32_t start = esp_cpu_get_cycle_count();
-    func();
-    return esp_cpu_get_cycle_count() - start;
-}
+constexpr size_t num_strings = sizeof(c_str_array) / sizeof(c_str_array[0]);
 
-
+#if USE_ETL
+    #include <etl/string.h>
+    #define MAX_STRLN 60 
+    using _string = etl::string<MAX_STRLN>;
+    _string str_array[num_strings]{};
+#else
+    #include <string>
+    using _string = std::string;
+    _string str_array[num_strings]{};
+#endif
 
 void 
 dump_heap(const char *label)
@@ -65,8 +76,7 @@ string_operations(void)
     dump_heap("START");
 
 
-    constexpr size_t num_strings = sizeof(c_str_array) / sizeof(c_str_array[0]);
-    _string str_array[num_strings]{};
+    
 
     for (size_t i = 0; i < num_strings; ++i)
     {
@@ -112,6 +122,8 @@ string_operations(void)
     str2.resize(str.size());
     CYCLE_GET_COUNT(std::reverse_copy(std::begin(str), std::end(str), std::begin(str2)), reverse_count);
     printf("reverse copy cycle count: %lu\n", reverse_count);
+                
+    TIME_TASK(std::reverse_copy(std::begin(str), std::end(str), std::begin(str2)), time_count);
     
     printf("str2 is: %s\n", str2.c_str());
     dump_heap("END");
@@ -133,6 +145,29 @@ string_operations(void)
 }
 
 
+void 
+task_string_operations(void *arg)
+{
+    /** Do a warmup run */ 
+    string_operations();
+    
+    size_t times{0};
+    while (times != 1000)
+    {
+        printf("\nNow inside the loop at iteration %u\n", times); 
+        string_operations();
+        times++;
+    }
+    vTaskDelete(NULL);
+}
+
+void
+task_heap_monitor(void *arg)
+{
+    
+}
+
+
 extern "C" void app_main(void)
 {
 #if USE_ETL
@@ -140,13 +175,19 @@ extern "C" void app_main(void)
 #else
     printf("Using libstdc++...\n"); 
 #endif
-    string_operations(); 
-    size_t times{10};
-    while (times != 0)
-    {
-        printf("\nNow inside the loop\n"); 
-        string_operations();
-        times--;
-    }
+
+
+    xTaskCreateStaticPinnedToCore(
+        task_string_operations, 
+        "static pinned to core string ops",
+        4096,
+        NULL, 
+        5, 
+        xStack, 
+        &xTaskBuffer, 
+        0
+    );
+    
+    //xTaskCreatePinnedToCore(task_string_operations, "String operations", 4096, NULL, 5, NULL, 0);
 
 }
