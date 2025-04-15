@@ -107,22 +107,25 @@
         time,                                   \
         "element access " label \
     );               \
-/**
+
+    /**
  * Wrapper for testing reverse operation.
  */
 #define TEST_REVERSE(expr, time, label)         \
     CYCLE_GET_COUNT(                            \
-        expr,                                   \
+        (_reverse(expr.begin(), expr.end())),                                   \
         time,                                   \
         "reverse " label \
     );                      \
-/**
+
+    /**
  * Wrapper for testing append (or operator+=) operation.
  */
-#define TEST_APPEND(expr, time, label)          \
-    CYCLE_GET_COUNT(                            \
+#define TEST_APPEND(expr, time, iters, label)          \
+    CYCLE_GET_COUNT_CUSTOM_ITERS(                            \
         expr,                                   \
         time,                                   \
+        iters, \
         "append " label \
     );                       \
 
@@ -130,10 +133,24 @@
  * Wrapper for testing comparison operation.
  * expr argument should be container.compare(other_container)
  */
-#define TEST_COMPARE(expr, time, label)         \
-    CYCLE_GET_COUNT(                            \
-        expr,                                   \
+#define TEST_COMPARE(expr1, expr2, time, label)         \
+    CYCLE_GET_COUNT_VAL(                            \
+        (expr1.compare(expr2)),                                   \
         time,                                   \
         "compare " label                        \
     );                      \
+
+#define TEST_POP_BACK(expr1, time, label)         \
+    CYCLE_GET_COUNT_VAL(                            \
+        (expr1.pop_back()),                                   \
+        time,                                   \
+        "compare " label                        \
+    );                      \
+
+
+
+
+
+
+
 

@@ -2,13 +2,13 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "string/string.hpp"
+#include "vector/vector.hpp"
 
-#define STACK_DEPTH 4096
-#define PRIORITY_DEFAULT 5
-#define CORE_0 0
-StaticTask_t xTaskBuffer;
-StackType_t xStack[STACK_DEPTH];
+int32_t cycles{0};
 
+
+_vector_int ints2 = ints;
+_vector_dummy dummy2 = dummy;
 
 
 extern "C" void app_main(void)
@@ -19,15 +19,178 @@ extern "C" void app_main(void)
         printf("Using libstdc++...\n"); 
     #endif
 
-    xTaskCreatePinnedToCore(task_string, "String Task", STACK_DEPTH, nullptr, PRIORITY_DEFAULT, nullptr, CORE_0);
-    // xTaskCreateStaticPinnedToCore(
-    //     task_string, 
-    //     "static pinned to core string ops",
-    //     2*STACK_DEPTH,
-    //     NULL, 
-    //     5, 
-    //     xStack, 
-    //     &xTaskBuffer, 
-    //     0
+    /** For raw benchmarks, avoid using FreeRTOS tasks */
+    /** TODO: Consider an expanded FOR_EACH macro */
+    
+    // /** Constructor with C-strings */
+    // TEST_CONSTRUCTOR(
+    //     _string s{c_str_tiny},
+    //     cycles,
+    //     "string: c_str_tiny"
+    // );
+    
+    // TEST_CONSTRUCTOR(
+    //     _string s{c_str_medium},
+    //     cycles,
+    //     "string: c_str_medium"
+    // );
+
+    // TEST_CONSTRUCTOR(
+    //     _string s{c_str_large},
+    //     cycles,
+    //     "string: c_str_large"
+    // );
+
+    
+    // TEST_CONSTRUCTOR(
+    //     #if USE_ETL
+    //         etl::string<6*MAX_STRLN> s{c_str_jumbo},
+    //     #else 
+    //         _string s{c_str_jumbo},
+    //     #endif
+    //     cycles,
+    //     "string: c_str_jumbo"
+    // );
+
+    // /** Operator[] */
+    // TEST_ELEM_ACCESS(
+    //     _str_tiny[1],
+    //     cycles,
+    //     "string: _str_tiny"
+    // );
+
+    // TEST_ELEM_ACCESS(
+    //     _str_medium[11],
+    //     cycles,
+    //     "string: _str_medium"
+    // );
+    
+    // TEST_ELEM_ACCESS(
+    //     _str_large[88],
+    //     cycles,
+    //     "string: _str_large"
+    // );
+    
+    // TEST_ELEM_ACCESS(
+    //     _str_jumbo[888],
+    //     cycles,
+    //     "string: _str_jumbo"
+    // );
+
+    // /** [std|etl]::reverse(begin, end) */
+    // TEST_REVERSE(
+    //     _str_tiny,
+    //     cycles,
+    //     "string: _str_tiny"
+    // );
+
+    // TEST_REVERSE(
+    //     _str_medium,
+    //     cycles,
+    //     "string: _str_medium"
+    // );
+    
+    // TEST_REVERSE(
+    //     _str_large,
+    //     cycles,
+    //     "string: _str_large"
+    // );
+    
+    // TEST_REVERSE(
+    //     _str_jumbo,
+    //     cycles,
+    //     "string: _str_jumbo"
+    // );
+
+    // /** Undo previous operations */
+
+    // _reverse(_str_tiny.begin(), _str_tiny.end());
+    // _reverse(_str_medium.begin(), _str_medium.end());
+    // _reverse(_str_large.begin(), _str_large.end());
+    // _reverse(_str_jumbo.begin(), _str_jumbo.end());
+
+    // /** _str_jumbo is already so large, clear it, do 1000 iterations (works well for both etl/libstdc++)
+    //  *  clock it.
+    //  */
+    // CYCLE_GET_COUNT(
+    //     _str_jumbo.clear(),
+    //     cycles,
+    //     "_str_jumbo.clear()"
+    // );
+    
+    // TEST_APPEND(
+    //     _str_jumbo += "a",
+    //     cycles,
+    //     1000,
+    //     "string: _str_jumbo"
+    // )
+    //  /** Clear it back */
+    // _str_jumbo.clear();
+    
+    // /** append c_str_jumbo */
+    // _str_jumbo.append(c_str_jumbo);
+
+    
+    // TEST_COMPARE(
+    //     _str_jumbo, 
+    //     _str_jumbo2,
+    //     cycles, 
+    //     "_str_jumbo, c_str_jumbo, "
+    // );
+
+    TEST_CONSTRUCTOR (
+        _vector_dummy d{}, 
+        cycles, 
+        "vector: _vector_dummy d{}"
+    );
+
+    TEST_CONSTRUCTOR (
+        _vector_dummy d{dummy}, 
+        cycles, 
+        "vector: _vector_dummy d{dummy} (128 members) "
+    );
+
+    // TEST_CONSTRUCTOR (
+    //     _vector_int i{}, 
+    //     cycles, 
+    //     "vector: _vector_int i{}"
+    // );
+
+    // TEST_CONSTRUCTOR (
+    //     _vector_int i{ints}, 
+    //     cycles, 
+    //     "vector: _vector_int i{ints} (128 members) "
+    // );
+
+    // TEST_CONSTRUCTOR (
+    //     _vector_dummy d(dummy.begin(), dummy.end()),
+    //     cycles,
+    //     "vector: _vector_dummy d(dummy.begin(), dummy.end())"
+    // )
+
+    // TEST_CONSTRUCTOR (
+    //     _vector_int i(ints.begin(), ints.end()),
+    //     cycles, 
+    //     "_vector_int i(ints.begin(), ints.end())"
+    // );
+
+    // TEST_APPEND (
+    //     d_blank.push_back({"hello", 111}),
+    //     cycles, 
+    //     128,
+    //     "_vector_dummy push_back(dummy)"
+    // );
+
+    // TEST_APPEND (
+    //     i_blank.push_back(111),
+    //     cycles, 
+    //     128,
+    //     "_vector_int push_back(111)"
+    // );
+
+    // TEST_POP_BACK (
+    //     dummy, 
+    //     cycles,
+    //     "dummy, dummy2"
     // );
 }
