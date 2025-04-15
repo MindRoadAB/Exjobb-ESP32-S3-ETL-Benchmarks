@@ -74,7 +74,6 @@
 
 #define CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER(expr1, pos, time) \
     do { \
-        (void)expr1.erase(pos); \
         auto val = expr1.back(); \
         uint32_t __start = esp_cpu_get_cycle_count();  \
         expr1.erase(pos);\
