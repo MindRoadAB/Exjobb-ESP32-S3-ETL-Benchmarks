@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <numeric>
+
 #include "esp_timer.h"
 #include "esp_cpu.h"
 
@@ -70,6 +72,17 @@
     } while (0)
 
 
+#define CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER(expr1, pos, time) \
+    do { \
+        (void)expr1.erase(pos); \
+        auto val = expr1.back(); \
+        uint32_t __start = esp_cpu_get_cycle_count();  \
+        expr1.erase(pos);\
+        time = esp_cpu_get_cycle_count() - __start;  \
+        expr1.insert(pos, val); \
+    } while (0)
+
+    
 /**
  * Wrap the given expression in calls to esp_timer_get_time() to measure the elapsed time of the
  * operation in microseconds.
@@ -140,16 +153,35 @@
         "compare " label                        \
     );                      \
 
-#define TEST_POP_BACK(expr1, time, label)         \
-    CYCLE_GET_COUNT_VAL(                            \
-        (expr1.pop_back()),                                   \
+#define TEST_POP_BACK(expr1, time, iters, label)         \
+    CYCLE_GET_COUNT_CUSTOM_ITERS( \
+        expr1.pop_back(),\
+        time,  \
+        iters, \
+        "pop_back " label \
+    )
+
+#define TEST_INSERT(expr1, pos, offset, expr2, time, iters, label)         \
+    CYCLE_GET_COUNT_CUSTOM_ITERS(                            \
+        (expr1.insert(pos + offset, expr2)),                                   \
         time,                                   \
-        "compare " label                        \
+        iters, \
+        "insert " label                        \
     );                      \
 
-
-
-
+#define TEST_ERASE(expr1, pos, time, iters, label) \
+    uint32_t times[iters]{}; \
+    for (size_t i = 0; i < iters; i++) { \
+        CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER( \
+            expr1, \
+            pos, \
+            time \
+        ); \
+        times[i] = time; \
+    } \
+    uint32_t sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    printf("erase %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
+        label, iters, (sum / iters));   
 
 
 

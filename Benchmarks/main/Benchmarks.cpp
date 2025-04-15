@@ -7,10 +7,6 @@
 int32_t cycles{0};
 
 
-_vector_int ints2 = ints;
-_vector_dummy dummy2 = dummy;
-
-
 extern "C" void app_main(void)
 {
     #if USE_ETL
@@ -138,59 +134,99 @@ extern "C" void app_main(void)
     //     "_str_jumbo, c_str_jumbo, "
     // );
 
+
     TEST_CONSTRUCTOR (
-        _vector_dummy d{}, 
+        _vector_int i{}, 
         cycles, 
-        "vector: _vector_dummy d{}"
+        "vector: _vector_int i{}"
     );
 
     TEST_CONSTRUCTOR (
-        _vector_dummy d{dummy}, 
+        _vector_int i{ints}, 
         cycles, 
-        "vector: _vector_dummy d{dummy} (128 members) "
+        "vector: _vector_int i{ints} (128 members) "
     );
 
-    // TEST_CONSTRUCTOR (
-    //     _vector_int i{}, 
-    //     cycles, 
-    //     "vector: _vector_int i{}"
-    // );
+    TEST_CONSTRUCTOR (
+        _vector_int i(ints.begin(), ints.end()),
+        cycles, 
+        "_vector_int i(ints.begin(), ints.end())"
+    );
 
-    // TEST_CONSTRUCTOR (
-    //     _vector_int i{ints}, 
-    //     cycles, 
-    //     "vector: _vector_int i{ints} (128 members) "
-    // );
+    TEST_APPEND (
+        i_blank.push_back(111),
+        cycles, 
+        128,
+        "_vector_int push_back(111)"
+    );
 
-    // TEST_CONSTRUCTOR (
-    //     _vector_dummy d(dummy.begin(), dummy.end()),
-    //     cycles,
-    //     "vector: _vector_dummy d(dummy.begin(), dummy.end())"
+    TEST_POP_BACK (
+        i_blank, 
+        cycles,
+        ints.size(), 
+        "_vector_int ints.pop_back()"
+    );
+
+    /** Reconstruct ints */
+    i_blank = ints; 
+    
+    
+    
+    
+    // for (size_t i{0}; i < 128; i++)
+    //     printf("ints: %d\n", ints[i]); 
+    
+    // printf("\n");
+    
+    // std::vector<int> vec = {1, 2, 3, 4, 5};
+    
+    // for (size_t i = 0; i < vec.size(); i++) 
+    //     printf("%d\n", vec[i]); 
+    
+    // printf("vec.size, capacity: %u, %u\n", vec.size(), vec.capacity());
+    // vec.pop_back();
+    
+    // printf("vec.size, capacity: %u, %u\n", vec.size(), vec.capacity());
+    
+    // for (size_t i = 0; i < vec.size(); i++) 
+    //     printf("%d\n", vec[i]); 
+    
+    
+    // ints.pop_back();
+    
+    // printf("\n");
+    
+    // for (size_t i{0}; i < 128; i++)
+    //     printf("ints: %d\n", ints[i]); 
+    
+    
+
+    // auto pos = ints.begin();
+    // TEST_INSERT (
+    //     i,
+    //     pos, 
+    //     (ints.size() / 2),  
+    //     cycles, 
+        
+    //     "_vector_int insert"
     // )
 
-    // TEST_CONSTRUCTOR (
-    //     _vector_int i(ints.begin(), ints.end()),
-    //     cycles, 
-    //     "_vector_int i(ints.begin(), ints.end())"
-    // );
+    // ints.insert(pos + 114, 234234);
 
-    // TEST_APPEND (
-    //     d_blank.push_back({"hello", 111}),
-    //     cycles, 
-    //     128,
-    //     "_vector_dummy push_back(dummy)"
-    // );
+    // for (size_t i{0}; i < 128; i++)
+    //     printf("ints: %d\n", ints[i]); 
 
-    // TEST_APPEND (
-    //     i_blank.push_back(111),
-    //     cycles, 
-    //     128,
-    //     "_vector_int push_back(111)"
-    // );
+    auto pos = i_blank.begin();
+    TEST_ERASE (
+        i_blank, 
+        (pos + (i_blank.size()/2)),
+        cycles, 
+        100,
+        "_vector_int erase()"
+    );
 
-    // TEST_POP_BACK (
-    //     dummy, 
-    //     cycles,
-    //     "dummy, dummy2"
-    // );
+
+
 }
+
+
