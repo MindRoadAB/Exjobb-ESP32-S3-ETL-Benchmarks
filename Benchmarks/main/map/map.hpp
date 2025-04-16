@@ -9,7 +9,7 @@
     #define STRLN 4;
     #define MAX_MAP_SIZE 16;
 
-    using _map = etl::unordered_map<int, std::string, 4>;
+    using _map = etl::unordered_map<int, std::string, 16>;
 
 #else
     #include <unordered_map>
@@ -22,4 +22,5 @@
 extern _map umap_1;
 extern _map umap_2;
 extern _map umap_empty;
+extern _map umap_large;
 

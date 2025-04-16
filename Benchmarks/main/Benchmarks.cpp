@@ -291,14 +291,41 @@ extern "C" void app_main(void)
         std::make_pair(11, "box"),
         cycles,
         100,
-        "u_map_int_string insert"
+        "u_map_int_string insert std::make_pair"
     );
 
+    std::pair<int, std::string> mapElem = {11, "box"};
 
+    TEST_MAP_INSERT (
+        umap_1,
+        mapElem,
+        cycles,
+        100,
+        "u_map_int_string insert object"
+    );
+    
+    auto first = umap_1.find(1);
+    printf("first elem: %d, %s\n", first->first, first->second.c_str()); 
+    
+    mapElem = std::make_pair(first->first, first->second); 
+    
+    TEST_MAP_ERASE (
+        umap_1,
+        mapElem,
+        cycles,
+        100,
+        "u_map_int_string_erase object"
+    );
 
+    for (auto& k: umap_1)
+        printf("\n<%d, %s>\n", k.first, k.second.c_str());
 
-
-
+    TEST_FIND (
+        umap_large,
+        13,
+        cycles,
+        "umap_int_string find"
+    );
 
 
 

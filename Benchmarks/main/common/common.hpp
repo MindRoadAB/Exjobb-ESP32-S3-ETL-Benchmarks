@@ -10,7 +10,6 @@
 #define MEASUREMENTS 5000
 std::array<uint32_t, 128> times{};
 uint32_t sum{};
-auto it;
 
 /** 
  *  Wrap the given expression in calls to esp_cpu_get_cycle_count() to measure the cycles.
@@ -115,7 +114,13 @@ auto it;
         expr1.erase(it); \
     } while (0)
 
-#define CYCLE_GET_COuNT    
+#define CYCLE_GET_COUNT_MAP_ERASE_INSERT_AFTER(expr1, expr2, time) \
+    do{ \
+        uint32_t __start = esp_cpu_get_cycle_count(); \
+        expr1.erase(expr2.first); \
+        time = esp_cpu_get_cycle_count() - __start; \
+        expr1.insert(expr2); \
+    } while (0)
 
 
 /**
@@ -197,9 +202,9 @@ auto it;
     )
 
 #define TEST_VECTOR_INSERT(expr1, pos, val, time, iters, label)         \
-    it = expr1.begin() + pos; \
-    expr1.insert(it, val); \
-    expr1.erase(it); \
+    auto it_v_insert = expr1.begin() + pos; \
+    expr1.insert(it_v_insert, val); \
+    expr1.erase(it_v_insert); \
     for (size_t i = 0; i < iters; i++) { \
         CYCLE_GET_COUNT_VECTOR_INSERT_VAL_REMOVE_AFTER(                            \
             expr1,                                   \
@@ -216,8 +221,8 @@ auto it;
 
 #define TEST_VECTOR_ERASE(expr1, pos, time, iters, label) \
     auto val = expr1[pos]; \
-    it = expr1.begin() + pos; \
-    expr1.erase(it); \
+    auto it_v_erase = expr1.begin() + pos; \
+    expr1.erase(it_v_erase); \
     expr1.insert((expr1.begin() + pos), val);\
     for (size_t i = 0; i < iters; i++) { \
         CYCLE_GET_COUNT_VECTOR_ERASE_VAL_REPLACE_AFTER( \
@@ -263,4 +268,30 @@ auto it;
     times.fill(0); \
     printf("insert %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
         label, iters, (sum / iters));  
-        
+
+/** ASSUME NON-FAILING. We are not testing error-handling, just performance. */
+#define TEST_MAP_ERASE(expr1, expr2, time, iters, label) \
+    expr1.erase(expr2.first); \
+    expr1.insert(expr2); \
+    for (size_t i = 0; i < iters; i++) { \
+        CYCLE_GET_COUNT_MAP_ERASE_INSERT_AFTER( \
+            expr1, \
+            expr2, \
+            time \
+        ); \
+        times[i] = time; \
+    } \
+    sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    times.fill(0); \
+    printf("erase %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
+        label, iters, (sum / iters));  
+
+#define TEST_FIND(expr1, expr2, time, label) \
+    CYCLE_GET_COUNT ( \
+        expr1.find(expr2), \
+        time, \
+        "find " label \
+    );
+
+
+
