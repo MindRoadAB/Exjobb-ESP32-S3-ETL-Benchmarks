@@ -10,6 +10,7 @@
 #define MEASUREMENTS 5000
 std::array<uint32_t, 128> times{};
 uint32_t sum{};
+auto it;
 
 /** 
  *  Wrap the given expression in calls to esp_cpu_get_cycle_count() to measure the cycles.
@@ -31,6 +32,26 @@ uint32_t sum{};
         printf("%s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
                 label, MEASUREMENTS, (time / MEASUREMENTS));                                \
     } while (0)
+
+#define CYCLE_GET_COUNT_MERGE_UNMERGE(type, expr1, expr2, time) \
+    do { \
+        type h = expr1; \
+        type k = expr2; \
+        uint32_t __start = esp_cpu_get_cycle_count(); \
+        h.merge(k); \
+        time = esp_cpu_get_cycle_count() - __start; \
+        h = expr1; \
+        k = expr2; \
+    } while (0)
+
+#define CYCLE_GET_COUNT_MAP_INSERT_ERASE_AFTER(expr1, expr2, time) \
+    do { \
+        uint32_t __start = esp_cpu_get_cycle_count(); \
+        expr1.insert(expr2); \
+        time = esp_cpu_get_cycle_count() - __start; \
+        expr1.erase(expr2.first); \
+    } while (0)
+
 
 /**
  * Wrap the given expression in calls to esp_cpu_get_cycle_count() to measure the cycles, 
@@ -75,7 +96,7 @@ uint32_t sum{};
     } while (0)
 
 
-#define CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER(expr1, pos, time) \
+#define CYCLE_GET_COUNT_VECTOR_ERASE_VAL_REPLACE_AFTER(expr1, pos, time) \
     do { \
         auto val = expr1[pos]; \
         auto it = expr1.begin() + pos; \
@@ -85,7 +106,7 @@ uint32_t sum{};
         expr1.insert((expr1.begin() + pos), val);\
     } while (0)
 
-#define CYCLE_GET_COUNT_INSERT_VAL_REMOVE_AFTER(expr1, pos, val, time) \
+#define CYCLE_GET_COUNT_VECTOR_INSERT_VAL_REMOVE_AFTER(expr1, pos, val, time) \
     do { \
         auto it = expr1.begin() + pos; \
         uint32_t __start = esp_cpu_get_cycle_count();  \
@@ -93,7 +114,10 @@ uint32_t sum{};
         time = esp_cpu_get_cycle_count() - __start;  \
         expr1.erase(it); \
     } while (0)
-    
+
+#define CYCLE_GET_COuNT    
+
+
 /**
  * Wrap the given expression in calls to esp_timer_get_time() to measure the elapsed time of the
  * operation in microseconds.
@@ -172,9 +196,12 @@ uint32_t sum{};
         "pop_back " label \
     )
 
-#define TEST_INSERT(expr1, pos, val, time, iters, label)         \
+#define TEST_VECTOR_INSERT(expr1, pos, val, time, iters, label)         \
+    it = expr1.begin() + pos; \
+    expr1.insert(it, val); \
+    expr1.erase(it); \
     for (size_t i = 0; i < iters; i++) { \
-        CYCLE_GET_COUNT_INSERT_VAL_REMOVE_AFTER(                            \
+        CYCLE_GET_COUNT_VECTOR_INSERT_VAL_REMOVE_AFTER(                            \
             expr1,                                   \
             pos,                                   \
             val,\
@@ -187,9 +214,13 @@ uint32_t sum{};
     printf("insert %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
         label, iters, (sum / iters));   
 
-#define TEST_ERASE(expr1, pos, time, iters, label) \
+#define TEST_VECTOR_ERASE(expr1, pos, time, iters, label) \
+    auto val = expr1[pos]; \
+    it = expr1.begin() + pos; \
+    expr1.erase(it); \
+    expr1.insert((expr1.begin() + pos), val);\
     for (size_t i = 0; i < iters; i++) { \
-        CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER( \
+        CYCLE_GET_COUNT_VECTOR_ERASE_VAL_REPLACE_AFTER( \
             expr1, \
             pos, \
             time \
@@ -202,5 +233,34 @@ uint32_t sum{};
         label, iters, (sum / iters));   
 
 
+#define TEST_MERGE(type, expr1, expr2, time, iters, label) \
+    for (size_t i = 0; i < iters; i++) { \
+        CYCLE_GET_COUNT_MERGE_UNMERGE( \
+            type, \
+            expr1, \
+            expr2, \
+            time \
+        ); \
+        times[i] = time; \
+    } \
+    sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    times.fill(0); \
+    printf("erase %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
+        label, iters, (sum / iters));   
 
-
+#define TEST_MAP_INSERT(expr1, expr2, time, iters, label) \
+    expr1.insert(expr2); \
+    expr1.erase(expr2.first); \
+    for (size_t i = 0; i < iters; i++) { \
+        CYCLE_GET_COUNT_MAP_INSERT_ERASE_AFTER( \
+            expr1, \
+            expr2, \
+            time \
+        ); \
+        times[i] = time; \
+    } \
+    sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    times.fill(0); \
+    printf("insert %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
+        label, iters, (sum / iters));  
+        

@@ -216,7 +216,7 @@ extern "C" void app_main(void)
     i_blank.erase(i_blank.begin() + middle);
     /************************************************************************ */ 
     
-    TEST_INSERT (
+    TEST_VECTOR_INSERT (
         i_blank,
         middle, 
         2222,  
@@ -229,7 +229,7 @@ extern "C" void app_main(void)
     i_blank.insert(i_blank.begin() + middle, value);
     /************************************************************************ */ 
     
-    TEST_ERASE (
+    TEST_VECTOR_ERASE (
         i_blank, 
         middle,
         cycles, 
@@ -237,12 +237,87 @@ extern "C" void app_main(void)
         "_vector_int erase()"
     );
 
+    printf("\n\n");
 
     TEST_CONSTRUCTOR (
-        _u_map_int_string x{},
+        //#if USE_ETL
+            _map m{}, 
+        // #else 
+        //     _u_map_int_string x{},
+        // #endif 
         cycles,
         "_u_map_int_string empty constructor"
     );
+    
+    TEST_CONSTRUCTOR (
+        //#if USE_ETL
+            _map m{umap_1}, 
+        // #else 
+        //     _u_map_int_string x{},
+        // #endif 
+        cycles,
+        "_u_map_int_string copy constructor"
+    );
+
+    TEST_CONSTRUCTOR (
+       // #if USE_ETL
+            _map m(umap_1.begin(), umap_1.end()), 
+        //#else 
+         //   _u_map_int_string x{},
+        //#endif 
+        cycles,
+        "_u_map_int_string iterator constructor"
+    );
+
+    TEST_ELEM_ACCESS (
+        umap_1[2], 
+        cycles,
+        "u_map_int_string operator[]"
+    );
+
+    for (auto& k: umap_1)
+        printf("<%d, %s>\n", k.first, k.second.c_str());
+    umap_1.insert({11, "box"});
+    for (auto& k: umap_1)
+        printf("\n\n<%d, %s>\n", k.first, k.second.c_str());
+
+    umap_1.erase(11);
+    printf("BREAK\n");
+    for (auto& k: umap_1)
+        printf("\n<%d, %s>\n", k.first, k.second.c_str());
+
+    TEST_MAP_INSERT (
+        umap_1,
+        std::make_pair(11, "box"),
+        cycles,
+        100,
+        "u_map_int_string insert"
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
