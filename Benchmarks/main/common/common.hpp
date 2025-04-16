@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <numeric>
+#include <array>
 
 #include "esp_timer.h"
 #include "esp_cpu.h"
 
 
 
-#define MEASUREMENTS 5000 
+#define MEASUREMENTS 5000
+std::array<uint32_t, 128> times{};
+uint32_t sum{};
 
 /** 
  *  Wrap the given expression in calls to esp_cpu_get_cycle_count() to measure the cycles.
@@ -74,13 +77,22 @@
 
 #define CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER(expr1, pos, time) \
     do { \
-        auto val = expr1.back(); \
+        auto val = expr1[pos]; \
+        auto it = expr1.begin() + pos; \
         uint32_t __start = esp_cpu_get_cycle_count();  \
-        expr1.erase(pos);\
+        expr1.erase(it);\
         time = esp_cpu_get_cycle_count() - __start;  \
-        expr1.insert(pos, val); \
+        expr1.insert((expr1.begin() + pos), val);\
     } while (0)
 
+#define CYCLE_GET_COUNT_INSERT_VAL_REMOVE_AFTER(expr1, pos, val, time) \
+    do { \
+        auto it = expr1.begin() + pos; \
+        uint32_t __start = esp_cpu_get_cycle_count();  \
+        expr1.insert(it, val);\
+        time = esp_cpu_get_cycle_count() - __start;  \
+        expr1.erase(it); \
+    } while (0)
     
 /**
  * Wrap the given expression in calls to esp_timer_get_time() to measure the elapsed time of the
@@ -160,16 +172,22 @@
         "pop_back " label \
     )
 
-#define TEST_INSERT(expr1, pos, offset, expr2, time, iters, label)         \
-    CYCLE_GET_COUNT_CUSTOM_ITERS(                            \
-        (expr1.insert(pos + offset, expr2)),                                   \
-        time,                                   \
-        iters, \
-        "insert " label                        \
-    );                      \
+#define TEST_INSERT(expr1, pos, val, time, iters, label)         \
+    for (size_t i = 0; i < iters; i++) { \
+        CYCLE_GET_COUNT_INSERT_VAL_REMOVE_AFTER(                            \
+            expr1,                                   \
+            pos,                                   \
+            val,\
+            time \
+        );                      \
+        times[i] = time; \
+    } \
+    sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    times.fill(0); \
+    printf("insert %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
+        label, iters, (sum / iters));   
 
 #define TEST_ERASE(expr1, pos, time, iters, label) \
-    uint32_t times[iters]{}; \
     for (size_t i = 0; i < iters; i++) { \
         CYCLE_GET_COUNT_ERASE_VAL_REPLACE_AFTER( \
             expr1, \
@@ -178,7 +196,8 @@
         ); \
         times[i] = time; \
     } \
-    uint32_t sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    sum = std::accumulate(std::begin(times), std::end(times), 0); \
+    times.fill(0); \
     printf("erase %s operation Ran %u iterations, @ %lu cycles per iteration\n",              \
         label, iters, (sum / iters));   
 

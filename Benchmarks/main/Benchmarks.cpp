@@ -3,6 +3,8 @@
 #include "freertos/task.h"
 #include "string/string.hpp"
 #include "vector/vector.hpp"
+#include "map/map.hpp"
+
 
 int32_t cycles{0};
 
@@ -153,13 +155,20 @@ extern "C" void app_main(void)
         "_vector_int i(ints.begin(), ints.end())"
     );
 
+    printf("size, cap: %u, %u\n", i_blank.size(), i_blank.capacity());
     TEST_APPEND (
         i_blank.push_back(111),
         cycles, 
-        128,
+        i_blank.size() - 1,
         "_vector_int push_back(111)"
     );
 
+    if (i_blank.empty())
+        printf("empty\n");
+    else
+        printf("not empty\n");
+
+    printf("size, cap: %u, %u\n", i_blank.size(), i_blank.capacity());
     TEST_POP_BACK (
         i_blank, 
         cycles,
@@ -172,6 +181,7 @@ extern "C" void app_main(void)
     
     
     
+    printf("size, cap: %u, %u\n", i_blank.size(), i_blank.capacity());
     
     // for (size_t i{0}; i < 128; i++)
     //     printf("ints: %d\n", ints[i]); 
@@ -200,32 +210,39 @@ extern "C" void app_main(void)
     //     printf("ints: %d\n", ints[i]); 
     
     
-
-    // auto pos = ints.begin();
-    // TEST_INSERT (
-    //     i,
-    //     pos, 
-    //     (ints.size() / 2),  
-    //     cycles, 
-        
-    //     "_vector_int insert"
-    // )
-
-    // ints.insert(pos + 114, 234234);
-
-    // for (size_t i{0}; i < 128; i++)
-    //     printf("ints: %d\n", ints[i]); 
-
-    auto pos = i_blank.begin();
+    /** Get the middle value, remove it to make room for insertion operations */
+    size_t middle = i_blank.size() / 2;
+    auto value = i_blank[middle]; 
+    i_blank.erase(i_blank.begin() + middle);
+    /************************************************************************ */ 
+    
+    TEST_INSERT (
+        i_blank,
+        middle, 
+        2222,  
+        cycles, 
+        100, 
+        "_vector_int insert"
+    )
+    
+    /** Put the removed value back before next test. */
+    i_blank.insert(i_blank.begin() + middle, value);
+    /************************************************************************ */ 
+    
     TEST_ERASE (
         i_blank, 
-        (pos + (i_blank.size()/2)),
+        middle,
         cycles, 
         100,
         "_vector_int erase()"
     );
 
 
+    TEST_CONSTRUCTOR (
+        _u_map_int_string x{},
+        cycles,
+        "_u_map_int_string empty constructor"
+    );
 
 }
 
