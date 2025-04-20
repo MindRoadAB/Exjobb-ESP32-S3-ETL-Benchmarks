@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string.h>
 #include <algorithm>
 
 #if USE_ETL
@@ -21,68 +22,82 @@ inline void _reverse(Iter first, Iter last)
     #endif
 }
 
-const char *c_str_tiny = "hi";
-const char *c_str_medium = "Hello World, it's a great day!";
-const char *c_str_large = "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!";
+extern const char *c_str_tiny;
+extern const char *c_str_medium; //"Hello World, it's a great day!";
+extern const char *c_str_large; // = "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!";
 
-const char *c_str_jumbo = "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!"
-                        "Hello World, it's a great day!";
-_string _str_tiny{c_str_tiny};
-_string _str_medium{c_str_medium};
-_string _str_large{c_str_large};
+extern const char *c_str_jumbo; 
+extern _string _str_tiny;
+extern _string _str_medium;
+extern _string _str_large;
+
+#if USE_ETL 
+    extern etl::string<6*MAX_STRLN> _str_jumbo;
+#else
+    extern _string _str_jumbo;
+#endif
+
+
+
+
+//= "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!"
+                        // "Hello World, it's a great day!";
+extern _string _str_tiny; //{c_str_tiny};
+extern _string _str_medium; //{c_str_medium};
+extern _string _str_large; //{c_str_large};
 #if USE_ETL
-    etl::string<6*MAX_STRLN> _str_jumbo{c_str_jumbo};
-    etl::string<6*MAX_STRLN> _str_jumbo2{c_str_jumbo};
+    extern etl::string<6*MAX_STRLN> _str_jumbo; //{c_str_jumbo};
+    extern etl::string<6*MAX_STRLN> _str_jumbo2; //{c_str_jumbo};
 #else 
-    _string _str_jumbo{c_str_jumbo};
-    _string _str_jumbo2{c_str_jumbo};
+    extern _string _str_jumbo; // {c_str_jumbo};
+    extern _string _str_jumbo2; //{c_str_jumbo};
 #endif
 
 
