@@ -41,4 +41,5 @@ extern _vector_int i_blank;
 extern _vector_dummy dummy;  
 extern _vector_int ints;  
 
+void vector_benchmark(uint32_t);
 

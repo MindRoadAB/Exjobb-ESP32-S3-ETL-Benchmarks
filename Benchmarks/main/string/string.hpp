@@ -39,56 +39,6 @@ extern _string _str_large;
     extern _string _str_jumbo;
 #endif
 
-
-
-
-//= "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!"
-                        // "Hello World, it's a great day!";
 extern _string _str_tiny; //{c_str_tiny};
 extern _string _str_medium; //{c_str_medium};
 extern _string _str_large; //{c_str_large};
@@ -100,4 +50,5 @@ extern _string _str_large; //{c_str_large};
     extern _string _str_jumbo2; //{c_str_jumbo};
 #endif
 
+void string_benchmark(uint32_t);
 

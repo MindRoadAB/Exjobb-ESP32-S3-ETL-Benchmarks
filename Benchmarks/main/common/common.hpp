@@ -6,9 +6,9 @@
 #include "esp_cpu.h"
 
 #define MEASUREMENTS 5000
-std::array<uint32_t, 128> times{};
-uint32_t sum{};
-int int_placeholder{};
+// std::array<uint32_t, 128> times{};
+// uint32_t sum{};
+// int int_placeholder{};
 
 // #if USE_ETL
 //     #include <etl/string.h>
@@ -20,7 +20,7 @@ int int_placeholder{};
 // For operations that do not mutate state
 
 
-#define CYCLE_MEASURE(op_expr, time, label)                                       \
+#define CYCLE_GET_COUNT(op_expr, time, label)                                       \
     do {                                                                        \
         op_expr;                                                       \
         uint32_t __start = esp_cpu_get_cycle_count();                             \
@@ -32,7 +32,7 @@ int int_placeholder{};
     } while (0)
 
 // For mutating operations where cleanup is needed after each iteration
-#define CYCLE_MEASURE_MUTATING_CORRECT(setup, op_expr, cleanup_expr, time, label) \
+#define CYCLE_GET_COUNT_MUTATE(setup, op_expr, cleanup_expr, time, label) \
     do {                                                                          \
         setup;                                                                    \
         time = 0;                                                                 \
@@ -47,7 +47,7 @@ int int_placeholder{};
     } while (0)
 
 // For ops that return a value, discard to avoid optimizing out
-#define CYCLE_MEASURE_RET(op_expr, time, label)                                   \
+#define CYCLE_GET_COUNT_RETURN(op_expr, time, label)                                   \
     do {                                                                          \
         uint32_t __start = esp_cpu_get_cycle_count();                             \
         for (int __i = 0; __i < MEASUREMENTS; ++__i) {                            \

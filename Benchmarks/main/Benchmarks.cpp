@@ -2,7 +2,12 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "string/string.hpp"
+#if USE_STRING
+    #include "string/string.hpp"
+#elif USE_VECTOR
+    #include "vector/vector.hpp"
+#endif
+
 #include "vector/vector.hpp"
 #include "map/map.hpp"
 #include "set/set.hpp"
@@ -18,128 +23,15 @@ extern "C" void app_main(void)
         printf("Using libstdc++...\n"); 
     #endif
 
-    // --------------------------
-    // STRING CONSTRUCTORS
-    // --------------------------
-    CYCLE_MEASURE(
-        _string s{c_str_tiny},
-        cycles,
-        "string: c_str_tiny"
-    );
+    #if USE_STRING
+        printf("Benchmarking string operations...\n"); 
+        string_benchmark(cycles);
+    #elif USE_VECTOR
+        printf("Benchmarking vector operations...\n"); 
+        vector_benchmark(cycles); 
+    #else
 
-    CYCLE_MEASURE(
-        _string s{c_str_medium},
-        cycles,
-        "string: c_str_medium"
-    );
-
-    CYCLE_MEASURE(
-        _string s{c_str_large},
-        cycles,
-        "string: c_str_large"
-    );
-
-    CYCLE_MEASURE(
-        _string s{c_str_jumbo},
-        cycles,
-        "string: c_str_jumbo"
-    );
-
-     CYCLE_MEASURE_RET(
-        _str_tiny[1],
-        cycles,
-        "string: _str_tiny[1]"
-    );
-
-    CYCLE_MEASURE_RET(
-        _str_medium[11],
-        cycles,
-        "string: _str_medium[11]"
-    );
-
-    CYCLE_MEASURE_RET(
-        _str_large[88],
-        cycles,
-        "string: _str_large[88]"
-    );
-
-    CYCLE_MEASURE_RET(
-        _str_jumbo[888],
-        cycles,
-        "string: _str_jumbo[888]"
-    );
-
-    // --------------------------
-    // REVERSE
-    // --------------------------
-    CYCLE_MEASURE(
-        _reverse(_str_tiny.begin(), _str_tiny.end()),
-        cycles,
-        "string: reverse _str_tiny"
-    );
-
-    CYCLE_MEASURE(
-        _reverse(_str_medium.begin(), _str_medium.end()),
-        cycles,
-        "string: reverse _str_medium"
-    );
-
-    CYCLE_MEASURE(
-        _reverse(_str_large.begin(), _str_large.end()),
-        cycles,
-        "string: reverse _str_large"
-    );
-
-    CYCLE_MEASURE(
-        _reverse(_str_jumbo.begin(), _str_jumbo.end()),
-        cycles,
-        "string: reverse _str_jumbo"
-    );
-
-    // Undo previous reverse operations
-    _reverse(_str_tiny.begin(), _str_tiny.end());
-    _reverse(_str_medium.begin(), _str_medium.end());
-    _reverse(_str_large.begin(), _str_large.end());
-    _reverse(_str_jumbo.begin(), _str_jumbo.end());
-
-    // --------------------------
-    // CLEAR & APPEND
-    // --------------------------
-    CYCLE_MEASURE(
-        _str_jumbo.clear(),
-        cycles,
-        "_str_jumbo.clear()"
-    );
-
-    CYCLE_MEASURE_MUTATING_CORRECT(
-        {},                         
-        _str_jumbo += "a",         
-        _str_jumbo.pop_back(),     
-        cycles,
-        "_str_jumbo += 'a'"
-    );
-    CYCLE_MEASURE_MUTATING_CORRECT(
-        {}, 
-        _str_jumbo.append(c_str_jumbo),
-        _str_jumbo.erase(_str_jumbo.size() - strlen(c_str_jumbo)),
-        cycles,
-        "string: append c_str_jumbo"
-    );
-
-    // --------------------------
-    // COMPARISON
-    // --------------------------
-    CYCLE_MEASURE_RET(
-        (_str_jumbo == _str_jumbo2),
-        cycles,
-        "compare: _str_jumbo == _str_jumbo2"
-    );
-
-    if (_str_jumbo == _str_jumbo2)
-        printf("equal\n");
-    else
-        printf("not equal\n");
-
+    #endif
 }
 
 // int32_t cycles{0};

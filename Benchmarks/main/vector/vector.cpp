@@ -1,5 +1,5 @@
-
 #include "vector.hpp"
+#include "../common/common.hpp"
 
 _vector_dummy dummy = {
     {"sdlkfj", 0},   {"sdlkjsdflkj", 1},   {"sdlfkjsdlkfj", 2},   {"sdlkfjsdflkjsdf", 3},
@@ -26,5 +26,86 @@ _vector_int ints = {
     120, 121, 122, 123, 124, 125, 126, 127
 };
 
+void
+vector_benchmark(uint32_t cycles)
+{
+    CYCLE_GET_COUNT (
+        _vector_int i{}, 
+        cycles, 
+        "vector: _vector_int i{}"
+    );
 
+    CYCLE_GET_COUNT (
+        _vector_int i{ints}, 
+        cycles, 
+        "vector: _vector_int i{ints} (128 members) "
+    );
+
+    CYCLE_GET_COUNT (
+        _vector_int i(ints.begin(), ints.end()),
+        cycles, 
+        "_vector_int i(ints.begin(), ints.end())"
+    );
+
+    CYCLE_GET_COUNT_MUTATE (
+        {},
+        i_blank.push_back(111),
+        i_blank.pop_back(),
+        cycles,
+        "_vector_int push_back(111)"
+    );
+
+    CYCLE_GET_COUNT_MUTATE (
+        auto k = i_blank.back(),
+        i_blank.pop_back(),
+        i_blank.push_back(k),
+        cycles,
+        "_vector_int pop_back()"
+    );
+
+    i_blank = ints;
+
+    size_t middle = i_blank.size() / 2; 
+    auto value = i_blank[middle]; 
+    i_blank.erase(i_blank.begin() + middle);
+
+    CYCLE_GET_COUNT_MUTATE (
+        {},
+        i_blank.insert(i_blank.begin() + middle, 2222),
+        i_blank.erase(i_blank.begin() + middle),
+        cycles,
+        "_vector_int insert(middle, 2222)" 
+    );
+    i_blank.insert(i_blank.begin() + middle, value);
+    
+    
+    value = i_blank.front();
+    i_blank.erase(i_blank.begin()); 
+    CYCLE_GET_COUNT_MUTATE (
+        {},
+        i_blank.insert(i_blank.begin(), 2222),
+        i_blank.erase(i_blank.begin()),
+        cycles,
+        "_vector_int insert(0, 2222)"
+    );
+    i_blank.insert(i_blank.begin(), value);
+
+    CYCLE_GET_COUNT_MUTATE (
+        auto k = i_blank[middle],
+        i_blank.erase(i_blank.begin() + middle),
+        i_blank.insert(i_blank.begin() + middle, k),
+        cycles,
+        "_vector_int erase(middle)"
+    );
+
+    CYCLE_GET_COUNT_MUTATE (
+        auto k = i_blank[0],
+        i_blank.erase(i_blank.begin()),
+        i_blank.insert(i_blank.begin(), k), 
+        cycles,
+        "_vector_int erase(0)"
+    ); 
+
+
+}
 
