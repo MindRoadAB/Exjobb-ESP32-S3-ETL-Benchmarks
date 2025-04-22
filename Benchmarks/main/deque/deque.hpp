@@ -23,4 +23,4 @@ extern _deque_string deq_s1;
 extern _deque_string deq_s2;
 extern _deque_string deq_sempty;
 
-
+void deque_benchmark(uint32_t);

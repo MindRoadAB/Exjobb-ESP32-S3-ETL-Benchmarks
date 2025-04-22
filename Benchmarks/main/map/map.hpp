@@ -29,7 +29,7 @@ extern _map umap_large;
     extern std::pair<int, _string> mapElem;
 #endif
 
-
+void map_benchmark(uint32_t);
 
 
 

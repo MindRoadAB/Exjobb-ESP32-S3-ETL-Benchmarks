@@ -24,7 +24,7 @@ if(DEFINED TYPE)
 endif()
 
 idf_component_register(
-    SRCS "${SOURCES}"
+    SRCS "Benchmarks.cpp" "${SOURCES}"
     INCLUDE_DIRS "${INC_DIRS}"
 )
 

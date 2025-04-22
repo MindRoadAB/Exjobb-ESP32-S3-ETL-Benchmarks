@@ -1,24 +1,8 @@
 #include <stdio.h>
-#include <numeric>
-#include <array>
 
-#include "esp_timer.h"
 #include "esp_cpu.h"
 
 #define MEASUREMENTS 5000
-// std::array<uint32_t, 128> times{};
-// uint32_t sum{};
-// int int_placeholder{};
-
-// #if USE_ETL
-//     #include <etl/string.h>
-//     etl::string<4> str_placeholder{};
-// #else
-//     #include <string>
-//     std::string str_placeholder{};
-// #endif
-// For operations that do not mutate state
-
 
 #define CYCLE_GET_COUNT(op_expr, time, label)                                       \
     do {                                                                        \
@@ -35,6 +19,8 @@
 #define CYCLE_GET_COUNT_MUTATE(setup, op_expr, cleanup_expr, time, label) \
     do {                                                                          \
         setup;                                                                    \
+        op_expr; \
+        cleanup_expr; \
         time = 0;                                                                 \
         for (int __i = 0; __i < MEASUREMENTS; ++__i) {                            \
             uint32_t __start = esp_cpu_get_cycle_count();                         \
@@ -49,6 +35,7 @@
 // For ops that return a value, discard to avoid optimizing out
 #define CYCLE_GET_COUNT_RETURN(op_expr, time, label)                                   \
     do {                                                                          \
+        (void)op_expr; \
         uint32_t __start = esp_cpu_get_cycle_count();                             \
         for (int __i = 0; __i < MEASUREMENTS; ++__i) {                            \
             (void)op_expr;                                                     \

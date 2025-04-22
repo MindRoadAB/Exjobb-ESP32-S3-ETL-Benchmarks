@@ -106,6 +106,5 @@ vector_benchmark(uint32_t cycles)
         "_vector_int erase(0)"
     ); 
 
-
 }
 

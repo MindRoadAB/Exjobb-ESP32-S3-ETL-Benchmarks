@@ -20,3 +20,5 @@ extern _set_int uset_iempty;
 extern _set_string uset_s1;
 extern _set_string uset_s2;
 extern _set_string uset_sempty;
+
+void set_benchmark(uint32_t);
