@@ -40,6 +40,16 @@ typedef struct
     SemaphoreHandle_t s_lock;    
 }sensor_t;
 
+inline void sensor_init(sensor_t *s, sensor_id_t id)
+{
+    s->id = id;
+    s->s_lock = xSemaphoreCreateMutex();
+    if (s->s_lock == NULL) {
+        ESP_LOGE("sensor_init", "Failed to create mutex");
+        abort();
+    }
+}
+
 inline std::string generate_fake_payload(const char* prefix, size_t len) {
     std::string s = prefix;
     s += ": ";

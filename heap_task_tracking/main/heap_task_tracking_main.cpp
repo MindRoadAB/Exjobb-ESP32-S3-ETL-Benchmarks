@@ -21,16 +21,6 @@ static sensor_t rfid_buffer;
 static sensor_t wind_sensor;
 static sensor_t moisture_sensor;
 
-static void sensor_init(sensor_t *s, sensor_id_t id)
-{
-    s->id = id;
-    s->s_lock = xSemaphoreCreateMutex();
-    if (s->s_lock == NULL) {
-        ESP_LOGE("sensor_init", "Failed to create mutex");
-        abort();
-    }
-}
-
 static void esp_dump_per_task_heap_info(void)
 {
     heap_task_info_params_t heap_info = {0};
