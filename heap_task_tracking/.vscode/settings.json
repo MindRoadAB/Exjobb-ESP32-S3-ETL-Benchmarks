@@ -1,0 +1,12 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPath": "/Users/warren/esp/esp-idf",
+    "idf.toolsPath": "/Users/warren/.espressif",
+    "idf.pythonInstallPath": "/opt/homebrew/bin/python3",
+    "files.associations": {
+        ".fantomasignore": "ignore",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp"
+    }
+}
