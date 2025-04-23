@@ -1,39 +1,17 @@
-#include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "esp_heap_task_info.h"
 #include "esp_log.h"
-#include "esp_random.h"
-#include <string>
-#include <deque>
-#include <vector>
+
+#include "sensor.hpp"
+
 
 #define MAX_TASK_NUM 20
 #define MAX_BLOCK_NUM 20
-#define MAX_BUFFER_SIZE 64
 #define MAX_DATA_LENGTH 128
 
-
-struct measurement_data_t {
-    uint32_t timestamp;
-    uint32_t sensor_id;
-    uint32_t data_size;
-    std::string data;
-};
-
-
-typedef std::deque<std::string> buffer_t;
 
 static size_t s_prepopulated_num = 0;
 static heap_task_totals_t s_totals_arr[MAX_TASK_NUM];
 static heap_task_block_t s_block_arr[MAX_BLOCK_NUM];
-
-
-
-struct sensor_t {
-    buffer_t buf;
-    SemaphoreHandle_t s_lock;    
-};
 
 static sensor_t temp_buffer;
 static sensor_t accel_buffer;
@@ -43,8 +21,9 @@ static sensor_t rfid_buffer;
 static sensor_t wind_sensor;
 static sensor_t moisture_sensor;
 
-static void sensor_init(sensor_t *s)
+static void sensor_init(sensor_t *s, sensor_id_t id)
 {
+    s->id = id;
     s->s_lock = xSemaphoreCreateMutex();
     if (s->s_lock == NULL) {
         ESP_LOGE("sensor_init", "Failed to create mutex");
@@ -79,138 +58,14 @@ static void esp_dump_per_task_heap_info(void)
    
 }
 
-// Utility to generate mock payloads
-static std::string generate_fake_payload(const char* prefix, size_t len = 100) {
-    std::string s = prefix;
-    s += ": ";
-    for (size_t i = 0; i < len; ++i) {
-        s += static_cast<char>((esp_random() % 26) + 65);  // A–Z
-    }
-    return s;
-}
 
-static void temp_sensor_task(void* arg)
-{
-    
-    while (true) {
-        std::string payload = generate_fake_payload("TEMP", 128);
-        if (xSemaphoreTake(temp_buffer.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to TEMP buffer\n"); //, payload.c_str());
-            temp_buffer.buf.push_back(payload);
-            xSemaphoreGive(temp_buffer.s_lock);
-        } 
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
-
-static void accel_sensor_task(void* arg)
-{
-
-    while (true) {
-        std::string payload = generate_fake_payload("ACCEL", 128);
-        if (xSemaphoreTake(accel_buffer.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to ACCEL buffer\n"); // , payload.c_str());
-        
-            //if (accel_buffer.buf.size() + payload.size() < MAX_BUFFER_SIZE) {
-                accel_buffer.buf.push_back(payload);
-           // }
-            xSemaphoreGive(accel_buffer.s_lock);
-        } 
-        vTaskDelay(pdMS_TO_TICKS(10000));
-    }
-}
-
-static void light_sensor_task(void* arg)
-{
-
-    while (true) {
-        std::string payload = generate_fake_payload("LIGHT", 128);
-        if (xSemaphoreTake(light_buffer.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to LIGHT buffer\n"); //, payload.c_str());
-        
-            //if (light_buffer.buf.size() + payload.size() < MAX_BUFFER_SIZE) {
-                light_buffer.buf.push_back(payload);
-           // }
-            xSemaphoreGive(light_buffer.s_lock);
-        } 
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
-
-static void gps_sensor_task(void* arg)
-{
-    
-    while (true) {
-        std::string payload = generate_fake_payload("GPS", 128);
-        if (xSemaphoreTake(gps_buffer.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to GPS buffer\n"); //, payload.c_str());
-        
-            //if (gps_buffer.buf.size() + payload.size() < MAX_BUFFER_SIZE) {
-                gps_buffer.buf.push_back(payload);
-            //}
-            xSemaphoreGive(gps_buffer.s_lock);
-        } 
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    } 
-}
-
-static void rfid_sensor_task(void* arg)
-{
-
-    while (true) {
-        std::string payload = generate_fake_payload("RFID", 128);
-        if (xSemaphoreTake(rfid_buffer.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to RFID buffer\n"); // %s\n", payload.c_str());
-        
-            //if (rfid_buffer.buf.size() + payload.size() < MAX_BUFFER_SIZE) {
-                rfid_buffer.buf.push_back(payload);
-            //}
-            xSemaphoreGive(rfid_buffer.s_lock);
-        } 
-        uint32_t delay = (esp_random() % 3000) + 1000; // 1s to 4s
-        vTaskDelay(pdMS_TO_TICKS(delay));
-    }
-}
-
-static void wind_sensor_task(void* arg)
-{
-
-    while (true) {
-        std::string payload = generate_fake_payload("WIND", 128);
-        if (xSemaphoreTake(wind_sensor.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to WIND buffer\n"); // %s\n", payload.c_str());
-        
-            //if (wind_sensor.buf.size() + payload.size() < MAX_BUFFER_SIZE) {
-                wind_sensor.buf.push_back(payload);
-            //}
-            xSemaphoreGive(wind_sensor.s_lock);
-        } 
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
-static void moisture_sensor_task(void* arg)
-{
-
-    while (true) {
-        std::string payload = generate_fake_payload("MOISTURE", 128);
-        if (xSemaphoreTake(moisture_sensor.s_lock, portMAX_DELAY) == pdTRUE)
-        {
-            printf("Pushing to MOISTURE buffer\n"); // %s\n", payload.c_str());
-        
-            //if (moisture_sensor.buf.size() + payload.size() < MAX_BUFFER_SIZE) {
-                moisture_sensor.buf.push_back(payload);
-            //}
-            xSemaphoreGive(moisture_sensor.s_lock);
-        } 
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
+static void temp_sensor_task(void* arg)     { run_sensor_task(temp_buffer, "TEMP", 1000); } 
+static void accel_sensor_task(void* arg)    { run_sensor_task(accel_buffer, "ACCEL", 10000); }
+static void light_sensor_task(void* arg)    { run_sensor_task(light_buffer, "LIGHT", 1000); }
+static void gps_sensor_task(void* arg)      { run_sensor_task(gps_buffer, "GPS", 1000); }
+static void rfid_sensor_task(void* arg)     { run_sensor_task(rfid_buffer, "RFID", 1000); }
+static void wind_sensor_task(void* arg)     { run_sensor_task(wind_sensor, "WIND", 1000); }
+static void moisture_sensor_task(void* arg) { run_sensor_task(moisture_sensor, "MOISTURE", 1000); }
 
 static void transmit_task(void* arg)
 {
@@ -222,8 +77,7 @@ static void transmit_task(void* arg)
             {   
                 printf("\nFlushing %s buffer (%u items):\n", label, s_buf.buf.size());
                 for (const auto& s : s_buf.buf) {
-                    // Simulate sending the data
-                    printf("%s\n", s.c_str());  // simulate send
+                    printf("%s\n", s.data.c_str());  
                 }
                 s_buf.buf.clear();
                 printf("\n");
@@ -271,13 +125,14 @@ extern "C" void app_main(void)
 {
     static const char *TAG = "app_main";
     vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
-    sensor_init(&temp_buffer);
-    sensor_init(&accel_buffer);
-    sensor_init(&light_buffer);
-    sensor_init(&gps_buffer);
-    sensor_init(&rfid_buffer);
-    sensor_init(&wind_sensor);
-    sensor_init(&moisture_sensor);
+    
+    sensor_init(&temp_buffer, TEMP_SENSOR);
+    sensor_init(&accel_buffer, ACCEL_SENSOR);
+    sensor_init(&light_buffer, LIGHT_SENSOR);
+    sensor_init(&gps_buffer, GPS_SENSOR);
+    sensor_init(&rfid_buffer, RFID_SENSOR);
+    sensor_init(&wind_sensor, WIND_SENSOR);
+    sensor_init(&moisture_sensor, MOISTURE_SENSOR);
 
     xTaskCreatePinnedToCore(temp_sensor_task, "temp_sensor", 4096, NULL, 6, NULL, 0);
     xTaskCreatePinnedToCore(accel_sensor_task, "accel_sensor", 4096, NULL, 5, NULL, 0);
