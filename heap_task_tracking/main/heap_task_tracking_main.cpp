@@ -138,6 +138,13 @@ static void task_heap_check(void *arg)
 
 extern "C" void app_main(void)
 {
+
+    #if USE_ETL
+        printf("USING ETL\n");
+    #else
+        printf("USING libstdc++\n");
+    #endif
+    
     static const char *TAG = "app_main";
     vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
     

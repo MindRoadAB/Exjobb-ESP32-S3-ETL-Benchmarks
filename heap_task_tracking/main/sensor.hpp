@@ -7,6 +7,10 @@
 #include <deque>
 #include <vector>
 
+#if USE_ETL
+    #include <etl/deque.h>
+#endif
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_random.h"
@@ -44,6 +48,9 @@ typedef struct
     SemaphoreHandle_t s_lock;    
 }sensor_t;
 
+#if USE_ETL
+    etl::deque<measurement_data_t, MAX_BUFFER_ENTRIES> overflow_buffer_x;
+#endif
 
 
 inline void sensor_init(sensor_t *s, sensor_id_t id)
