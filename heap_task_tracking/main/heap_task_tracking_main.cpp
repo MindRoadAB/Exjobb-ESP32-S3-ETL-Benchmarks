@@ -49,12 +49,12 @@ static void esp_dump_per_task_heap_info(void)
 }
 
 
-static void temp_sensor_task(void* arg)     { run_sensor_task(temp_buffer, "TEMP", 1000); } 
+static void temp_sensor_task(void* arg)     { run_sensor_task(temp_buffer, "TEMP", 500); } 
 static void accel_sensor_task(void* arg)    { run_sensor_task(accel_buffer, "ACCEL", 10000); }
 static void light_sensor_task(void* arg)    { run_sensor_task(light_buffer, "LIGHT", 1000); }
 static void gps_sensor_task(void* arg)      { run_sensor_task(gps_buffer, "GPS", 1000); }
 static void rfid_sensor_task(void* arg)     { run_sensor_task(rfid_buffer, "RFID", 1000); }
-static void wind_sensor_task(void* arg)     { run_sensor_task(wind_sensor, "WIND", 1000); }
+static void wind_sensor_task(void* arg)     { run_sensor_task(wind_sensor, "WIND", 500); }
 static void moisture_sensor_task(void* arg) { run_sensor_task(moisture_sensor, "MOISTURE", 1000); }
 
 static void transmit_task(void* arg)
@@ -65,13 +65,14 @@ static void transmit_task(void* arg)
         auto flush_buffer = [](const char* label, sensor_t& s_buf) {
             if (xSemaphoreTake(s_buf.s_lock, portMAX_DELAY) == pdTRUE)
             {   
-                printf("\nFlushing %s buffer (%u items):\n", label, s_buf.buf.size());
                 for (const auto& s : s_buf.buf) {
                     printf("%s\n", s.data.c_str());  
                 }
                 s_buf.buf.clear();
-                printf("\n");
+                printf("\n");  
             }
+            s_buf.buf.shrink_to_fit();
+            
             xSemaphoreGive(s_buf.s_lock);
         };
 
@@ -80,11 +81,35 @@ static void transmit_task(void* arg)
         flush_buffer("LIGHT", light_buffer);
         flush_buffer("GPS", gps_buffer);
         flush_buffer("RFID", rfid_buffer);
+        flush_buffer("WIND", wind_sensor);
+        flush_buffer("MOISTURE", moisture_sensor);
+
 
         esp_dump_per_task_heap_info();
         vTaskDelay(pdMS_TO_TICKS(60000)); 
     }
 }
+
+static void task_overflow_flush(void *arg)
+{
+    while (1)
+    {
+        if (xSemaphoreTake(overflow_lock, portMAX_DELAY))
+        {
+            printf("overflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
+            for (const auto& k: overflow) 
+            {
+                printf("Overflow: %s\n", k.data.c_str());
+                overflow.clear();
+            }
+            overflow.shrink_to_fit();
+            printf("overflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
+            xSemaphoreGive(overflow_lock);
+        }
+        vTaskDelay(pdMS_TO_TICKS(120000));
+    }
+}
+
 
 static void task_heap_check(void *arg)
 {
@@ -116,6 +141,12 @@ extern "C" void app_main(void)
     static const char *TAG = "app_main";
     vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
     
+    overflow_lock = xSemaphoreCreateMutex();
+    if (overflow_lock == NULL) {
+        ESP_LOGE(TAG, "Failed to create mutex");
+        abort();
+    }
+
     sensor_init(&temp_buffer, TEMP_SENSOR);
     sensor_init(&accel_buffer, ACCEL_SENSOR);
     sensor_init(&light_buffer, LIGHT_SENSOR);
@@ -124,7 +155,7 @@ extern "C" void app_main(void)
     sensor_init(&wind_sensor, WIND_SENSOR);
     sensor_init(&moisture_sensor, MOISTURE_SENSOR);
 
-    xTaskCreatePinnedToCore(temp_sensor_task, "temp_sensor", 4096, NULL, 6, NULL, 0);
+    xTaskCreatePinnedToCore(temp_sensor_task, "temp_sensor", 4096, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(accel_sensor_task, "accel_sensor", 4096, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(light_sensor_task, "light_sensor", 4096, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(gps_sensor_task, "gps_sensor", 4096, NULL, 5, NULL, 0);
@@ -134,6 +165,7 @@ extern "C" void app_main(void)
     
     xTaskCreatePinnedToCore(transmit_task, "transmit_task", 8192, NULL, 5, NULL, 1);
     xTaskCreatePinnedToCore(task_heap_check, "task_heap_check", 4096, NULL, 5, NULL, 1);
+    xTaskCreatePinnedToCore(task_overflow_flush, "task_overflow_flush", 4096, NULL, 5, NULL, 1);
 }
 
 

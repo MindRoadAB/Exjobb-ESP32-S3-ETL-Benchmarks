@@ -5,12 +5,13 @@
 
 #include <string>
 #include <deque>
+#include <vector>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_random.h"
 
-#define MAX_BUFFER_ENTRIES 64
+#define MAX_BUFFER_ENTRIES 64 
 
 typedef enum 
 {
@@ -33,12 +34,17 @@ typedef struct
 
 typedef std::deque<measurement_data_t> buffer_t;
 
+std::vector<measurement_data_t> overflow;
+SemaphoreHandle_t overflow_lock;
+
 typedef struct 
 {
     sensor_id_t id;
     buffer_t buf;
     SemaphoreHandle_t s_lock;    
 }sensor_t;
+
+
 
 inline void sensor_init(sensor_t *s, sensor_id_t id)
 {
@@ -61,6 +67,8 @@ inline std::string generate_fake_payload(const char* prefix, size_t len) {
 
 inline void run_sensor_task(sensor_t& s, const char* label, unsigned delay_ms) 
 {
+    measurement_data_t data[16];
+    
     while (true) 
     {
         measurement_data_t data;
@@ -69,15 +77,28 @@ inline void run_sensor_task(sensor_t& s, const char* label, unsigned delay_ms)
         data.data_size = data.data.size();
         data.sensor_id = static_cast<sensor_id_t>(s.id); 
 
+        measurement_data_t data_copy; 
         if (xSemaphoreTake(s.s_lock, portMAX_DELAY)) 
         {
-            if (s.buf.size() >= MAX_BUFFER_ENTRIES) 
-                s.buf.pop_front();
-
-            s.buf.push_back(std::move(data));
-            printf("Pushing to %s buffer\n", label);
+            if (s.buf.size() < MAX_BUFFER_ENTRIES)
+            {
+                s.buf.push_back(std::move(data));
+                printf("Pushing to %s buffer\n", label);
+            }
+            else
+            {
+                data_copy = std::move(data); 
+            }
             xSemaphoreGive(s.s_lock);
         }
+        if (data_copy.data_size > 0 && xSemaphoreTake(overflow_lock, portMAX_DELAY)) 
+        {
+            overflow.push_back(std::move(data_copy)); 
+            ESP_LOGI(label, "Overflow\n");
+            xSemaphoreGive(overflow_lock);
+        }
+
+
 
         vTaskDelay(pdMS_TO_TICKS(delay_ms));
     }
