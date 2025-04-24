@@ -49,12 +49,12 @@ static void esp_dump_per_task_heap_info(void)
 }
 
 
-static void temp_sensor_task(void* arg)     { run_sensor_task(temp_buffer, "TEMP", 500); } 
+static void temp_sensor_task(void* arg)     { run_sensor_task(temp_buffer, "TEMP", 1000); } 
 static void accel_sensor_task(void* arg)    { run_sensor_task(accel_buffer, "ACCEL", 10000); }
 static void light_sensor_task(void* arg)    { run_sensor_task(light_buffer, "LIGHT", 1000); }
 static void gps_sensor_task(void* arg)      { run_sensor_task(gps_buffer, "GPS", 1000); }
 static void rfid_sensor_task(void* arg)     { run_sensor_task(rfid_buffer, "RFID", 1000); }
-static void wind_sensor_task(void* arg)     { run_sensor_task(wind_sensor, "WIND", 500); }
+static void wind_sensor_task(void* arg)     { run_sensor_task(wind_sensor, "WIND", 1000); }
 static void moisture_sensor_task(void* arg) { run_sensor_task(moisture_sensor, "MOISTURE", 1000); }
 
 static void transmit_task(void* arg)
@@ -71,8 +71,8 @@ static void transmit_task(void* arg)
                 s_buf.buf.clear();
                 printf("\n");  
             }
-            s_buf.buf.shrink_to_fit();
-            
+            s_buf.buf = buffer_t();
+            printf("Buffer %s size: %u\n", label, s_buf.buf.size()); 
             xSemaphoreGive(s_buf.s_lock);
         };
 
@@ -102,11 +102,12 @@ static void task_overflow_flush(void *arg)
                 printf("Overflow: %s\n", k.data.c_str());
                 overflow.clear();
             }
-            overflow.shrink_to_fit();
+            //overflow.shrink_to_fit();
+            overflow = std::vector<measurement_data_t>(); /** Force the reallocation */ 
             printf("overflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
             xSemaphoreGive(overflow_lock);
         }
-        vTaskDelay(pdMS_TO_TICKS(120000));
+        vTaskDelay(pdMS_TO_TICKS(60000));
     }
 }
 

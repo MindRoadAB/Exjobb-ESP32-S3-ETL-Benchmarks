@@ -6,6 +6,8 @@
 #include <string>
 #include <deque>
 #include <vector>
+#include <memory>
+
 
 #if USE_ETL
     #include <etl/deque.h>
@@ -74,7 +76,6 @@ inline std::string generate_fake_payload(const char* prefix, size_t len) {
 
 inline void run_sensor_task(sensor_t& s, const char* label, unsigned delay_ms) 
 {
-    measurement_data_t data[16];
     
     while (true) 
     {
@@ -102,6 +103,7 @@ inline void run_sensor_task(sensor_t& s, const char* label, unsigned delay_ms)
         {
             overflow.push_back(std::move(data_copy)); 
             ESP_LOGI(label, "Overflow\n");
+            printf("\nOverflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
             xSemaphoreGive(overflow_lock);
         }
 
