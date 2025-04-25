@@ -66,7 +66,7 @@ static void transmit_task(void* arg)
             if (xSemaphoreTake(s_buf.s_lock, portMAX_DELAY) == pdTRUE)
             {   
                 for (const auto& s : s_buf.buf) {
-                    printf("%s\n", s.data.c_str());  
+                    printf("%s\n", s.payload.c_str());  
                 }
                 s_buf.buf.clear();
                 printf("\n");  
@@ -96,15 +96,20 @@ static void task_overflow_flush(void *arg)
     {
         if (xSemaphoreTake(overflow_lock, portMAX_DELAY))
         {
-            printf("overflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
+            //printf("overflow size: %zu\n", overflow.size());
             for (const auto& k: overflow) 
             {
-                printf("Overflow: %s\n", k.data.c_str());
+                printf("Overflow: %s\n", k.payload.c_str());
                 overflow.clear();
             }
             //overflow.shrink_to_fit();
-            overflow = std::vector<measurement_data_t>(); /** Force the reallocation */ 
-            printf("overflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
+            overflow = 
+            #if USE_ETL
+                buffer_t(MAX_BUFFER_ENTRIES); //std::vector<measurement_data_t>(); /** Force the reallocation */ 
+            #else
+                buffer_t();
+            #endif 
+            //printf("overflow size: %zu\n", overflow.size());
             xSemaphoreGive(overflow_lock);
         }
         vTaskDelay(pdMS_TO_TICKS(60000));
@@ -142,13 +147,15 @@ extern "C" void app_main(void)
 
     #if USE_ETL
         printf("USING ETL\n");
+        overflow = buffer_t(MAX_BUFFER_ENTRIES);  
     #else
         printf("USING libstdc++\n");
+        overflow = buffer_t();
     #endif
     
     static const char *TAG = "app_main";
     vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
-    
+
     overflow_lock = xSemaphoreCreateMutex();
     if (overflow_lock == NULL) {
         ESP_LOGE(TAG, "Failed to create mutex");
@@ -163,7 +170,7 @@ extern "C" void app_main(void)
     sensor_init(&wind_sensor, WIND_SENSOR);
     sensor_init(&moisture_sensor, MOISTURE_SENSOR);
 
-    xTaskCreatePinnedToCore(temp_sensor_task, "temp_sensor", 4096, NULL, 5, NULL, 0);
+    xTaskCreatePinnedToCore(temp_sensor_task, "temp_sensor", 12288, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(accel_sensor_task, "accel_sensor", 4096, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(light_sensor_task, "light_sensor", 4096, NULL, 5, NULL, 0);
     xTaskCreatePinnedToCore(gps_sensor_task, "gps_sensor", 4096, NULL, 5, NULL, 0);

@@ -3,21 +3,24 @@
 #include <stdio.h>
 #include <ctime>
 
-#include <string>
-#include <deque>
-#include <vector>
-#include <memory>
 
+#define MAX_BUFFER_ENTRIES 64 
+#define MAX_PAYLOAD_LENGTH 128
 
 #if USE_ETL
     #include <etl/deque.h>
+    #include <etl/string.h> 
+    typedef etl::string<MAX_PAYLOAD_LENGTH> string_t;
+#else
+    #include <string>
+    #include <deque>
+    typedef std::string string_t;
 #endif
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_random.h"
 
-#define MAX_BUFFER_ENTRIES 64 
 
 typedef enum 
 {
@@ -33,15 +36,20 @@ typedef enum
 typedef struct 
 {
     sensor_id_t sensor_id;
-    uint8_t data_size;
-    time_t timestamp; 
-    std::string data;
+    time_t timestamp;
+    string_t payload;
 }measurement_data_t;
 
-typedef std::deque<measurement_data_t> buffer_t;
+#if USE_ETL
+    typedef etl::deque<measurement_data_t, MAX_BUFFER_ENTRIES> buffer_t;
+#else
+    typedef std::deque<measurement_data_t> buffer_t;
+#endif
 
-std::vector<measurement_data_t> overflow;
+
+buffer_t overflow;
 SemaphoreHandle_t overflow_lock;
+
 
 typedef struct 
 {
@@ -50,9 +58,6 @@ typedef struct
     SemaphoreHandle_t s_lock;    
 }sensor_t;
 
-#if USE_ETL
-    etl::deque<measurement_data_t, MAX_BUFFER_ENTRIES> overflow_buffer_x;
-#endif
 
 
 inline void sensor_init(sensor_t *s, sensor_id_t id)
@@ -65,8 +70,8 @@ inline void sensor_init(sensor_t *s, sensor_id_t id)
     }
 }
 
-inline std::string generate_fake_payload(const char* prefix, size_t len) {
-    std::string s = prefix;
+inline string_t generate_fake_payload(const char* prefix, size_t len) {
+    string_t s = prefix; 
     s += ": ";
     for (size_t i = 0; i < (esp_random() % len + 1); ++i) {
         s += static_cast<char>((esp_random() % 26) + 65);  // A–Z
@@ -79,10 +84,9 @@ inline void run_sensor_task(sensor_t& s, const char* label, unsigned delay_ms)
     
     while (true) 
     {
-        measurement_data_t data;
+        measurement_data_t data{};
         data.timestamp = time(nullptr); 
-        data.data = generate_fake_payload(label, 128);
-        data.data_size = data.data.size();
+        data.payload = generate_fake_payload(label, MAX_PAYLOAD_LENGTH - 1);
         data.sensor_id = static_cast<sensor_id_t>(s.id); 
 
         measurement_data_t data_copy; 
@@ -90,25 +94,42 @@ inline void run_sensor_task(sensor_t& s, const char* label, unsigned delay_ms)
         {
             if (s.buf.size() < MAX_BUFFER_ENTRIES)
             {
+                //printf("WATERMARK: %d\n", uxTaskGetStackHighWaterMark(NULL));
+
                 s.buf.push_back(std::move(data));
-                printf("Pushing to %s buffer\n", label);
+                //printf("Pushing to %s buffer\n", label);
             }
             else
             {
+                ESP_LOGI(label, "Buffer full, pushing to overflow\n");
                 data_copy = std::move(data); 
             }
+            //ESP_LOGI(label, "about to give the lock\n");
             xSemaphoreGive(s.s_lock);
+            ESP_LOGI(label, "lock given\n"); 
         }
-        if (data_copy.data_size > 0 && xSemaphoreTake(overflow_lock, portMAX_DELAY)) 
+        if (data_copy.payload.length() > 0 && xSemaphoreTake(overflow_lock, portMAX_DELAY)) 
         {
+            ESP_LOGI(label, "Overflow lock taken\n");
+            #if USE_ETL
+                if (overflow.size() >= MAX_BUFFER_ENTRIES)
+                {
+                    buffer_t newBuffer = buffer_t(MAX_BUFFER_ENTRIES * 2);
+                    for (auto& k : overflow)
+                        newBuffer.push_back(std::move(k)); 
+                    overflow = std::move(newBuffer); //buffer_t(MAX_BUFFER_ENTRIES * 2); 
+                    ESP_LOGI(label, "Overflow buffer resized\n");
+                    ESP_LOGI(label, "New size: %u\n", overflow.size());
+                }
+            #endif 
             overflow.push_back(std::move(data_copy)); 
             ESP_LOGI(label, "Overflow\n");
-            printf("\nOverflow size, capacity: %u, %u\n", overflow.size(), overflow.capacity());
+            printf("\nOverflow size: %u\n", overflow.size());
             xSemaphoreGive(overflow_lock);
         }
 
 
-
         vTaskDelay(pdMS_TO_TICKS(delay_ms));
+        ESP_LOGI(label, "Delay done\n");
     }
 }
