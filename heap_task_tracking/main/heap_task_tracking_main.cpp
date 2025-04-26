@@ -9,7 +9,7 @@
 #define MAX_DATA_LENGTH 128
 
 #if USE_STATIC
-    #define TASK_SIZE 4096 
+    #define TASK_SIZE 8192 
     StaticTask_t task_sensor_temp;
     StaticTask_t task_sensor_accel;
     StaticTask_t task_sensor_light;
@@ -206,7 +206,7 @@ extern "C" void app_main(void)
         xTaskCreateStaticPinnedToCore(rfid_sensor_task, "rfid_sensor", TASK_SIZE, NULL, 5, task_rfid_stack, &task_sensor_rfid, 0);
         xTaskCreateStaticPinnedToCore(sensor_wind_task, "sensor_wind", TASK_SIZE, NULL, 5, task_wind_stack, &task_wind_buffer, 0);
         xTaskCreateStaticPinnedToCore(sensor_moisture_task, "sensor_moisture", TASK_SIZE, NULL, 5, task_moisture_stack, &task_moisture_buffer, 0);
-        xTaskCreateStaticPinnedToCore(transmit_task, "transmit_task", 2*TASK_SIZE, NULL, 5, task_transmit_stack, &task_transmit_buffer, 1);
+        xTaskCreateStaticPinnedToCore(transmit_task, "transmit_task", TASK_SIZE, NULL, 5, task_transmit_stack, &task_transmit_buffer, 1);
     #else
         xTaskCreatePinnedToCore(temp_sensor_task, "temp_sensor", 4096, NULL, 5, NULL, 0);
         xTaskCreatePinnedToCore(accel_sensor_task, "accel_sensor", 4096, NULL, 5, NULL, 0);
