@@ -56,7 +56,12 @@ typedef struct
     SemaphoreHandle_t s_lock;    
 }sensor_t;
 
-
+typedef struct
+{
+    sensor_t *sensor;
+    const char *label;
+    unsigned delay_ms;
+}sensor_context_t;
 
 inline void sensor_init(sensor_t *s, sensor_id_t id)
 {
@@ -77,7 +82,7 @@ inline string_t generate_fake_payload(const char* prefix, size_t len) {
     return s;
 }
 
-inline void run_sensor_task(sensor_t& s, measurement_data_t& data, const char* label, unsigned delay_ms) 
+inline void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *label, unsigned delay_ms) 
 {
     
     while (true) 
@@ -122,3 +127,4 @@ inline void run_sensor_task(sensor_t& s, measurement_data_t& data, const char* l
         vTaskDelay(pdMS_TO_TICKS(delay_ms));
     }
 }
+
