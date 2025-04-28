@@ -23,12 +23,12 @@
 typedef enum 
 {
     S_TEMP = 0,
-    S_ACCEL,
+    S_PRECIP,
     S_LIGHT,
-    S_GPS,
-    S_RFID,
+    S_AIR_Q,
+    S_BAROM_P,
     S_WIND,
-    S_MOISTURE, 
+    S_HUMIDITY, 
 }sensor_id_t;
 
 typedef struct 
@@ -60,7 +60,7 @@ typedef struct
 {
     sensor_t *sensor;
     const char *label;
-    unsigned delay_ms;
+    // unsigned delay_ms;
 }sensor_context_t;
 
 inline void sensor_init(sensor_t *s, sensor_id_t id)
