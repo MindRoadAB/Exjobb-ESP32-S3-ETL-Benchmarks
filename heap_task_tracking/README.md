@@ -37,3 +37,7 @@ Task: main -> CAP_8BIT: 3480 CAP_32BIT: 0
 Task: ipc1 -> CAP_8BIT: 12 CAP_32BIT: 0
 Task: example_task -> CAP_8BIT: 696 CAP_32BIT: 0
 ```
+
+
+## TODO:
+Set task stack sizes for xTaskCreateStaticPinnedToCore to adjust dynamically (based on ETL or not) at compile time to have more efficient usage.
