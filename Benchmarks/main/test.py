@@ -8,7 +8,7 @@ PROJECT_DIR = os.path.expanduser('~/Development/Exjobb-ESP32-S3-ETL-Benchmarks/B
 
 SERIAL_PORT = '/dev/ttyUSB0'  # or COMx on Windows
 BAUD_RATE = 115200
-READ_TIME = 30  # seconds
+READ_TIME = 20  # seconds
 OUTPUT_JSON = 'benchmark_results.json'
 
 etl_options = [0, 1]
@@ -39,7 +39,8 @@ def read_serial_output():
     return lines
 
 def parse_output(lines):
-    pattern = re.compile(r'\[BENCH\]\s+(\w+):\s+(\d+)\s+cycles')
+    pattern = re.compile(r'\[BENCH\]\s+(\w+):\s+(\d+)\s+cycles') # Change printtf's in tests to use ESP_LOGI(TAG, RESULT) t
+    # to make parsing easier...
     results = {}
     for line in lines:
         match = pattern.search(line)
