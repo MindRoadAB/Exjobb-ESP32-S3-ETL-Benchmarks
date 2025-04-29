@@ -58,6 +58,8 @@ _string _str_tiny{c_str_tiny};
 _string _str_medium{c_str_medium};
 _string _str_large{c_str_large};
 
+const _string_view _str_vu{c_str_large};
+
 #if USE_ETL
     etl::string<6*MAX_STRLN> _str_jumbo{c_str_jumbo};
     etl::string<6*MAX_STRLN> _str_jumbo2; 
@@ -69,6 +71,39 @@ _string _str_large{c_str_large};
 void
 string_benchmark(uint32_t cycles) 
 {
+
+    CYCLE_GET_COUNT(
+        _string(),
+        cycles,
+        "string: string s()"
+    );
+
+    CYCLE_GET_COUNT(
+        _string s(c_str_large),
+        cycles,
+        "string: string s(c_str_large)"
+    );
+
+    size_t c_str_large_len = strnlen(c_str_large, MAX_STRLN); 
+
+    CYCLE_GET_COUNT(
+        _string s(c_str_large, c_str_large_len),
+        cycles,
+        "string: string s(c_str_large, size)"
+    );
+
+    CYCLE_GET_COUNT(
+        _string s(MAX_STRLN, 'a'),
+        cycles,
+        "string: string s(MAX_STRLN, 'a')"
+    );
+
+    CYCLE_GET_COUNT(
+        _string s(_str_vu),
+        cycles,
+        "string: string s(string_view v)"
+    );
+
     CYCLE_GET_COUNT(
         _string s{c_str_tiny},
         cycles,
@@ -116,6 +151,105 @@ string_benchmark(uint32_t cycles)
         cycles,
         "string: _str_jumbo[888]"
     );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.at(88),
+        cycles,
+        "string: _str_large.at(88)"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.front(),
+        cycles,
+        "string: _str_large.front()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.back(),
+        cycles,
+        "string: _str_large.back()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.begin(),
+        cycles,
+        "string: _str_large.begin()"
+    ); 
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.end(),
+        cycles,
+        "string: _str_large.end()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.rbegin(),
+        cycles,
+        "string: _str_large.rbegin()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.rend(),
+        cycles,
+        "string: _str_large.rend()"
+    );
+
+    
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.data(),
+        cycles,
+        "string: _str_large.data()"
+    );
+
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.empty(),
+        cycles,
+        "string: _str_large.empty()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.max_size(),
+        cycles,
+        "string: _str_large.max_size()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.capacity(),
+        cycles,
+        "string: _str_large.capacity()"
+    );
+
+
+    CYCLE_GET_COUNT_RETURN(
+        _str_large.size(),
+        cycles,
+        "string: _str_large.size()"
+    );
+
+    CYCLE_GET_COUNT(
+        _str_tiny.resize(MAX_STRLN),
+        cycles,
+        "string: _str_tiny.resize(MAX_STRLN)"
+    );
+
+    _str_tiny.resize(2); /** undo resize above */
+
+
+    CYCLE_GET_COUNT(
+         _str_tiny.resize_and_overwrite(10, [](char* data, size_t capacity) -> size_t {
+            const char* new_text = "world";
+            std::memcpy(data, new_text, 5);
+            return 5; }),
+        cycles,
+        "string: _str_tiny.resize_and_overwrite(size, operation)"
+
+    );
+
+    _str_tiny = "hi"; /** undo resize and overwrite */
+
+
+
 
     CYCLE_GET_COUNT(
         _reverse(_str_tiny.begin(), _str_tiny.end()),
@@ -174,6 +308,32 @@ string_benchmark(uint32_t cycles)
         cycles,
         "compare: _str_jumbo == _str_jumbo2"
     );
+
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        _str_medium.push_back('a'),
+        _str_medium.pop_back(),
+        cycles,
+        "string: _str_medium.push_back('a')"
+    );
+
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        _str_medium.push_back('a'),
+        _str_medium.pop_back(),
+        cycles,
+        "string: _str_medium.push_back('a')" 
+    );
+
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        _str_medium.insert(3, "Hello"),
+        _str_medium.erase(3, 5),
+        cycles,
+        "string: _str_medium.insert(3, 'Hello')"
+    );
+
+    
 
 }
 

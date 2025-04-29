@@ -9,16 +9,17 @@
 #define MAX_DATA_LENGTH 128
 
 #define LARGE_TASK_SIZE 8192 
-#define SENSOR_TASK_SIZE 2560
-#define BASE_TASK_SIZE 2048 
+#define SENSOR_TASK_STACK_SIZE 2560
+#define BASE_TASK_STACK_SIZE 2048 
 
-#define DELAY_MS_SENSOR_BASE 10000
-#define DELAY_MS_SENSOR_FAST 200
+#define DELAY_MS_SENSOR_BASE 1000
+#define DELAY_MS_SENSOR_FAST 500
 
-#define DELAY_MS_TRANSMIT_BASE 20000
+#define DELAY_MS_TRANSMIT_BASE 60000
 #define DELAY_MS_HEAP_CHECK 2000
 #define DELAY_MS_OVERFLOW_FLUSH 60000
-
+#define DELAY_MS_WEATHER_EVENT_ON 20000
+#define DELAY_MS_WEATHER_EVENT_OFF 60000 
 
 /** Task tags */
 #define TAG_TEMP "TEMP"
@@ -46,17 +47,17 @@
     static StaticTask_t tcb_overflow_flush;
     static StaticTask_t tcb_weather_event;
         
-    static StackType_t stack_sensor_task_temp[SENSOR_TASK_SIZE];
-    static StackType_t stack_sensor_task_precip[SENSOR_TASK_SIZE];
-    static StackType_t stack_sensor_task_light[SENSOR_TASK_SIZE];
-    static StackType_t stack_sensor_task_airq[SENSOR_TASK_SIZE];
-    static StackType_t stack_sensor_task_baromp[SENSOR_TASK_SIZE];
-    static StackType_t stack_sensor_task_wind[SENSOR_TASK_SIZE];
-    static StackType_t stack_sensor_task_humidity[SENSOR_TASK_SIZE];
-    static StackType_t stack_task_transmit[SENSOR_TASK_SIZE + 512];
-    static StackType_t stack_task_heap_check[SENSOR_TASK_SIZE];
-    static StackType_t stack_task_overflow_flush[BASE_TASK_SIZE];
-    static StackType_t stack_task_weather_event[1024];
+    static StackType_t stack_sensor_task_temp[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_sensor_task_precip[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_sensor_task_light[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_sensor_task_airq[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_sensor_task_baromp[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_sensor_task_wind[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_sensor_task_humidity[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_task_transmit[SENSOR_TASK_STACK_SIZE + 512];
+    static StackType_t stack_task_heap_check[SENSOR_TASK_STACK_SIZE];
+    static StackType_t stack_task_overflow_flush[BASE_TASK_STACK_SIZE + 512];
+    static StackType_t stack_task_weather_event[BASE_TASK_STACK_SIZE];
 #endif
 
 static bool fast_mode = false;
@@ -234,9 +235,7 @@ static void transmit_task(void* arg)
         flush_buffer(TAG_WIND, sensor_wind);
         flush_buffer(TAG_HUMIDITY, sensor_humidity);
 
-        // printf("\nFLUSHED\n");
         // // esp_per_task_heap_info_dump();
-        // printf("finished per task heap info dump\n"); 
         esp_task_info_dump();
         vTaskDelay(pdMS_TO_TICKS(DELAY_MS_TRANSMIT_BASE)); 
     }
@@ -248,19 +247,24 @@ static void task_overflow_flush(void *arg)
     {
         if (xSemaphoreTake(overflow_lock, portMAX_DELAY))
         {
-            for (const auto& k: _buf_overflow) 
+            if (_buf_overflow.size() == 0)
+                xSemaphoreGive(overflow_lock);
+            else 
             {
-                ESP_LOGW(TAG_OVERFLOW_FLUSH, "Overflow: %s\n", k.payload.c_str());
-                //printf("Overflow: %s\n", k.payload.c_str());
-                _buf_overflow.clear();
+                for (const auto& k: _buf_overflow) 
+                {
+                    ESP_LOGW(TAG_OVERFLOW_FLUSH, "Overflow: %s\n", k.payload.c_str());
+                    _buf_overflow.clear();
+                }
+                
+                #if !USE_ETL
+                    _buf_overflow = buffer_t();
+                    printf("overflow new size, capacity: %u\n", _buf_overflow.size());
+                #endif 
+                xSemaphoreGive(overflow_lock);
             }
-            
-            #if !USE_ETL
-                _buf_overflow = buffer_t();
-                printf("overflow new size, capacity: %u\n", _buf_overflow.size());
-            #endif 
-            xSemaphoreGive(overflow_lock);
         }
+        
         vTaskDelay(pdMS_TO_TICKS(60000));
     }
 }
@@ -291,13 +295,16 @@ static void task_heap_check(void *arg)
 
 static void task_weather_event(void *arg)
 {
-    uint32_t random_delay;    
+    //uint32_t random_delay;    
     while (1)
     {
-        random_delay = esp_random() % 110001 + 1000; //between 10s and 120s
-        vTaskDelay(pdMS_TO_TICKS(random_delay));
-        fast_mode = !fast_mode;
+        //random_delay = esp_random() % 110001 + 1000; //between 10s and 120s
         ESP_LOGW(TAG_WEATHER_EVENT, "Fast mode: %s\n", fast_mode ? "ON" : "OFF");
+        if (fast_mode)
+            vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_ON));
+        else
+            vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_OFF));
+        fast_mode = !fast_mode;
         //printf("Fast mode: %s\n", fast_mode ? "ON" : "OFF");
     }
 }
@@ -340,33 +347,34 @@ extern "C" void app_main(void)
     sensor_context_humidity = {&sensor_humidity, TAG_HUMIDITY}; //, 1000};
 
     #if USE_STATIC
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_SIZE, &sensor_context_temp, 5, stack_sensor_task_temp, &tcb_sensor_temp, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_SIZE, &sensor_context_precip, 5, stack_sensor_task_precip, &tcb_sensor_precip, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_SIZE, &sensor_context_light, 5, stack_sensor_task_light, &tcb_sensor_light, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_SIZE, &sensor_context_airq, 5, stack_sensor_task_airq, &tcb_sensor_airq, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_SIZE, &sensor_context_baromp, 5, stack_sensor_task_baromp, &task_sensor_baromp, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_SIZE, &sensor_context_wind, 5, stack_sensor_task_wind, &tcb_sensor_wind, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_SIZE, &sensor_context_humidity, 5, stack_sensor_task_humidity, &tcb_sensor_humidity, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, stack_sensor_task_temp, &tcb_sensor_temp, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, stack_sensor_task_precip, &tcb_sensor_precip, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, stack_sensor_task_light, &tcb_sensor_light, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, stack_sensor_task_airq, &tcb_sensor_airq, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, stack_sensor_task_baromp, &task_sensor_baromp, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, stack_sensor_task_wind, &tcb_sensor_wind, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, stack_sensor_task_humidity, &tcb_sensor_humidity, 0);
         
-        xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_SIZE + 512, NULL, 5, stack_task_transmit, &tcb_transmit, 1);
-        xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_SIZE, NULL, 5, stack_task_heap_check, &tcb_heap_check, 1);
-        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_SIZE, NULL, 5, stack_task_overflow_flush, &tcb_overflow_flush, 1);
+        xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 5, stack_task_transmit, &tcb_transmit, 1);
+        xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, stack_task_heap_check, &tcb_heap_check, 1);
+        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512
+        , NULL, 5, stack_task_overflow_flush, &tcb_overflow_flush, 1);
         
-        xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, 1024, NULL, 5, stack_task_weather_event, &tcb_weather_event, 1);
+        xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE, NULL, 5, stack_task_weather_event, &tcb_weather_event, 1);
     #else
         
-        xTaskCreatePinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_SIZE, &sensor_context_temp, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_SIZE, &sensor_context_precip, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_SIZE, &sensor_context_light, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_SIZE, &sensor_context_airq, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_SIZE, &sensor_context_baromp, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_SIZE, &sensor_context_wind, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_SIZE, &sensor_context_humidity, 5, NULL, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, NULL, tskNO_AFFINITY);
         
-        xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_SIZE + 512, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_SIZE, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_SIZE, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, 1024, NULL, 5, NULL, 1);
+        xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 5, NULL, tskNO_AFFINITY);
+        xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE, NULL, 5, NULL, tskNO_AFFINITY);//1);
     #endif
 
 }
