@@ -1,0 +1,9 @@
+timestamp,event
+0.6,RESIZE Resizing buffer TEMP to 0
+0.6,RESIZE Resizing buffer PRECIP to 0
+0.6,RESIZE Resizing buffer LIGHT to 0
+0.6,RESIZE Resizing buffer AIRQ to 0
+0.7,RESIZE Resizing buffer BAROMP to 0
+0.7,RESIZE Resizing buffer WIND to 0
+0.7,RESIZE Resizing buffer HUMIDITY to 0
+0.8,WEATHER_EVENT WEATHER EVENT ENDED
