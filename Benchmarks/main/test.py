@@ -9,7 +9,9 @@ PROJECT_DIR = os.path.expanduser('./')
 SERIAL_PORT = '/dev/ttyUSB0'  # or COMx on Windows
 BAUD_RATE = 115200
 READ_TIME = 20  # seconds
-OUTPUT_JSON = 'benchmark_results.json'
+OUTPUT_DIR = os.path.join(PROJECT_DIR, 'results')
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+OUTPUT_JSON = os.path.join(OUTPUT_DIR , 'benchmark_results.json')
 
 etl_options = [0, 1]
 types = ['string', 'vector', 'map', 'set', 'deque']

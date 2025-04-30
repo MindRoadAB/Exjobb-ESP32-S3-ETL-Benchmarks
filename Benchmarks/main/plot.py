@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Load the data
-with open('../benchmark_results.json') as f:
+with open('./results/benchmark_results.json') as f:
     data = json.load(f)
 
 # Flatten JSON into a DataFrame
@@ -22,7 +22,7 @@ for context, operations in data.items():
 df = pd.DataFrame(rows)
 
 # Output folder for plots
-output_dir = Path('plots')
+output_dir = Path('./results/plots')
 output_dir.mkdir(exist_ok=True)
 
 # Loop over each TYPE and generate plots
