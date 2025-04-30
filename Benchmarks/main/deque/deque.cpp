@@ -1,6 +1,8 @@
 #include "deque.hpp"
 #include "../common/common.hpp"
 
+constexpr const char *tag = "deque";
+
 _deque_int deq_i1 = 
 {
     32, 904, 233, -234,
@@ -207,17 +209,5 @@ deque_benchmark(uint32_t cycles)
         "deque<string>: erase(pos)"
     );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    ESP_LOGI(tag, "DONE\n");
 }

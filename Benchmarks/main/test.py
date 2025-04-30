@@ -4,7 +4,7 @@ import time
 import re
 import json
 import os
-PROJECT_DIR = os.path.expanduser('~/Development/Exjobb-ESP32-S3-ETL-Benchmarks/Benchmarks')
+PROJECT_DIR = os.path.expanduser('./')
 
 SERIAL_PORT = '/dev/ttyUSB0'  # or COMx on Windows
 BAUD_RATE = 115200
@@ -35,11 +35,13 @@ def read_serial_output():
         if line:
             print(line)
             lines.append(line)
+            if "DONE" in line:
+                break
     ser.close()
     return lines
 
 def parse_output(lines):
-    pattern = re.compile(r'\[BENCH\]\s+(\w+):\s+(\d+)\s+cycles') # Change printtf's in tests to use ESP_LOGI(TAG, RESULT) t
+    pattern = re.compile(r'TEST:\s+(.*?):\s+(\d+)\s+cycles/iteration$') # Change printtf's in tests to use ESP_LOGI(TAG, RESULT) t
     # to make parsing easier...
     results = {}
     for line in lines:

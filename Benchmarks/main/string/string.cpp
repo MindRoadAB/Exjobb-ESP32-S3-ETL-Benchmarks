@@ -1,6 +1,8 @@
 #include "../common/common.hpp"
 #include "string.hpp"
 
+constexpr const char *tag = "string";
+
 const char *c_str_tiny = "hi";
 const char *c_str_medium = "Hello World, it's a great day!";
 const char *c_str_large = "Hello World, it's a great day!"
@@ -319,21 +321,13 @@ string_benchmark(uint32_t cycles)
 
     CYCLE_GET_COUNT_MUTATE(
         {},
-        _str_medium.push_back('a'),
-        _str_medium.pop_back(),
-        cycles,
-        "string: _str_medium.push_back('a')" 
-    );
-
-    CYCLE_GET_COUNT_MUTATE(
-        {},
         _str_medium.insert(3, "Hello"),
         _str_medium.erase(3, 5),
         cycles,
         "string: _str_medium.insert(3, 'Hello')"
     );
 
-    
+    ESP_LOGI(tag, "DONE\n");    
 
 }
 

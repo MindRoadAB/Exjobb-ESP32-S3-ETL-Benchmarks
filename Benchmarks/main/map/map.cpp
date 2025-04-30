@@ -1,6 +1,8 @@
 #include "map.hpp"
 #include "../common/common.hpp"
 
+constexpr const char *tag = "unordered_map";
+
 _map umap_1 = 
 {
     {1, "foo"},
@@ -109,5 +111,7 @@ map_benchmark(uint32_t cycles)
         cycles,
         "unordered_map<int, string>: find(key)"
     );
+
+    ESP_LOGI(tag, "DONE\n");
 }
 

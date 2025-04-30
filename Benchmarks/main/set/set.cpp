@@ -1,6 +1,9 @@
 #include "set.hpp"
 #include "../common/common.hpp"
 
+
+constexpr const char *tag = "unordered_set";
+
 _set_int uset_i1 = 
 {
      0,  1,  2,  3,  4,  5,  6,  7,  
@@ -150,7 +153,7 @@ set_benchmark(uint32_t cycles)
         uset_s1.insert(uset_s1.begin(), "tim"),
         uset_s1.erase("tim"),
         cycles, 
-        "unordered_set<int>: uset.insert(hint, key)" 
+        "unordered_set<string>: uset.insert(hint, key)" 
     );
 
     CYCLE_GET_COUNT_MUTATE (
@@ -168,4 +171,6 @@ set_benchmark(uint32_t cycles)
         cycles, 
         "unordered_set<string>: uset.erase(key)"
     );
+
+    ESP_LOGI(tag, "DONE\n");
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "esp_cpu.h"
+#include "esp_log.h"
 
 #define MEASUREMENTS 5000
 
@@ -12,7 +13,7 @@
             op_expr;                                                             \
         }                                                                        \
         time = esp_cpu_get_cycle_count() - __start;                              \
-        printf("%s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
+        printf("TEST: %s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
     } while (0)
 
 // For mutating operations where cleanup is needed after each iteration
@@ -29,7 +30,7 @@
             time += (__end - __start);                                           \
             cleanup_expr;                                                        \
         }                                                                        \
-        printf("%s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
+        printf("TEST: %s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
     } while (0)
 
 // For ops that return a value, discard to avoid optimizing out
@@ -41,6 +42,6 @@
             (void)op_expr;                                                       \
         }                                                                        \
         time = esp_cpu_get_cycle_count() - __start;                              \
-        printf("%s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
+        printf("TEST: %s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
     } while (0)    
 

@@ -1,6 +1,10 @@
 #include "vector.hpp"
 #include "../common/common.hpp"
 
+
+constexpr const char *tag = "vector";
+
+
 _vector_dummy dummy = {
     {"sdlkfj", 0},   {"sdlkjsdflkj", 1},   {"sdlfkjsdlkfj", 2},   {"sdlkfjsdflkjsdf", 3},
     {"sdlkfj", 4},   {"sdlkjsdflkj", 5},   {"sdlfkjsdlkfj", 6},   {"sdlkfjsdflkjsdf", 7},
@@ -106,5 +110,6 @@ vector_benchmark(uint32_t cycles)
         "_vector_int erase(0)"
     ); 
 
+    ESP_LOGI(tag, "DONE\n");
 }
 
