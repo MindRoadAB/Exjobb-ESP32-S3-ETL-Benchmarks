@@ -7,3 +7,120 @@ timestamp,event
 0.7,RESIZE Resizing buffer WIND to 0
 0.7,RESIZE Resizing buffer HUMIDITY to 0
 0.8,WEATHER_EVENT WEATHER EVENT ENDED
+60.8,RESIZE Resizing buffer TEMP to 0
+60.9,RESIZE Resizing buffer PRECIP to 0
+60.9,RESIZE Resizing buffer LIGHT to 0
+60.9,RESIZE Resizing buffer AIRQ to 0
+61.0,RESIZE Resizing buffer BAROMP to 0
+61.0,RESIZE Resizing buffer WIND to 0
+61.0,RESIZE Resizing buffer HUMIDITY to 0
+61.2,WEATHER_EVENT WEATHER EVENT STARTED
+91.2,WEATHER_EVENT WEATHER EVENT ENDED
+121.3,RESIZE Resizing buffer TEMP to 0
+121.4,RESIZE Resizing buffer PRECIP to 0
+121.5,RESIZE Resizing buffer LIGHT to 0
+121.7,RESIZE Resizing buffer AIRQ to 0
+121.8,RESIZE Resizing buffer BAROMP to 0
+121.9,RESIZE Resizing buffer WIND to 0
+122.1,RESIZE Resizing buffer HUMIDITY to 0
+151.2,WEATHER_EVENT WEATHER EVENT STARTED
+181.2,WEATHER_EVENT WEATHER EVENT ENDED
+182.3,RESIZE Resizing buffer TEMP to 0
+182.5,RESIZE Resizing buffer PRECIP to 0
+182.6,RESIZE Resizing buffer LIGHT to 0
+182.7,RESIZE Resizing buffer AIRQ to 0
+182.9,RESIZE Resizing buffer BAROMP to 0
+183.0,RESIZE Resizing buffer WIND to 0
+183.2,RESIZE Resizing buffer HUMIDITY to 0
+241.2,WEATHER_EVENT WEATHER EVENT STARTED
+243.4,RESIZE Resizing buffer TEMP to 0
+243.4,RESIZE Resizing buffer PRECIP to 0
+243.4,RESIZE Resizing buffer LIGHT to 0
+243.5,RESIZE Resizing buffer AIRQ to 0
+243.5,RESIZE Resizing buffer BAROMP to 0
+243.5,RESIZE Resizing buffer WIND to 0
+243.6,RESIZE Resizing buffer HUMIDITY to 0
+271.2,WEATHER_EVENT WEATHER EVENT ENDED
+303.9,RESIZE Resizing buffer TEMP to 0
+304.0,RESIZE Resizing buffer PRECIP to 0
+304.1,RESIZE Resizing buffer LIGHT to 0
+304.2,RESIZE Resizing buffer AIRQ to 0
+304.4,RESIZE Resizing buffer BAROMP to 0
+304.5,RESIZE Resizing buffer WIND to 0
+304.6,RESIZE Resizing buffer HUMIDITY to 0
+331.2,WEATHER_EVENT WEATHER EVENT STARTED
+361.2,WEATHER_EVENT WEATHER EVENT ENDED
+364.9,RESIZE Resizing buffer TEMP to 0
+365.1,RESIZE Resizing buffer PRECIP to 0
+365.2,RESIZE Resizing buffer LIGHT to 0
+365.3,RESIZE Resizing buffer AIRQ to 0
+365.5,RESIZE Resizing buffer BAROMP to 0
+365.6,RESIZE Resizing buffer WIND to 0
+365.7,RESIZE Resizing buffer HUMIDITY to 0
+421.2,WEATHER_EVENT WEATHER EVENT STARTED
+426.0,RESIZE Resizing buffer TEMP to 0
+426.0,RESIZE Resizing buffer PRECIP to 0
+426.0,RESIZE Resizing buffer LIGHT to 0
+426.1,RESIZE Resizing buffer AIRQ to 0
+426.1,RESIZE Resizing buffer BAROMP to 0
+426.2,RESIZE Resizing buffer WIND to 0
+426.2,RESIZE Resizing buffer HUMIDITY to 0
+451.2,WEATHER_EVENT WEATHER EVENT ENDED
+486.6,RESIZE Resizing buffer TEMP to 0
+486.7,RESIZE Resizing buffer PRECIP to 0
+486.8,RESIZE Resizing buffer LIGHT to 0
+486.9,RESIZE Resizing buffer AIRQ to 0
+487.0,RESIZE Resizing buffer BAROMP to 0
+487.2,RESIZE Resizing buffer WIND to 0
+487.3,RESIZE Resizing buffer HUMIDITY to 0
+511.2,WEATHER_EVENT WEATHER EVENT STARTED
+541.2,WEATHER_EVENT WEATHER EVENT ENDED
+547.6,RESIZE Resizing buffer TEMP to 0
+547.7,RESIZE Resizing buffer PRECIP to 0
+547.9,RESIZE Resizing buffer LIGHT to 0
+548.0,RESIZE Resizing buffer AIRQ to 0
+548.1,RESIZE Resizing buffer BAROMP to 0
+548.3,RESIZE Resizing buffer WIND to 0
+548.4,RESIZE Resizing buffer HUMIDITY to 0
+601.2,WEATHER_EVENT WEATHER EVENT STARTED
+608.6,RESIZE Resizing buffer TEMP to 0
+608.7,RESIZE Resizing buffer PRECIP to 0
+608.8,RESIZE Resizing buffer LIGHT to 0
+608.9,RESIZE Resizing buffer AIRQ to 0
+608.9,RESIZE Resizing buffer BAROMP to 0
+609.0,RESIZE Resizing buffer WIND to 0
+609.0,RESIZE Resizing buffer HUMIDITY to 0
+631.2,WEATHER_EVENT WEATHER EVENT ENDED
+669.3,RESIZE Resizing buffer TEMP to 0
+669.4,RESIZE Resizing buffer PRECIP to 0
+669.5,RESIZE Resizing buffer LIGHT to 0
+669.6,RESIZE Resizing buffer AIRQ to 0
+669.7,RESIZE Resizing buffer BAROMP to 0
+669.9,RESIZE Resizing buffer WIND to 0
+670.0,RESIZE Resizing buffer HUMIDITY to 0
+691.2,WEATHER_EVENT WEATHER EVENT STARTED
+721.2,WEATHER_EVENT WEATHER EVENT ENDED
+730.3,RESIZE Resizing buffer TEMP to 0
+730.4,RESIZE Resizing buffer PRECIP to 0
+730.5,RESIZE Resizing buffer LIGHT to 0
+730.7,RESIZE Resizing buffer AIRQ to 0
+730.8,RESIZE Resizing buffer BAROMP to 0
+730.9,RESIZE Resizing buffer WIND to 0
+731.1,RESIZE Resizing buffer HUMIDITY to 0
+781.2,WEATHER_EVENT WEATHER EVENT STARTED
+791.3,RESIZE Resizing buffer TEMP to 0
+791.4,RESIZE Resizing buffer PRECIP to 0
+791.5,RESIZE Resizing buffer LIGHT to 0
+791.6,RESIZE Resizing buffer AIRQ to 0
+791.6,RESIZE Resizing buffer BAROMP to 0
+791.7,RESIZE Resizing buffer WIND to 0
+791.8,RESIZE Resizing buffer HUMIDITY to 0
+811.2,WEATHER_EVENT WEATHER EVENT ENDED
+852.1,RESIZE Resizing buffer TEMP to 0
+852.2,RESIZE Resizing buffer PRECIP to 0
+852.3,RESIZE Resizing buffer LIGHT to 0
+852.4,RESIZE Resizing buffer AIRQ to 0
+852.5,RESIZE Resizing buffer BAROMP to 0
+852.6,RESIZE Resizing buffer WIND to 0
+852.7,RESIZE Resizing buffer HUMIDITY to 0
+871.2,WEATHER_EVENT WEATHER EVENT STARTED

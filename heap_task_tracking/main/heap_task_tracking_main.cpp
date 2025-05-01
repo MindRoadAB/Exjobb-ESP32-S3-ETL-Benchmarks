@@ -63,7 +63,7 @@
     static StackType_t stack_task_weather_event[BASE_TASK_STACK_SIZE];
 #endif
 
-static bool fast_mode = false;
+static volatile bool fast_mode = false;
 
 static size_t s_prepopulated_num = 0;
 static heap_task_totals_t s_totals_arr[MAX_TASK_NUM];
@@ -222,7 +222,7 @@ static void transmit_task(void* arg)
             }
             #if !USE_ETL
                 s_buf.buf = buffer_t();
-                printf("%s Resizing buffer %s to 0\n", TAG_RESIZE, label); 
+                printf("%s sensor buffer\n", TAG_RESIZE); 
             #endif
 
             printf("Buffer %s size: %u\n", label, s_buf.buf.size()); 
@@ -253,15 +253,16 @@ static void task_overflow_flush(void *arg)
                 xSemaphoreGive(overflow_lock);
             else 
             {
-                for (const auto& k: _buf_overflow) 
+                for (const auto& _: _buf_overflow) 
                 {
-                    ESP_LOGW(TAG_OVERFLOW_FLUSH, "Overflow: %s\n", k.payload.c_str());
-                    _buf_overflow.clear();
+                    printf("%s overflow buffer\n", TAG_RESIZE);
                 }
+                
+                _buf_overflow.clear();
                 
                 #if !USE_ETL
                     _buf_overflow = buffer_t();
-                    printf("overflow new size, capacity: %u\n", _buf_overflow.size());
+                    printf("%s overflow buffer \n", TAG_RESIZE);
                 #endif 
                 xSemaphoreGive(overflow_lock);
             }

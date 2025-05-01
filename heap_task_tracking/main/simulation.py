@@ -7,6 +7,11 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
+""" 
+Script  for parsing serial output of ESP32 heap test
+"""
+
+
 # Config
 SYSTEM = platform.system()
 
@@ -18,7 +23,7 @@ else:
     raise RuntimeError(f"Unsupported OS: {SYSTEM}")
 
 MINUTES = 60 # as in, 60 seconds
-READ_DURATION = 1 * MINUTES 
+READ_DURATION = 2 * MINUTES 
 
 BAUD_RATE = 115200
 
