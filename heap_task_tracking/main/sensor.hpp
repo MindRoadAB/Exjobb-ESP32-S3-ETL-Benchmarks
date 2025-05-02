@@ -7,7 +7,7 @@
 #include "freertos/task.h"
 #include "esp_random.h"
 
-#define MAX_BUFFER_ENTRIES 4 
+#define MAX_BUFFER_ENTRIES 64 
 #define MAX_PAYLOAD_LENGTH 128
 
 #define OVERFLOW_ENTRIES 4*MAX_BUFFER_ENTRIES
@@ -51,6 +51,8 @@ typedef struct
 #endif
 
 SemaphoreHandle_t overflow_lock;
+SemaphoreHandle_t overflow_flush_clear;
+
 
 typedef struct 
 {
@@ -63,7 +65,6 @@ typedef struct
 {
     sensor_t *sensor;
     const char *label;
-    // unsigned delay_ms;
 }sensor_context_t;
 
 inline void sensor_init(sensor_t *s, sensor_id_t id)
