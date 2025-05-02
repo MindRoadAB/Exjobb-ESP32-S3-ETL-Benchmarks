@@ -174,7 +174,7 @@ static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *l
             }
             xSemaphoreGive(s.s_lock);
         }
-        /** If the buffer was full, data was copied and */
+        
         if (buffer_full && xSemaphoreTake(overflow_lock, portMAX_DELAY)) 
         {
             #if USE_ETL
@@ -247,25 +247,19 @@ static void task_overflow_flush(void *arg)
 {
     while (1)
     {
-        if (xSemaphoreTake(overflow_lock, portMAX_DELAY))
+        if (xSemaphoreTake(overflow_lock, portMAX_DELAY) && _buf_overflow.size() != 0)
         {
-            if (_buf_overflow.size() == 0)
-                xSemaphoreGive(overflow_lock);
-            else 
-            {
-                for (const auto& _: _buf_overflow) 
-                {
-                    printf("%s overflow buffer\n", TAG_RESIZE);
-                }
-                
-                _buf_overflow.clear();
-                
-                #if !USE_ETL
-                    _buf_overflow = buffer_t();
-                    printf("%s overflow buffer \n", TAG_RESIZE);
-                #endif 
-                xSemaphoreGive(overflow_lock);
-            }
+            for (const auto& _: _buf_overflow) 
+                printf("%s overflow buffer\n", TAG_RESIZE);
+            
+            _buf_overflow.clear();
+            
+            #if !USE_ETL
+                _buf_overflow = buffer_t();
+                printf("%s overflow buffer \n", TAG_RESIZE);
+            #endif 
+        
+            xSemaphoreGive(overflow_lock);
         }
         
         vTaskDelay(pdMS_TO_TICKS(DELAY_MS_OVERFLOW_FLUSH));
@@ -365,8 +359,7 @@ extern "C" void app_main(void)
         
         xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 5, stack_task_transmit, &tcb_transmit, 1);
         xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, stack_task_heap_check, &tcb_heap_check, 1);
-        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 5, stack_task_overflow_flush, &tcb_overflow_flush, 1);
-        
+        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
         xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE, NULL, 5, stack_task_weather_event, &tcb_weather_event, 1);
     #else
         
@@ -380,7 +373,7 @@ extern "C" void app_main(void)
         
         xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 5, NULL, 1);
         xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 5, NULL, 1);
+        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 7, NULL, 1);
         xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE, NULL, 5, NULL, 1);
     #endif
 

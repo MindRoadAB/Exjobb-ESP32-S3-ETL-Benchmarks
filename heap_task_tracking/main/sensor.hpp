@@ -13,10 +13,11 @@
 #if USE_ETL
     #include <etl/deque.h>
     #include <etl/string.h> 
-    typedef etl::string<MAX_PAYLOAD_LENGTH> string_t;
+    typedef etl::string<MAX_PAYLOAD_LENGTH> string_t;  
 #else
     #include <string>
     #include <deque>
+    #include <vector>
     typedef std::string string_t;
 #endif
 
