@@ -64,6 +64,9 @@
 #endif
 
 static volatile bool fast_mode = false;
+static volatile int overflow_notification = 0;
+static TaskHandle_t task_handle;
+
 
 static size_t s_prepopulated_num = 0;
 static heap_task_totals_t s_totals_arr[MAX_TASK_NUM];
@@ -132,7 +135,8 @@ static void esp_per_task_heap_info_dump(void)
 static void sema_init(SemaphoreHandle_t *s_lock)
 {
     *s_lock = xSemaphoreCreateMutex();
-    if (*s_lock == NULL) {
+    if (*s_lock == NULL) 
+    {
         ESP_LOGE("sema_init", "Failed to create mutex");
         abort();
     }
@@ -141,9 +145,9 @@ static void sema_init(SemaphoreHandle_t *s_lock)
 static string_t generate_fake_payload(const char* prefix, size_t len) {
     string_t s = prefix; 
     s += ": ";
-    for (size_t i = 0; i < (esp_random() % len + 1); ++i) {
-        s += static_cast<char>((esp_random() % 26) + 65);  // A–Z
-    }
+    for (size_t i = 0; i < (esp_random() % len + 1); ++i) 
+        s += static_cast<char>((esp_random() % 26) + 65);  
+
     return s;
 }
 
@@ -177,15 +181,18 @@ static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *l
         
         if (buffer_full && xSemaphoreTake(overflow_lock, portMAX_DELAY)) 
         {
-            #if USE_ETL
+            //#if USE_ETL
                 if (_buf_overflow.size() >= OVERFLOW_ENTRIES)
                 {
-                    _buf_overflow.pop_front();
+                    xTaskNotifyGive(task_handle);
+                    xSemaphoreGive(overflow_lock);
+                    //_buf_overflow.pop_front();
                     //ESP_LOGW(TAG_OVERFLOW, "Overflow full, popping front\n");
-                    printf("%s Overflow full, popping front\n", TAG_OVERFLOW); 
-                    ESP_LOGW(label, "Overflow full, popping front\n");
+                    //printf("%s Overflow full, popping front\n", TAG_OVERFLOW); 
+                    //ESP_LOGW(label, "Overflow full, popping front\n");
+                    xSemaphoreTake(overflow_lock, portMAX_DELAY);
                 }
-            #endif 
+            //#endif 
             _buf_overflow.push_back(std::move(data)); 
             printf("\nOverflow size: %u\n", _buf_overflow.size()); 
             xSemaphoreGive(overflow_lock);
@@ -245,12 +252,17 @@ static void transmit_task(void* arg)
 
 static void task_overflow_flush(void *arg)
 {
+    //int overflow_notification;
+    
     while (1)
     {
-        if (xSemaphoreTake(overflow_lock, portMAX_DELAY) && _buf_overflow.size() != 0)
+        /** Block until notified that the overflow is full */
+        overflow_notification = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        /** Get the semaphore for exclusive access */ 
+        if (xSemaphoreTake(overflow_lock, portMAX_DELAY)) //&& _buf_overflow.size() != 0)
         {
-            for (const auto& _: _buf_overflow) 
-                printf("%s overflow buffer\n", TAG_RESIZE);
+            for (const auto& k: _buf_overflow) 
+                printf("Emptying overflow: %s overflow buffer\n", k.payload.c_str());
             
             _buf_overflow.clear();
             
@@ -261,8 +273,8 @@ static void task_overflow_flush(void *arg)
         
             xSemaphoreGive(overflow_lock);
         }
-        
-        vTaskDelay(pdMS_TO_TICKS(DELAY_MS_OVERFLOW_FLUSH));
+        overflow_notification--;
+        //vTaskDelay(pdMS_TO_TICKS(DELAY_MS_OVERFLOW_FLUSH));
     }
 }
 
@@ -331,21 +343,20 @@ extern "C" void app_main(void)
     vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
     sema_init(&overflow_lock);
 
-
-    sensor_init(&sensor_temp, S_TEMP);
-    sensor_init(&sensor_precip, S_PRECIP);
-    sensor_init(&sensor_light, S_LIGHT);
-    sensor_init(&sensor_airq, S_AIR_Q);
-    sensor_init(&sensor_baromp, S_BAROM_P);
-    sensor_init(&sensor_wind, S_WIND);
+    sensor_init(&sensor_temp,     S_TEMP);
+    sensor_init(&sensor_precip,   S_PRECIP);
+    sensor_init(&sensor_light,    S_LIGHT);
+    sensor_init(&sensor_airq,     S_AIR_Q);
+    sensor_init(&sensor_baromp,   S_BAROM_P);
+    sensor_init(&sensor_wind,     S_WIND);
     sensor_init(&sensor_humidity, S_HUMIDITY);
 
-    sensor_context_temp = {&sensor_temp, TAG_TEMP}; 
-    sensor_context_precip = {&sensor_precip, TAG_PRECIP}; 
-    sensor_context_light = {&sensor_light, TAG_LIGHT}; 
-    sensor_context_airq = {&sensor_airq, TAG_AIRQ}; 
-    sensor_context_baromp = {&sensor_baromp, TAG_BAROMP}; 
-    sensor_context_wind = {&sensor_wind, TAG_WIND}; 
+    sensor_context_temp     = {&sensor_temp,     TAG_TEMP}; 
+    sensor_context_precip   = {&sensor_precip,   TAG_PRECIP}; 
+    sensor_context_light    = {&sensor_light,    TAG_LIGHT}; 
+    sensor_context_airq     = {&sensor_airq,     TAG_AIRQ}; 
+    sensor_context_baromp   = {&sensor_baromp,   TAG_BAROMP}; 
+    sensor_context_wind     = {&sensor_wind,     TAG_WIND}; 
     sensor_context_humidity = {&sensor_humidity, TAG_HUMIDITY}; 
 
     #if USE_STATIC
@@ -373,7 +384,7 @@ extern "C" void app_main(void)
         
         xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 5, NULL, 1);
         xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 7, NULL, 1);
+        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE + 512, NULL, 7, &task_handle, 1);
         xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE, NULL, 5, NULL, 1);
     #endif
 

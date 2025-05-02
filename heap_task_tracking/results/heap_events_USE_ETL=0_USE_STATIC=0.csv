@@ -6,25 +6,25 @@ timestamp,event
 0.6,RESIZE sensor buffer
 0.6,RESIZE sensor buffer
 0.7,RESIZE sensor buffer
-0.7,WEATHER_EVENT WEATHER EVENT ENDED
-60.7,WEATHER_EVENT WEATHER EVENT STARTED
-60.9,RESIZE sensor buffer
+0.8,WEATHER_EVENT WEATHER EVENT ENDED
+60.8,RESIZE sensor buffer
+60.8,RESIZE sensor buffer
 60.9,RESIZE sensor buffer
 60.9,RESIZE sensor buffer
 60.9,RESIZE sensor buffer
 61.0,RESIZE sensor buffer
 61.0,RESIZE sensor buffer
-61.0,RESIZE sensor buffer
-90.7,WEATHER_EVENT WEATHER EVENT ENDED
-121.3,RESIZE sensor buffer
+61.2,WEATHER_EVENT WEATHER EVENT STARTED
+91.2,WEATHER_EVENT WEATHER EVENT ENDED
+121.2,RESIZE sensor buffer
 121.4,RESIZE sensor buffer
 121.5,RESIZE sensor buffer
-121.7,RESIZE sensor buffer
+121.6,RESIZE sensor buffer
 121.8,RESIZE sensor buffer
 121.9,RESIZE sensor buffer
 122.1,RESIZE sensor buffer
-150.7,WEATHER_EVENT WEATHER EVENT STARTED
-180.7,WEATHER_EVENT WEATHER EVENT ENDED
+151.2,WEATHER_EVENT WEATHER EVENT STARTED
+181.2,WEATHER_EVENT WEATHER EVENT ENDED
 182.3,RESIZE sensor buffer
 182.5,RESIZE sensor buffer
 182.6,RESIZE sensor buffer
@@ -32,7 +32,7 @@ timestamp,event
 182.9,RESIZE sensor buffer
 183.0,RESIZE sensor buffer
 183.1,RESIZE sensor buffer
-240.7,WEATHER_EVENT WEATHER EVENT STARTED
+241.2,WEATHER_EVENT WEATHER EVENT STARTED
 243.3,RESIZE sensor buffer
 243.3,RESIZE sensor buffer
 243.3,RESIZE sensor buffer
@@ -40,7 +40,7 @@ timestamp,event
 243.3,RESIZE sensor buffer
 243.3,RESIZE sensor buffer
 243.3,RESIZE sensor buffer
-270.7,WEATHER_EVENT WEATHER EVENT ENDED
+271.2,WEATHER_EVENT WEATHER EVENT ENDED
 303.5,RESIZE sensor buffer
 303.5,RESIZE sensor buffer
 303.5,RESIZE sensor buffer
@@ -48,320 +48,4 @@ timestamp,event
 303.5,RESIZE sensor buffer
 303.5,RESIZE sensor buffer
 303.5,RESIZE sensor buffer
-330.7,WEATHER_EVENT WEATHER EVENT STARTED
-360.7,WEATHER_EVENT WEATHER EVENT ENDED
-363.7,RESIZE sensor buffer
-363.7,RESIZE sensor buffer
-363.7,RESIZE sensor buffer
-363.7,RESIZE sensor buffer
-363.7,RESIZE sensor buffer
-363.7,RESIZE sensor buffer
-363.7,RESIZE sensor buffer
-420.7,WEATHER_EVENT WEATHER EVENT STARTED
-423.9,RESIZE sensor buffer
-423.9,RESIZE sensor buffer
-423.9,RESIZE sensor buffer
-423.9,RESIZE sensor buffer
-423.9,RESIZE sensor buffer
-423.9,RESIZE sensor buffer
-423.9,RESIZE sensor buffer
-450.7,WEATHER_EVENT WEATHER EVENT ENDED
-484.1,RESIZE sensor buffer
-484.1,RESIZE sensor buffer
-484.1,RESIZE sensor buffer
-484.1,RESIZE sensor buffer
-484.1,RESIZE sensor buffer
-484.1,RESIZE sensor buffer
-484.1,RESIZE sensor buffer
-510.7,WEATHER_EVENT WEATHER EVENT STARTED
-540.7,WEATHER_EVENT WEATHER EVENT ENDED
-544.3,RESIZE sensor buffer
-544.3,RESIZE sensor buffer
-544.3,RESIZE sensor buffer
-544.3,RESIZE sensor buffer
-544.3,RESIZE sensor buffer
-544.3,RESIZE sensor buffer
-544.3,RESIZE sensor buffer
-600.7,WEATHER_EVENT WEATHER EVENT STARTED
-604.5,RESIZE sensor buffer
-604.5,RESIZE sensor buffer
-604.5,RESIZE sensor buffer
-604.5,RESIZE sensor buffer
-604.5,RESIZE sensor buffer
-604.5,RESIZE sensor buffer
-604.5,RESIZE sensor buffer
-630.7,WEATHER_EVENT WEATHER EVENT ENDED
-664.7,RESIZE sensor buffer
-664.7,RESIZE sensor buffer
-664.7,RESIZE sensor buffer
-664.7,RESIZE sensor buffer
-664.7,RESIZE sensor buffer
-664.7,RESIZE sensor buffer
-664.7,RESIZE sensor buffer
-690.7,WEATHER_EVENT WEATHER EVENT STARTED
-720.7,WEATHER_EVENT WEATHER EVENT ENDED
-724.9,RESIZE sensor buffer
-724.9,RESIZE sensor buffer
-724.9,RESIZE sensor buffer
-724.9,RESIZE sensor buffer
-724.9,RESIZE sensor buffer
-724.9,RESIZE sensor buffer
-724.9,RESIZE sensor buffer
-780.7,WEATHER_EVENT WEATHER EVENT STARTED
-785.1,RESIZE sensor buffer
-785.1,RESIZE sensor buffer
-785.1,RESIZE sensor buffer
-785.1,RESIZE sensor buffer
-785.1,RESIZE sensor buffer
-785.1,RESIZE sensor buffer
-785.1,RESIZE sensor buffer
-810.7,WEATHER_EVENT WEATHER EVENT ENDED
-845.3,RESIZE sensor buffer
-845.3,RESIZE sensor buffer
-845.3,RESIZE sensor buffer
-845.3,RESIZE sensor buffer
-845.3,RESIZE sensor buffer
-845.3,RESIZE sensor buffer
-845.3,RESIZE sensor buffer
-870.7,WEATHER_EVENT WEATHER EVENT STARTED
-900.7,WEATHER_EVENT WEATHER EVENT ENDED
-905.5,RESIZE sensor buffer
-905.5,RESIZE sensor buffer
-905.5,RESIZE sensor buffer
-905.5,RESIZE sensor buffer
-905.5,RESIZE sensor buffer
-905.5,RESIZE sensor buffer
-905.5,RESIZE sensor buffer
-960.7,WEATHER_EVENT WEATHER EVENT STARTED
-965.7,RESIZE sensor buffer
-965.7,RESIZE sensor buffer
-965.7,RESIZE sensor buffer
-965.7,RESIZE sensor buffer
-965.7,RESIZE sensor buffer
-965.7,RESIZE sensor buffer
-965.7,RESIZE sensor buffer
-990.7,WEATHER_EVENT WEATHER EVENT ENDED
-1025.9,RESIZE sensor buffer
-1025.9,RESIZE sensor buffer
-1025.9,RESIZE sensor buffer
-1025.9,RESIZE sensor buffer
-1025.9,RESIZE sensor buffer
-1025.9,RESIZE sensor buffer
-1025.9,RESIZE sensor buffer
-1050.7,WEATHER_EVENT WEATHER EVENT STARTED
-1080.7,WEATHER_EVENT WEATHER EVENT ENDED
-1086.1,RESIZE sensor buffer
-1086.1,RESIZE sensor buffer
-1086.1,RESIZE sensor buffer
-1086.1,RESIZE sensor buffer
-1086.1,RESIZE sensor buffer
-1086.1,RESIZE sensor buffer
-1086.1,RESIZE sensor buffer
-1140.7,WEATHER_EVENT WEATHER EVENT STARTED
-1146.3,RESIZE sensor buffer
-1146.3,RESIZE sensor buffer
-1146.3,RESIZE sensor buffer
-1146.3,RESIZE sensor buffer
-1146.3,RESIZE sensor buffer
-1146.3,RESIZE sensor buffer
-1146.3,RESIZE sensor buffer
-1170.7,WEATHER_EVENT WEATHER EVENT ENDED
-1206.5,RESIZE sensor buffer
-1206.5,RESIZE sensor buffer
-1206.5,RESIZE sensor buffer
-1206.5,RESIZE sensor buffer
-1206.5,RESIZE sensor buffer
-1206.5,RESIZE sensor buffer
-1206.5,RESIZE sensor buffer
-1230.7,WEATHER_EVENT WEATHER EVENT STARTED
-1260.7,WEATHER_EVENT WEATHER EVENT ENDED
-1266.7,RESIZE sensor buffer
-1266.7,RESIZE sensor buffer
-1266.7,RESIZE sensor buffer
-1266.7,RESIZE sensor buffer
-1266.7,RESIZE sensor buffer
-1266.7,RESIZE sensor buffer
-1266.7,RESIZE sensor buffer
-1320.7,WEATHER_EVENT WEATHER EVENT STARTED
-1326.9,RESIZE sensor buffer
-1326.9,RESIZE sensor buffer
-1326.9,RESIZE sensor buffer
-1326.9,RESIZE sensor buffer
-1326.9,RESIZE sensor buffer
-1326.9,RESIZE sensor buffer
-1326.9,RESIZE sensor buffer
-1350.7,WEATHER_EVENT WEATHER EVENT ENDED
-1387.1,RESIZE sensor buffer
-1387.1,RESIZE sensor buffer
-1387.1,RESIZE sensor buffer
-1387.1,RESIZE sensor buffer
-1387.1,RESIZE sensor buffer
-1387.1,RESIZE sensor buffer
-1387.1,RESIZE sensor buffer
-1410.7,WEATHER_EVENT WEATHER EVENT STARTED
-1440.7,WEATHER_EVENT WEATHER EVENT ENDED
-1447.3,RESIZE sensor buffer
-1447.3,RESIZE sensor buffer
-1447.3,RESIZE sensor buffer
-1447.3,RESIZE sensor buffer
-1447.3,RESIZE sensor buffer
-1447.3,RESIZE sensor buffer
-1447.3,RESIZE sensor buffer
-1500.7,WEATHER_EVENT WEATHER EVENT STARTED
-1507.5,RESIZE sensor buffer
-1507.5,RESIZE sensor buffer
-1507.5,RESIZE sensor buffer
-1507.5,RESIZE sensor buffer
-1507.5,RESIZE sensor buffer
-1507.5,RESIZE sensor buffer
-1507.5,RESIZE sensor buffer
-1530.7,WEATHER_EVENT WEATHER EVENT ENDED
-1567.7,RESIZE sensor buffer
-1567.7,RESIZE sensor buffer
-1567.7,RESIZE sensor buffer
-1567.7,RESIZE sensor buffer
-1567.7,RESIZE sensor buffer
-1567.7,RESIZE sensor buffer
-1567.7,RESIZE sensor buffer
-1590.7,WEATHER_EVENT WEATHER EVENT STARTED
-1620.7,WEATHER_EVENT WEATHER EVENT ENDED
-1627.9,RESIZE sensor buffer
-1627.9,RESIZE sensor buffer
-1627.9,RESIZE sensor buffer
-1627.9,RESIZE sensor buffer
-1627.9,RESIZE sensor buffer
-1627.9,RESIZE sensor buffer
-1627.9,RESIZE sensor buffer
-1680.7,WEATHER_EVENT WEATHER EVENT STARTED
-1688.1,RESIZE sensor buffer
-1688.1,RESIZE sensor buffer
-1688.1,RESIZE sensor buffer
-1688.1,RESIZE sensor buffer
-1688.1,RESIZE sensor buffer
-1688.1,RESIZE sensor buffer
-1688.1,RESIZE sensor buffer
-1710.7,WEATHER_EVENT WEATHER EVENT ENDED
-1748.3,RESIZE sensor buffer
-1748.3,RESIZE sensor buffer
-1748.3,RESIZE sensor buffer
-1748.3,RESIZE sensor buffer
-1748.3,RESIZE sensor buffer
-1748.3,RESIZE sensor buffer
-1748.3,RESIZE sensor buffer
-1770.7,WEATHER_EVENT WEATHER EVENT STARTED
-1800.7,WEATHER_EVENT WEATHER EVENT ENDED
-1808.5,RESIZE sensor buffer
-1808.5,RESIZE sensor buffer
-1808.5,RESIZE sensor buffer
-1808.5,RESIZE sensor buffer
-1808.5,RESIZE sensor buffer
-1808.5,RESIZE sensor buffer
-1808.5,RESIZE sensor buffer
-1860.7,WEATHER_EVENT WEATHER EVENT STARTED
-1868.7,RESIZE sensor buffer
-1868.7,RESIZE sensor buffer
-1868.7,RESIZE sensor buffer
-1868.7,RESIZE sensor buffer
-1868.7,RESIZE sensor buffer
-1868.7,RESIZE sensor buffer
-1868.7,RESIZE sensor buffer
-1890.7,WEATHER_EVENT WEATHER EVENT ENDED
-1928.9,RESIZE sensor buffer
-1928.9,RESIZE sensor buffer
-1928.9,RESIZE sensor buffer
-1928.9,RESIZE sensor buffer
-1928.9,RESIZE sensor buffer
-1928.9,RESIZE sensor buffer
-1928.9,RESIZE sensor buffer
-1950.7,WEATHER_EVENT WEATHER EVENT STARTED
-1980.7,WEATHER_EVENT WEATHER EVENT ENDED
-1989.1,RESIZE sensor buffer
-1989.1,RESIZE sensor buffer
-1989.1,RESIZE sensor buffer
-1989.1,RESIZE sensor buffer
-1989.1,RESIZE sensor buffer
-1989.1,RESIZE sensor buffer
-1989.1,RESIZE sensor buffer
-2040.7,WEATHER_EVENT WEATHER EVENT STARTED
-2049.3,RESIZE sensor buffer
-2049.3,RESIZE sensor buffer
-2049.3,RESIZE sensor buffer
-2049.3,RESIZE sensor buffer
-2049.3,RESIZE sensor buffer
-2049.3,RESIZE sensor buffer
-2049.3,RESIZE sensor buffer
-2070.7,WEATHER_EVENT WEATHER EVENT ENDED
-2109.5,RESIZE sensor buffer
-2109.5,RESIZE sensor buffer
-2109.5,RESIZE sensor buffer
-2109.5,RESIZE sensor buffer
-2109.5,RESIZE sensor buffer
-2109.5,RESIZE sensor buffer
-2109.5,RESIZE sensor buffer
-2130.7,WEATHER_EVENT WEATHER EVENT STARTED
-2160.7,WEATHER_EVENT WEATHER EVENT ENDED
-2169.7,RESIZE sensor buffer
-2169.7,RESIZE sensor buffer
-2169.7,RESIZE sensor buffer
-2169.7,RESIZE sensor buffer
-2169.7,RESIZE sensor buffer
-2169.7,RESIZE sensor buffer
-2169.7,RESIZE sensor buffer
-3193.1,RESIZE sensor buffer
-3193.1,RESIZE sensor buffer
-3193.1,RESIZE sensor buffer
-3193.1,RESIZE sensor buffer
-3193.1,RESIZE sensor buffer
-3193.1,RESIZE sensor buffer
-3193.2,RESIZE sensor buffer
-3210.7,WEATHER_EVENT WEATHER EVENT STARTED
-3240.7,WEATHER_EVENT WEATHER EVENT ENDED
-3253.3,RESIZE sensor buffer
-3253.3,RESIZE sensor buffer
-3253.3,RESIZE sensor buffer
-3253.3,RESIZE sensor buffer
-3253.3,RESIZE sensor buffer
-3253.3,RESIZE sensor buffer
-3253.4,RESIZE sensor buffer
-3300.7,WEATHER_EVENT WEATHER EVENT STARTED
-3313.5,RESIZE sensor buffer
-3313.5,RESIZE sensor buffer
-3313.5,RESIZE sensor buffer
-3313.5,RESIZE sensor buffer
-3313.5,RESIZE sensor buffer
-3313.5,RESIZE sensor buffer
-3313.6,RESIZE sensor buffer
-3330.7,WEATHER_EVENT WEATHER EVENT ENDED
-3373.7,RESIZE sensor buffer
-3373.7,RESIZE sensor buffer
-3373.7,RESIZE sensor buffer
-3373.7,RESIZE sensor buffer
-3373.7,RESIZE sensor buffer
-3373.8,RESIZE sensor buffer
-3373.8,RESIZE sensor buffer
-3390.7,WEATHER_EVENT WEATHER EVENT STARTED
-3420.7,WEATHER_EVENT WEATHER EVENT ENDED
-3433.9,RESIZE sensor buffer
-3433.9,RESIZE sensor buffer
-3433.9,RESIZE sensor buffer
-3433.9,RESIZE sensor buffer
-3433.9,RESIZE sensor buffer
-3434.0,RESIZE sensor buffer
-3434.0,RESIZE sensor buffer
-3480.7,WEATHER_EVENT WEATHER EVENT STARTED
-3494.1,RESIZE sensor buffer
-3494.1,RESIZE sensor buffer
-3494.1,RESIZE sensor buffer
-3494.1,RESIZE sensor buffer
-3494.1,RESIZE sensor buffer
-3494.2,RESIZE sensor buffer
-3494.2,RESIZE sensor buffer
-3510.7,WEATHER_EVENT WEATHER EVENT ENDED
-3554.3,RESIZE sensor buffer
-3554.3,RESIZE sensor buffer
-3554.3,RESIZE sensor buffer
-3554.3,RESIZE sensor buffer
-3554.3,RESIZE sensor buffer
-3554.4,RESIZE sensor buffer
-3554.4,RESIZE sensor buffer
-3570.7,WEATHER_EVENT WEATHER EVENT STARTED
+331.2,WEATHER_EVENT WEATHER EVENT STARTED

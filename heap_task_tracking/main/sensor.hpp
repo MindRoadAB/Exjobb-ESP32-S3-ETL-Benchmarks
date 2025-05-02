@@ -7,8 +7,10 @@
 #include "freertos/task.h"
 #include "esp_random.h"
 
-#define MAX_BUFFER_ENTRIES 64 
+#define MAX_BUFFER_ENTRIES 4 
 #define MAX_PAYLOAD_LENGTH 128
+
+#define OVERFLOW_ENTRIES 4*MAX_BUFFER_ENTRIES
 
 #if USE_ETL
     #include <etl/deque.h>
