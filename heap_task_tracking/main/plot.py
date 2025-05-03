@@ -49,16 +49,16 @@ for etl in [0, 1]:
 
         for _, row in event_df.iterrows():
             ax.axvline(x=row['timestamp'], color='red', linestyle='--', alpha=0.6)
-            ax.text(
-                row['timestamp'], -0.08,  # below the axis
-                row['event'],
-                rotation=45,
-                fontsize=7,
-                color='red',
-                ha='right',
-                va='top',
-                transform=ax.get_xaxis_transform()
-            )
+            # ax.text(
+            #     row['timestamp'], -0.08,  # below the axis
+            #     row['event'],
+            #     rotation=45,
+            #     fontsize=7,
+            #     color='red',
+            #     ha='right',
+            #     va='top',
+            #     transform=ax.get_xaxis_transform()
+            # )
 
         ax.set_title(f'Heap Ratio Over Time (ETL={etl}, STATIC={static})')
         ax.set_xlabel('Time (s)')

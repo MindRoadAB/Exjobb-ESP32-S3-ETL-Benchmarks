@@ -23,7 +23,7 @@ else:
     raise RuntimeError(f"Unsupported OS: {SYSTEM}")
 
 MINUTES = 60 # as in, 60 seconds
-READ_DURATION = 15 * MINUTES 
+READ_DURATION = 60 * MINUTES 
 
 BAUD_RATE = 115200
 
