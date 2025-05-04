@@ -44,7 +44,7 @@ for etl in [0, 1]:
         heap_df = pd.read_csv(heap_file)
         event_df = pd.read_csv(event_file)
 
-        fig, ax = plt.subplots(figsize=(12, 6))
+        fig, ax = plt.subplots(figsize=(18, 6))
         ax.plot(heap_df['timestamp'], heap_df['ratio'], label='heap ratio', linewidth=1.5)
 
         for _, row in event_df.iterrows():

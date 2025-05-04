@@ -22,7 +22,7 @@
 #define DELAY_MS_HEAP_CHECK 5000
 #define DELAY_MS_OVERFLOW_FLUSH 60000
 #define DELAY_MS_WEATHER_EVENT_ON 30000
-#define DELAY_MS_WEATHER_EVENT_OFF 30000 
+#define DELAY_MS_WEATHER_EVENT_OFF 60000 
 
 /** Task tags */
 #define TAG_TEMP "TEMP"
@@ -333,7 +333,7 @@ static void task_weather_event(void *arg)
         }
         else
         {
-            printf("%s WEATHER EVENT ENDED\n", TAG_WEATHER_EVENT); 
+            //printf("%s WEATHER EVENT ENDED\n", TAG_WEATHER_EVENT); 
             vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_OFF));
         } 
         fast_mode = !fast_mode;
