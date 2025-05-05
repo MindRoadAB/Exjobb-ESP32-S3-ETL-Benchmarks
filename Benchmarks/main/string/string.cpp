@@ -327,6 +327,35 @@ string_benchmark(uint32_t cycles)
         "string: _str_medium.insert(3, 'Hello')"
     );
 
+
+    CYCLE_GET_COUNT_MUTATE (
+        {},
+        _str_medium.insert(3, 5, 'a'),
+        _str_medium.erase(3, 5),
+        cycles,
+        "string: _str_medium.insert(3, 5, 'a')"
+    );
+
+    CYCLE_GET_COUNT_MUTATE (
+        {},
+        _str_medium.insert(_str_medium.begin() + 3, 'a'),
+        _str_medium.erase(_str_medium.begin() + 3),
+        cycles,
+        "string: _str_medium.insert(_str_medium.begin() + 3, 'a')"
+    );
+
+    printf("\n%s\n", _str_medium.c_str());
+
+    CYCLE_GET_COUNT_MUTATE (
+        {},
+        _str_medium.insert(_str_medium.begin() + 3, _str_medium),
+        _str_medium.erase(_str_medium.begin() + 3, _str_medium.begin() + 3 + _str_medium.size()),
+        cycles,
+        "string: _str_medium.insert(_str_medium.begin() + 3, _str_medium)"
+    );
+
+    printf("\n%s\n", _str_medium.c_str());
+
     ESP_LOGI(tag, "DONE\n");    
 
 }

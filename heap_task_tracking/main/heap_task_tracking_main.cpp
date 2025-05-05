@@ -6,6 +6,9 @@
 
 #define EVENT_OVERFLOW_FULL (1 << 0)
 #define EVENT_OVERFLOW_CLEAR (1 << 1)
+#define EVENT_FAST_MODE_DONE (1 << 2)
+
+#define SENSOR_COUNT 7
 
 #define MAX_TASK_NUM 20
 #define MAX_BLOCK_NUM 20
@@ -20,9 +23,8 @@
 
 #define DELAY_MS_TRANSMIT_BASE 60000
 #define DELAY_MS_HEAP_CHECK 5000
-#define DELAY_MS_OVERFLOW_FLUSH 60000
-#define DELAY_MS_WEATHER_EVENT_ON 30000
-#define DELAY_MS_WEATHER_EVENT_OFF 60000 
+#define DELAY_MS_WEATHER_EVENT_ON 60000
+#define DELAY_MS_WEATHER_EVENT_OFF 120000 
 
 /** Task tags */
 #define TAG_TEMP "TEMP"
@@ -35,7 +37,7 @@
 #define TAG_TRANSMIT "TRANSMIT"
 #define TAG_HEAP_CHECK "HEAP_CHECK"
 #define TAG_OVERFLOW_FLUSH "OVERFLOW_FLUSH"
-#define TAG_WEATHER_EVENT "EVENT: WEATHER_EVENT"
+#define TAG_WEATHER_EVENT "EVENT: WEATHER"
 
 #define TAG_OVERFLOW "EVENT: OVERFLOW"
 #define TAG_RESIZE "EVENT: RESIZE"
@@ -45,7 +47,7 @@
     static StaticTask_t tcb_sensor_precip;
     static StaticTask_t tcb_sensor_light;
     static StaticTask_t tcb_sensor_airq;
-    static StaticTask_t task_sensor_baromp;
+    static StaticTask_t tcb_sensor_baromp;
     static StaticTask_t tcb_sensor_wind;
     static StaticTask_t tcb_sensor_humidity;
     static StaticTask_t tcb_transmit;
@@ -62,13 +64,14 @@
     static StackType_t stack_sensor_task_humidity[SENSOR_TASK_STACK_SIZE];
     static StackType_t stack_task_transmit[SENSOR_TASK_STACK_SIZE + 512];
     static StackType_t stack_task_heap_check[SENSOR_TASK_STACK_SIZE];
-    static StackType_t stack_task_overflow_flush[SENSOR_TASK_STACK_SIZE + 512];// + 1024];
-    static StackType_t stack_task_weather_event[BASE_TASK_STACK_SIZE];
+    static StackType_t stack_task_overflow_flush[2048]; //SENSOR_TASK_STACK_SIZE + 512];// + 1024];
+    static StackType_t stack_task_weather_event[BASE_TASK_STACK_SIZE + 512];
 #endif
 
 static volatile bool fast_mode = false;
 
 static EventGroupHandle_t event_overflow;
+static EventGroupHandle_t event_fast_mode_done;
 
 static size_t s_prepopulated_num = 0;
 static heap_task_totals_t s_totals_arr[MAX_TASK_NUM];
@@ -201,10 +204,11 @@ static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *l
                 xSemaphoreGive(overflow_lock);
 
                 /** Block until the overflow buffer is cleared */
-                xEventGroupWaitBits(event_overflow, EVENT_OVERFLOW_CLEAR, pdTRUE, pdFALSE, portMAX_DELAY);
-                xSemaphoreTake(overflow_lock, portMAX_DELAY);
+               xEventGroupWaitBits(event_overflow, EVENT_OVERFLOW_CLEAR, pdTRUE, pdFALSE, portMAX_DELAY);
+               /** Get the lock again to add the data to the overflow buffer */
+               xSemaphoreTake(overflow_lock, portMAX_DELAY);
             }
-
+            assert(_buf_overflow.size() < OVERFLOW_ENTRIES);
             /** Now add the data to the overflow buffer */ 
             _buf_overflow.push_back(std::move(data)); 
             printf("\nOverflow size: %u\n", _buf_overflow.size()); 
@@ -212,10 +216,8 @@ static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *l
         }
 
         /** A foul-weather event triggers whether data triggers 'fast-mode' and determines if data is recieved faster or slower  */
-        if (fast_mode) 
-            vTaskDelay(pdMS_TO_TICKS(DELAY_MS_SENSOR_FAST));
-        else
-            vTaskDelay(pdMS_TO_TICKS(DELAY_MS_SENSOR_BASE));
+        vTaskDelay(fast_mode ? pdMS_TO_TICKS(DELAY_MS_SENSOR_FAST) 
+                             : pdMS_TO_TICKS(DELAY_MS_SENSOR_BASE));
     }
 }
 
@@ -231,6 +233,8 @@ static void sensor_task(void* arg)
 static void transmit_task(void* arg)
 {
     while (true) {
+        xEventGroupWaitBits(event_overflow, EVENT_FAST_MODE_DONE, pdTRUE, pdFALSE, pdMS_TO_TICKS(DELAY_MS_TRANSMIT_BASE));
+        
         printf("\n[TRANSMIT TASK] Processing buffers...\n");
 
         /** lambda function for clearing a sensor's data buffer*/
@@ -262,7 +266,8 @@ static void transmit_task(void* arg)
         /** Dump info to serial for each task */
         esp_per_task_heap_info_dump();
         esp_task_info_dump();
-        vTaskDelay(pdMS_TO_TICKS(DELAY_MS_TRANSMIT_BASE)); 
+        //vTaskDelay(pdMS_TO_TICKS(DELAY_MS_TRANSMIT_BASE)); 
+       // xEventGroupSetBits(event_overflow, EVENT_FAST_MODE_DONE);
     }
 }
 
@@ -271,16 +276,20 @@ static void transmit_task(void* arg)
  */
 static void task_overflow_flush(void *arg)
 {
+
+    printf("\n[OVERFLOW FLUSH TASK] Waiting for overflow...\n");
     while (1)
     {
         /** Block until notified that the overflow is full */
         xEventGroupWaitBits(event_overflow, EVENT_OVERFLOW_FULL, pdTRUE, pdFALSE, portMAX_DELAY);
-
+        
         /** Get the mutex for the overflow buffer */
         if (xSemaphoreTake(overflow_lock, portMAX_DELAY)) 
         {
-            for (const auto& k: _buf_overflow) 
-                printf("Emptying overflow: %s overflow buffer\n", k.payload.c_str());
+            printf("\n[OVERFLOW FLUSH TASK] Overflow buffer full, flushing...\n");
+            size_t x = _buf_overflow.size(); 
+            for (; x > 0; --x) 
+                printf("%u\n", x); //Emptying overflow: %s overflow buffer\n", k.payload.c_str());
             
             _buf_overflow.clear();
             
@@ -290,7 +299,7 @@ static void task_overflow_flush(void *arg)
         
             xSemaphoreGive(overflow_lock);
         }
-        
+
         /** Signal that the overflow buffer is flushed */ 
         xEventGroupSetBits(event_overflow, EVENT_OVERFLOW_CLEAR);
     }
@@ -325,18 +334,13 @@ static void task_weather_event(void *arg)
     while (1)
     {
         ESP_LOGW("task weather: ", "Fast mode: %s\n", fast_mode ? "ON" : "OFF");
-    
-        if (fast_mode)
-        {
-            printf("%s WEATHER EVENT STARTED\n", TAG_WEATHER_EVENT); 
-            vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_ON));
-        }
-        else
-        {
-            //printf("%s WEATHER EVENT ENDED\n", TAG_WEATHER_EVENT); 
-            vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_OFF));
-        } 
+        fast_mode ? vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_ON)) 
+                  : vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_OFF));
+        
         fast_mode = !fast_mode;
+
+        if (!fast_mode)// && xSemaphoreTake(overflow_lock, portMAX_DELAY))
+            xEventGroupSetBits(event_overflow, EVENT_FAST_MODE_DONE);
     }
 }
 
@@ -363,10 +367,11 @@ extern "C" void app_main(void)
     /** Initialize global buffer mutex */
     sema_init(&overflow_lock);
 
-    /** Initialize the event group */
+    /** Initialize the event groups */
     event_overflow = xEventGroupCreate();
-    if (event_overflow == NULL) {
-        ESP_LOGE(TAG, "Failed to create event group");
+    if (event_overflow == NULL) 
+    {
+        ESP_LOGE(TAG, "Failed to create event group overflow");
         abort();
     }
 
@@ -394,14 +399,15 @@ extern "C" void app_main(void)
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, stack_sensor_task_precip, &tcb_sensor_precip, 0);
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, stack_sensor_task_light, &tcb_sensor_light, 0);
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, stack_sensor_task_airq, &tcb_sensor_airq, 0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, stack_sensor_task_baromp, &task_sensor_baromp, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, stack_sensor_task_baromp, &tcb_sensor_baromp, 0);
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, stack_sensor_task_wind, &tcb_sensor_wind, 0);
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, stack_sensor_task_humidity, &tcb_sensor_humidity, 0);
         
-        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, SENSOR_TASK_STACK_SIZE + 512, NULL, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
         xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 7, stack_task_transmit, &tcb_transmit, 1);
         xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, stack_task_heap_check, &tcb_heap_check, 1);
         xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE + 512, NULL, 5, stack_task_weather_event, &tcb_weather_event, 1);
+    
+        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 2048, NULL, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
     #else
         
         xTaskCreatePinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, NULL, 0);
@@ -414,7 +420,7 @@ extern "C" void app_main(void)
         
         xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 7, NULL, 1);
         xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 1024, NULL, 7, NULL, 1);
+        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 4096, NULL, 7, NULL, 1);
         xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE + 512, NULL, 5, NULL, 1);
     #endif
 
