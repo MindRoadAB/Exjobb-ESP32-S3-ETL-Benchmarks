@@ -44,8 +44,11 @@ for target_type in df['TYPE'].unique():
 
     # Plot
     ax = pivot.plot(kind='bar', figsize=(14, 6))
+    ax.set_yscale('log')
+    ax.yaxis.grid(True, which='both', linestyle='--', linewidth=0.5)
+
     plt.title(f'{target_type} Benchmarks (ETL vs STL)')
-    plt.ylabel('Cycles per iteration')
+    plt.ylabel('Cycles per iteration (log scale)')
     plt.xlabel('Operation')
     plt.xticks(rotation=45, ha='right')
     plt.legend(title='USE_ETL', labels=['STL', 'ETL'])
