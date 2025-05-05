@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string.h>
-#include <algorithm>
 #include <cstring>
 
 #define MAX_STRLN 256 
@@ -18,15 +17,15 @@
     using _string_view = std::string_view;
 #endif
 
-template <typename Iter>
-inline void _reverse(Iter first, Iter last) 
-{
-    #if USE_ETL
-        etl::reverse(first, last);
-    #else
-        std::reverse(first, last);
-    #endif
-}
+// template <typename Iter>
+// inline void _reverse(Iter first, Iter last) 
+// {
+//     #if USE_ETL
+//         etl::reverse(first, last);
+//     #else
+//         std::reverse(first, last);
+//     #endif
+// }
 
 extern const char *c_str_tiny;
 extern const char *c_str_medium; //"Hello World, it's a great day!";

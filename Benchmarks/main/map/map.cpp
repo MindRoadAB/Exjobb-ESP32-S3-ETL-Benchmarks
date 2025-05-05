@@ -1,5 +1,5 @@
+
 #include "map.hpp"
-#include "../common/common.hpp"
 
 constexpr const char *tag = "unordered_map";
 
@@ -110,6 +110,62 @@ map_benchmark(uint32_t cycles)
         umap_large.find(13),
         cycles,
         "unordered_map<int, string>: find(key)"
+    );
+    
+    CYCLE_GET_COUNT_RETURN(
+        umap_1.size(),
+        cycles,
+        "unordered_map: size()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        umap_1.empty(),
+        cycles,
+        "unordered_map: empty()"
+    );
+    
+    CYCLE_GET_COUNT_RETURN(
+        umap_1.at(2),
+        cycles,
+        "unordered_map: at(key)"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        umap_1.count(2),
+        cycles,
+        "unordered_map: count(key)"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        umap_1.count(100),
+        cycles,
+        "unordered_map: count(nonexistent key)"
+    );
+    
+    CYCLE_GET_COUNT_RETURN(
+        umap_large.bucket_count(),
+        cycles,
+        "unordered_map: bucket_count()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        umap_large.load_factor(),
+        cycles,
+        "unordered_map: load_factor()"
+    );
+    
+    CYCLE_GET_COUNT_RETURN(
+        (umap_1 == umap_1),
+        cycles,
+        "unordered_map: equality comparison (==)"
+    );
+    
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        umap_1[1] = "modified",
+        umap_1[1] = "foo",
+        cycles,
+        "unordered_map: operator[] overwrite"
     );
 
     ESP_LOGI(tag, "DONE\n");
