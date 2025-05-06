@@ -30,6 +30,8 @@ _vector_int ints = {
     120, 121, 122, 123, 124, 125, 126, 127
 };
 
+static _vector_int i_blank2 = ints; 
+
 void
 vector_benchmark(uint32_t cycles)
 {
@@ -38,7 +40,13 @@ vector_benchmark(uint32_t cycles)
         cycles, 
         "vector: _vector_int i{}"
     );
-
+    
+    CYCLE_GET_COUNT(
+        _vector_int i(256, 7),
+        cycles,
+        "vector: construct with size and value (256, 7)"
+    );
+    
     CYCLE_GET_COUNT (
         _vector_int i{ints}, 
         cycles, 
@@ -85,6 +93,7 @@ vector_benchmark(uint32_t cycles)
     
     value = i_blank.front();
     i_blank.erase(i_blank.begin()); 
+    
     CYCLE_GET_COUNT_MUTATE (
         {},
         i_blank.insert(i_blank.begin(), 2222),
@@ -109,6 +118,115 @@ vector_benchmark(uint32_t cycles)
         cycles,
         "_vector_int erase(0)"
     ); 
+    
+    CYCLE_GET_COUNT_RETURN(
+        (i_blank == i_blank2),
+        cycles,
+        "vector: i_blank == i_blank2"
+    );
+    
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.rbegin(),
+        cycles,
+        "vector: i_blank.rbegin()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.rend(),
+        cycles,
+        "vector: i_blank.rend()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.at(middle),
+        cycles,
+        "vector: i_blank.at(middle)"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.front(),
+        cycles,
+        "vector: i_blank.front()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.back(),
+        cycles,
+        "vector: i_blank.back()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.size(),
+        cycles,
+        "vector: i_blank.size()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.capacity(),
+        cycles,
+        "vector: i_blank.capacity()"
+    );
+
+    CYCLE_GET_COUNT_RETURN(
+        i_blank.max_size(),
+        cycles,
+        "vector: i_blank.max_size()"
+    );
+
+    // Reserve
+    CYCLE_GET_COUNT(
+        i_blank.reserve(512),
+        cycles,
+        "vector: i_blank.reserve(512)"
+    );
+
+    // Resize
+    CYCLE_GET_COUNT(
+        i_blank.resize(256),
+        cycles,
+        "vector: i_blank.resize(256)"
+    );
+
+    // Reverse
+    CYCLE_GET_COUNT(
+        _reverse(i_blank.begin(), i_blank.end()),
+        cycles,
+        "vector: reverse i_blank"
+    );
+    _reverse(i_blank.begin(), i_blank.end());
+
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        i_blank.insert(i_blank.begin() + middle, 10, 123),
+        i_blank.erase(i_blank.begin() + middle, i_blank.begin() + middle + 10),
+        cycles,
+        "vector: insert 10 elements at middle"
+    );
+
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        i_blank.insert(i_blank.end(), ints.begin(), ints.begin() + 10),
+        i_blank.erase(i_blank.end() - 10, i_blank.end()),
+        cycles,
+        "vector: insert range at end (append)"
+    );
+
+    CYCLE_GET_COUNT(
+        i_blank.clear(),
+        cycles,
+        "vector: i_blank.clear()"
+    );
+
+    CYCLE_GET_COUNT_MUTATE(
+        {},
+        {
+            i_blank.resize(100);
+            std::fill(i_blank.begin(), i_blank.end(), 42);
+        },
+        i_blank.clear(),
+        cycles,
+        "vector: resize and fill"
+    );
 
     ESP_LOGI(tag, "DONE\n");
 }

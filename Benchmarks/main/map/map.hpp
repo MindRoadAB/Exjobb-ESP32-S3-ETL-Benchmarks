@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "../common/common.hpp"
 
 #if USE_ETL
     #include <etl/string.h>

@@ -1,4 +1,7 @@
+#pragma once
+
 #include <stdio.h>
+#include <algorithm>
 
 #include "esp_cpu.h"
 #include "esp_log.h"
@@ -45,3 +48,16 @@
         printf("TEST: %s: %lu cycles/iteration\n", label, (time / MEASUREMENTS));      \
     } while (0)    
 
+#if USE_ETL
+    #include <etl/algorithm.h>
+#endif
+
+template <typename Iter>
+inline void _reverse(Iter first, Iter last) 
+{
+    #if USE_ETL
+        etl::reverse(first, last);
+    #else
+        std::reverse(first, last);
+    #endif
+}
