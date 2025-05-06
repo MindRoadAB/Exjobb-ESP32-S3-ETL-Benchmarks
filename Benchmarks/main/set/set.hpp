@@ -1,4 +1,5 @@
 #pragma once
+#include "../common/common.hpp"
 
 #if USE_ETL
     #include <etl/unordered_set.h>

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "../common/common.hpp"
+
 #include <string>
 
 #define MAX_DEQUE_SIZE 64

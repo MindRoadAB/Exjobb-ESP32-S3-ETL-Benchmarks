@@ -6,7 +6,8 @@ import json
 import os
 PROJECT_DIR = os.path.expanduser('./')
 
-SERIAL_PORT = '/dev/ttyUSB0'  # or COMx on Windows
+# Assuming Linux
+SERIAL_PORT = '/dev/ttyUSB0'  
 BAUD_RATE = 115200
 READ_TIME = 20  # seconds
 OUTPUT_DIR = os.path.join(PROJECT_DIR, 'results')

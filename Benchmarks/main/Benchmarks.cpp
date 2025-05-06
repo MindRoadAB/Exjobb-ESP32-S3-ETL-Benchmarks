@@ -1,4 +1,3 @@
-#include "common/common.hpp"
 
 #if USE_STRING
     #include "string/string.hpp"

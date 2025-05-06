@@ -1,4 +1,3 @@
-#include "../common/common.hpp"
 #include "string.hpp"
 
 constexpr const char *tag = "string";
@@ -56,6 +55,7 @@ const char *c_str_jumbo = "Hello World, it's a great day!"
                         "Hello World, it's a great day!"
                         "Hello World, it's a great day!"
                         "Hello World, it's a great day!";
+
 _string _str_tiny{c_str_tiny};
 _string _str_medium{c_str_medium};
 _string _str_large{c_str_large};
@@ -195,14 +195,12 @@ string_benchmark(uint32_t cycles)
         cycles,
         "string: _str_large.rend()"
     );
-
     
     CYCLE_GET_COUNT_RETURN(
         _str_large.data(),
         cycles,
         "string: _str_large.data()"
     );
-
 
     CYCLE_GET_COUNT_RETURN(
         _str_large.empty(),
@@ -222,7 +220,6 @@ string_benchmark(uint32_t cycles)
         "string: _str_large.capacity()"
     );
 
-
     CYCLE_GET_COUNT_RETURN(
         _str_large.size(),
         cycles,
@@ -237,7 +234,6 @@ string_benchmark(uint32_t cycles)
 
     _str_tiny.resize(2); /** undo resize above */
 
-
     CYCLE_GET_COUNT(
          _str_tiny.resize_and_overwrite(10, [](char* data, size_t capacity) -> size_t {
             const char* new_text = "world";
@@ -249,9 +245,6 @@ string_benchmark(uint32_t cycles)
     );
 
     _str_tiny = "hi"; /** undo resize and overwrite */
-
-
-
 
     CYCLE_GET_COUNT(
         _reverse(_str_tiny.begin(), _str_tiny.end()),
@@ -277,7 +270,7 @@ string_benchmark(uint32_t cycles)
         "string: reverse _str_jumbo"
     );
 
-    // Undo previous reverse operations
+    /** Undo previous reverse operations */
     _reverse(_str_tiny.begin(), _str_tiny.end());
     _reverse(_str_medium.begin(), _str_medium.end());
     _reverse(_str_large.begin(), _str_large.end());
@@ -369,9 +362,9 @@ string_benchmark(uint32_t cycles)
     CYCLE_GET_COUNT_MUTATE (
         _str_jumbo = c_str_jumbo;,
         _str_jumbo.replace(half_jumbo, temp_len, temp),
-        _str_medium.replace(half_jumbo, temp_len, substr),
+        _str_jumbo.replace(half_jumbo, temp_len, substr),
         cycles,
-        "string: _str_jumbo.replace(middle, hello again)"
+        "string: _str_jumbo.replace(middle_pos, \"hello again\")"
     );
     
     ESP_LOGI(tag, "DONE\n");    

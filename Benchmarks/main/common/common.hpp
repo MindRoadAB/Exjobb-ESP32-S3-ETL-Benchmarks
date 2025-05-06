@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdio.h>
-#include <algorithm>
+
 
 #include "esp_cpu.h"
 #include "esp_log.h"
@@ -50,6 +50,8 @@
 
 #if USE_ETL
     #include <etl/algorithm.h>
+#else
+    #include <algorithm>
 #endif
 
 template <typename Iter>

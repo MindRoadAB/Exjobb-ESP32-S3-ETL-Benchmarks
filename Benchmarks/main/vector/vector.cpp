@@ -1,19 +1,10 @@
 #include "vector.hpp"
-#include "../common/common.hpp"
 
 
 constexpr const char *tag = "vector";
 
-
-_vector_dummy dummy = {
-    {"sdlkfj", 0},   {"sdlkjsdflkj", 1},   {"sdlfkjsdlkfj", 2},   {"sdlkfjsdflkjsdf", 3},
-    {"sdlkfj", 4},   {"sdlkjsdflkj", 5},   {"sdlfkjsdlkfj", 6},   {"sdlkfjsdflkjsdf", 7},
-    {"sdlkfj", 8},   {"sdlkjsdflkj", 9},   {"sdlfkjsdlkfj", 10},  {"sdlkfjsdflkjsdf", 11},
-};
-
-_vector_dummy d_blank{};
-
 _vector_int i_blank{};
+
 _vector_int ints = {
     0,     1,   2,   3,   4,   5,   6,   7,   8,   9,
     10,   11,  12,  13,  14,  15,  16,  17,  18,  19, 

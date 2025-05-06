@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-# Load the data
 with open('./results/benchmark_results.json') as f:
     data = json.load(f)
 
@@ -21,7 +20,7 @@ for context, operations in data.items():
 
 df = pd.DataFrame(rows)
 
-# Output folder for plots
+# Output directory 
 output_dir = Path('./results/plots')
 output_dir.mkdir(exist_ok=True)
 
@@ -39,7 +38,6 @@ for target_type in df['TYPE'].unique():
         print(f"⚠️ Skipping '{target_type}' — no common operations.")
         continue
 
-    # Optional: sort by STL baseline
     pivot = pivot.sort_values(by=0)
 
     # Plot
