@@ -1,11 +1,6 @@
-Todo as of 22 april lunch:
-  - ~~clean up macros for consitency, reduce redundancy~~
-  - consider if you have all the benchmarks you want (say, additional erase overrides, for example)
-  - ~~edit CMAKE lists for conditional compilation of each of the different tests, (set, vector, etc. )~
+There are two separate projects here, Benchmarks and heap_task_tracking
+To run them (linux), you first need to get ESP-IDF, instructions can be found here: 
 
+https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html
 
-
-## Benchmarking
-    - remember: $idf.py menuconfig -> Component config -> ESP System Settings -> Disable watchdog timer
-    - remember: Increase main stack size:
-        - $idf.py menuconfig -> componenet ->config - Esp system settings-> Main Task Stack Size -> 8192 
+Then proceed to either Benchmarks or heap_task_tracking
