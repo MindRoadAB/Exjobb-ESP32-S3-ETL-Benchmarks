@@ -1,43 +1,60 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- | -------- | -------- |
+This program simulates an embedded weather station, sort of.
+There are several sensors which "gather" data and "transmit" it onward at regular time intervals. 
 
-# Heap Task Tracking Example
+Periodically, an "extreme weather event" occurs and triggers more rapid reading of data. 
 
-## Overview
+The purpose of this is to compare how using buffers that consist of ```std::deque``` which use dynamic memory allocation compare to using the Embedded Template Library-based ```etl::deque``` which has a maximum size and does not dynamically allocate memory.
 
-The example creates a task which allocates random amount of memory in each iteration and demonstrates use of internal API to get heap info on per task basis running in a system.
+The program uses FreeRTOS tasks (assuming dual core esp-32s) and events and semaphores to coordinate work amongst the different tasks.
 
-Heap task tracking feature has dependency on some of the internal heap debugging features (e.g. heap poisoning) which allows to store task control block in metadata of each heap block.
+Assuming you have installed esp-idf according to the installation instructions from the previous page, after cloning this repository (replace with your own path):
+```cd path/to/my/repo/.../Exjobb-ESP32-S3-ETL-Benchmarks/heap_task_tracking```
 
-This adds small memory overhead on per heap block and hence this feature should be used for debugging purpose only.
-
-### Configure the project
-
-To change the `Heap Corruption Detection level`, open the project configuration menu (`idf.py menuconfig`).
-
-Navigate to `Component config -> Heap memory debugging` menu. In `Heap corruption detection` menu select either "Light Impact" or "Comprehensive".
-
-**Note:** Enabling “Comprehensive” detection has a substantial runtime performance impact.
-
-### Build and Flash
-
-Run `idf.py -p PORT flash monitor` to build and flash the project..
-
-(To exit the serial monitor, type ``Ctrl-]``.)
-
-See the [Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html) for full steps to configure and use ESP-IDF to build projects.
-
-## Example Output
-
+Setup the project:
 ```
-Task: Pre-Scheduler allocs -> CAP_8BIT: 5360 CAP_32BIT: 0
-Task: esp_timer -> CAP_8BIT: 1724 CAP_32BIT: 0
-Task: ipc0 -> CAP_8BIT: 8316 CAP_32BIT: 0
-Task: main -> CAP_8BIT: 3480 CAP_32BIT: 0
-Task: ipc1 -> CAP_8BIT: 12 CAP_32BIT: 0
-Task: example_task -> CAP_8BIT: 696 CAP_32BIT: 0
+idf.py set-target <my device>
 ```
 
+Where ```<my_device>``` is an esp32 device. This project has been tested on ESP32-S3 model as well as a base ESP-32.
 
-## TODO:
-Set task stack sizes for xTaskCreateStaticPinnedToCore to adjust dynamically (based on ETL or not) at compile time to have more efficient usage.
+For example, using an ESP32-S3 I do:
+```
+idf.py set-target esp32s3
+```
+
+Then:
+
+```
+idf.py menuconfig
+```
+1) And go to: Component config --> ESP System Settings --> Main task stack size: 8192
+2) Component config --> FreeRTOS --> Kernel --> configUSE_TRACE_FACILITY
+
+## To run an instance:
+You can run one of four versions of this program, which will run indefinitely:
+```
+idf.py -DUSE_ETL=<0|1> -DUSE_STATIC=<0|1> build flash monitor
+```
+
+```-DUSE_ETL=1``` determines that Embedded Template Library will be used for the buffers in the program. ```-DUSE_ETL=0``` uses the default libstdc++ version of string and deque for data and buffers. 
+
+```-DUSE_STATIC=0``` will create tasks (dynamic allocation) with ```xTaskCreatePinnedToCore``` and ```-DUSE_STATIC=1``` will allocate tasks statically with ```xTaskCreateStaticPinnedToCore```.
+
+## To run the simulation
+You can run all four versions in a row (time for each program to run is set inside ```main/simulation.py``` near the top).
+
+Do:
+```
+python3 main/simulation.py
+```
+
+## To plot the results:
+You will need ```pandas``` and ```matplotlib```
+Checkout:
+- https://pandas.pydata.org/docs/getting_started/install.html
+- https://matplotlib.org/stable/install/index.html
+
+run:
+```
+python3 main/plot.py
+```
