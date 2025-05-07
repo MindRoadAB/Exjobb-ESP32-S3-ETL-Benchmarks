@@ -4,10 +4,20 @@ import time
 import re
 import json
 import os
+import platform
+
+
 PROJECT_DIR = os.path.expanduser('./')
 
-# Assuming Linux
-SERIAL_PORT = '/dev/ttyUSB0'  
+SYSTEM = platform.system()
+
+if SYSTEM == 'Linux':
+    SERIAL_PORT = '/dev/ttyUSB0'
+elif SYSTEM == 'Darwin':
+    SERIAL_PORT = '/dev/cu.usbserial-110'  
+else:
+    raise RuntimeError(f"Unsupported OS: {SYSTEM}")
+
 BAUD_RATE = 115200
 READ_TIME = 20  # seconds
 OUTPUT_DIR = os.path.join(PROJECT_DIR, 'results')
