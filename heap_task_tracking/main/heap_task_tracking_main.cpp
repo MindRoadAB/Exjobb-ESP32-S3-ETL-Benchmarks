@@ -63,7 +63,7 @@
     static StackType_t stack_sensor_task_humidity[SENSOR_TASK_STACK_SIZE];
     static StackType_t stack_task_transmit[SENSOR_TASK_STACK_SIZE + 512];
     static StackType_t stack_task_heap_check[SENSOR_TASK_STACK_SIZE];
-    static StackType_t stack_task_overflow_flush[2048]; //SENSOR_TASK_STACK_SIZE + 512];// + 1024];
+    static StackType_t stack_task_overflow_flush[2048];
     static StackType_t stack_task_weather_event[BASE_TASK_STACK_SIZE + 512];
 #endif
 
@@ -91,7 +91,8 @@ static sensor_context_t sensor_context_wind;
 static sensor_context_t sensor_context_humidity;
 
  /** Gives a per-task dump of the name, state, priority, and highest stack use of each task */
-static void esp_task_info_dump(void)
+static void
+esp_task_info_dump()
 {
     constexpr UBaseType_t MAX_TASKS = MAX_TASK_NUM; 
     TaskStatus_t task_array[MAX_TASKS];
@@ -110,14 +111,15 @@ static void esp_task_info_dump(void)
 }
 
 /** Directly from ESP-IDF examples on displaying heap usage (capability based) for each task */
-static void esp_per_task_heap_info_dump(void)
+static void
+esp_per_task_heap_info_dump()
 {
     heap_task_info_params_t heap_info{};
     heap_info.caps[0] = MALLOC_CAP_8BIT;
     heap_info.mask[0] = MALLOC_CAP_8BIT;
     heap_info.caps[1] = MALLOC_CAP_32BIT;
     heap_info.mask[1] = MALLOC_CAP_32BIT;
-    heap_info.tasks = NULL;
+    heap_info.tasks = nullptr;
     heap_info.num_tasks = 0;
     heap_info.totals = s_totals_arr;
     heap_info.num_totals = &s_prepopulated_num;
@@ -138,10 +140,11 @@ static void esp_per_task_heap_info_dump(void)
 }
 
 /** Wrapper for initializing a semaphore. Abort the program if failure on create (can't synchronize without it) */
-static void sema_init(SemaphoreHandle_t *s_lock)
+static void
+sema_init(SemaphoreHandle_t *s_lock)
 {
     *s_lock = xSemaphoreCreateMutex();
-    if (*s_lock == NULL) 
+    if (*s_lock == nullptr)
     {
         ESP_LOGE("sema_init", "Failed to create mutex");
         abort();
@@ -149,10 +152,11 @@ static void sema_init(SemaphoreHandle_t *s_lock)
 }
 
 /** Generate a fake data payload to be placed in a sensor's data buffer */
-static string_t generate_fake_payload(const char* prefix, size_t len) {
-    string_t s = prefix; 
+static string_t
+generate_fake_payload(const char* prefix)
+{    string_t s = prefix;
     s += ": ";
-    for (size_t i = 0; i < (esp_random() % len + 1); ++i) 
+    for (size_t i = 0; i < (esp_random() % MAX_PAYLOAD_LENGTH); ++i)
         s += static_cast<char>((esp_random() % 26) + 65);  
 
     return s;
@@ -162,7 +166,8 @@ static string_t generate_fake_payload(const char* prefix, size_t len) {
  *  If the sensor's buffer is full, the data is stored in the global overflow buffer. The goal is to
  *  not drop sensor data reads.
  */
-static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *label) 
+[[noreturn]] static void
+run_sensor_task(sensor_t& s, measurement_data_t& data, const char *label)
 {
     while (true) 
     {
@@ -170,7 +175,7 @@ static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *l
 
         /** "Read" sensor data, set the sensor ID, and record the timestamp of the data read */ 
         data.timestamp = time(nullptr); 
-        data.payload = generate_fake_payload(label, MAX_PAYLOAD_LENGTH - 1);
+        data.payload = generate_fake_payload(label);
         data.sensor_id = static_cast<sensor_id_t>(s.id); 
 
         bool buffer_full = false;
@@ -220,15 +225,17 @@ static void run_sensor_task(sensor_t& s, measurement_data_t& data, const char *l
 }
 
 /** Setup-wrapper for run_sensor_task */
-static void sensor_task(void* arg)     
+static void
+sensor_task(void* arg)
 { 
     measurement_data_t data{};
-    sensor_context_t *s = (sensor_context_t *)(arg); 
+    auto *s = (sensor_context_t *)(arg);
     run_sensor_task(*(s->sensor), data, s->label); 
 }
 
 /** "Transmits" the data in each sensor's buffer. Clears the buffer and, if using libstdc++, resizes the buffer */
-static void transmit_task(void* arg)
+[[noreturn]] static void
+transmit_task(void* arg)
 {
     while (true) {
         /** Runs if Fast-mode finishes, or DELAY_MS_TRANSMIT_BASE timeout, whichever is first
@@ -273,11 +280,12 @@ static void transmit_task(void* arg)
 /** Waits for an event signal from run_sensor_task when the overflow buffer is full and then clears the buffer.
  *  When the buffer is cleared, send event notification back to run_sensor_task
  */
-static void task_overflow_flush(void *arg)
+[[noreturn]] static void
+task_overflow_flush(void *arg)
 {
 
     printf("\n[OVERFLOW FLUSH TASK] Waiting for overflow...\n");
-    while (1)
+    while (true)
     {
         /** Block until notified that the overflow is full */
         xEventGroupWaitBits(event_overflow, EVENT_OVERFLOW_FULL, pdTRUE, pdFALSE, portMAX_DELAY);
@@ -309,7 +317,7 @@ static void task_overflow_flush(void *arg)
  *  the largest free heap block, and the 
  *  ratio of largest block / heap available 
  **/
-static void 
+[[noreturn]]static void
 task_heap_check(void *arg)
 {
     uint32_t free_heap_size{0};
@@ -317,7 +325,7 @@ task_heap_check(void *arg)
     uint32_t largest_block{0}; 
     
     const char *TAG = "task_heap_check";
-    while (1)
+    while (true)
     {
         free_heap_size = heap_caps_get_free_size(MALLOC_CAP_8BIT);
         minimum_free_heap_size = heap_caps_get_minimum_free_size(MALLOC_CAP_8BIT); 
@@ -337,10 +345,10 @@ task_heap_check(void *arg)
  * This will trigger sensors to take more frequent reads, 
  * increasing the load on the system 
  **/
-static void 
+[[noreturn]] static void
 task_weather_event(void *arg)
 {
-    while (1)
+    while (true)
     {
         ESP_LOGW("task weather: ", "Fast mode: %s\n", fast_mode ? "ON" : "OFF");
         fast_mode ? vTaskDelay(pdMS_TO_TICKS(DELAY_MS_WEATHER_EVENT_ON)) 
@@ -355,20 +363,20 @@ task_weather_event(void *arg)
 }
 
 static void
-setup(void)
+setup()
 {
     /** For some reason, the function esp_task_info_dump is allowing the memory address
      *  that stores the name "main" for the main task to be overwritten. Fix this here.
      */
     static const char *TAG = "app_main";
-    vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
+    vTaskSetThreadLocalStoragePointer(nullptr, 0, (void*)TAG);
     
     /** Initialize global buffer mutex */
     sema_init(&overflow_lock);
 
     /** Initialize the event groups */
     event_overflow = xEventGroupCreate();
-    if (event_overflow == NULL) 
+    if (event_overflow == nullptr)
     {
         ESP_LOGE(TAG, "Failed to create event group overflow");
         abort();
@@ -408,40 +416,6 @@ app_main(void)
         printf("USING xTaskCreate...\n");
     #endif
 
-    // /** For some reason, the function esp_task_info_dump is allowing the memory address
-    //  *  that stores the name "main" for the main task to be overwritten. Fix this here.
-    //  */
-    // static const char *TAG = "app_main";
-    // vTaskSetThreadLocalStoragePointer(NULL, 0, (void*)TAG);
-    
-    // /** Initialize global buffer mutex */
-    // sema_init(&overflow_lock);
-
-    // /** Initialize the event groups */
-    // event_overflow = xEventGroupCreate();
-    // if (event_overflow == NULL) 
-    // {
-    //     ESP_LOGE(TAG, "Failed to create event group overflow");
-    //     abort();
-    // }
-
-    // /** Initialize all sensors */
-    // sensor_init(&sensor_temp,     S_TEMP);
-    // sensor_init(&sensor_precip,   S_PRECIP);
-    // sensor_init(&sensor_light,    S_LIGHT);
-    // sensor_init(&sensor_airq,     S_AIR_Q);
-    // sensor_init(&sensor_baromp,   S_BAROM_P);
-    // sensor_init(&sensor_wind,     S_WIND);
-    // sensor_init(&sensor_humidity, S_HUMIDITY);
-
-    // sensor_context_temp     = {&sensor_temp,     TAG_TEMP}; 
-    // sensor_context_precip   = {&sensor_precip,   TAG_PRECIP}; 
-    // sensor_context_light    = {&sensor_light,    TAG_LIGHT}; 
-    // sensor_context_airq     = {&sensor_airq,     TAG_AIRQ}; 
-    // sensor_context_baromp   = {&sensor_baromp,   TAG_BAROMP}; 
-    // sensor_context_wind     = {&sensor_wind,     TAG_WIND}; 
-    // sensor_context_humidity = {&sensor_humidity, TAG_HUMIDITY}; 
-
     setup();
 
     /** Launch tasks */
@@ -456,25 +430,25 @@ app_main(void)
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, stack_sensor_task_humidity, &tcb_sensor_humidity, 0);
         
         /** Other tasks */
-        xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 7, stack_task_transmit, &tcb_transmit, 1);
-        xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, stack_task_heap_check, &tcb_heap_check, 1);
-        xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE + 512, NULL, 5, stack_task_weather_event, &tcb_weather_event, 1);
-        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 2048, NULL, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
+        xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, nullptr, 7, stack_task_transmit, &tcb_transmit, 1);
+        xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, nullptr, 5, stack_task_heap_check, &tcb_heap_check, 1);
+        xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE + 512, nullptr, 5, stack_task_weather_event, &tcb_weather_event, 1);
+        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 2048, nullptr, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
     #else
         /** Sensor tasks */ 
-        xTaskCreatePinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, NULL, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, NULL, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, nullptr, 0);
         
         /** Other tasks */
-        xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, NULL, 7, NULL, 1);
-        xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE + 512, NULL, 5, NULL, 1);
-        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 2048, NULL, 7, NULL, 1);
+        xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE + 512, nullptr, 7, nullptr, 1);
+        xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, nullptr, 5, nullptr, 1);
+        xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, BASE_TASK_STACK_SIZE + 512, nullptr, 5, nullptr, 1);
+        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, 2048, nullptr, 7, nullptr, 1);
     #endif
 }
 
