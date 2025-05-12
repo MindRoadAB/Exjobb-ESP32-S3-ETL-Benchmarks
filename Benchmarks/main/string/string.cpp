@@ -73,7 +73,6 @@ const _string_view _str_vu{c_str_large};
 void
 string_benchmark(uint32_t cycles) 
 {
-
     CYCLE_GET_COUNT(
         _string(),
         cycles,
