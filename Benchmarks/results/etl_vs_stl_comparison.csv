@@ -1,0 +1,132 @@
+TYPE,OPERATION,STL,ETL,delta,ETL_faster,percent_faster
+deque,deque<int>: back(),43.0,47.0,-4.0,False,-9.30232558139535
+deque,"deque<int>: deque_int(begin, end)",5683.0,1481.0,4202.0,True,73.9398205173324
+deque,deque<int>: deque_int{copy},5775.0,1465.0,4310.0,True,74.63203463203463
+deque,deque<int>: deque_int{empty copy},4377.0,112.0,4265.0,True,97.44116975097099
+deque,deque<int>: deque_int{},3968.0,77.0,3891.0,True,98.05947580645162
+deque,deque<int>: erase(pos),860.0,664.0,196.0,True,22.790697674418606
+deque,deque<int>: front(),11.0,7.0,4.0,True,36.36363636363637
+deque,"deque<int>: insert(middle, val)",1246.0,980.0,266.0,True,21.34831460674157
+deque,"deque<int>: insert(pos, begin, end)",2519.0,1671.0,848.0,True,33.66415244144502
+deque,deque<int>: operator[middle],49.0,54.0,-5.0,False,-10.204081632653061
+deque,deque<int>: push_back(val),68.0,39.0,29.0,True,42.64705882352941
+deque,deque<int>: push_front(val),1224.0,36.0,1188.0,True,97.05882352941177
+deque,deque<string>: back(),44.0,50.0,-6.0,False,-13.636363636363635
+deque,"deque<string>: deque_string(begin, end)",9934.0,6153.0,3781.0,True,38.06120394604389
+deque,deque<string>: deque_string{copy},10016.0,6141.0,3875.0,True,38.68809904153355
+deque,deque<string>: deque_string{empty copy},4237.0,122.0,4115.0,True,97.12060420108567
+deque,deque<string>: deque_string{},4051.0,87.0,3964.0,True,97.85238212786966
+deque,deque<string>: erase(pos),1239.0,1524.0,-285.0,False,-23.002421307506054
+deque,deque<string>: front(),11.0,7.0,4.0,True,36.36363636363637
+deque,"deque<string>: insert(middle, val)",2685.0,3151.0,-466.0,False,-17.35567970204842
+deque,"deque<string>: insert(pos, begin, end)",2959.0,3594.0,-635.0,False,-21.459952686718488
+deque,deque<string>: operator[middle],57.0,56.0,1.0,True,1.7543859649122806
+deque,deque<string>: push_back(val),285.0,385.0,-100.0,False,-35.08771929824561
+deque,deque<string>: push_front(val),1452.0,382.0,1070.0,True,73.69146005509641
+map,unordered_map: at(key),72.0,45.0,27.0,True,37.5
+map,unordered_map: bucket_count(),7.0,7.0,0.0,False,0.0
+map,unordered_map: count(key),73.0,87.0,-14.0,False,-19.17808219178082
+map,unordered_map: count(nonexistent key),65.0,72.0,-7.0,False,-10.76923076923077
+map,unordered_map: empty(),7.0,7.0,0.0,False,0.0
+map,unordered_map: equality comparison (==),424.0,2187.0,-1763.0,False,-415.8018867924528
+map,unordered_map: load_factor(),8.0,8.0,0.0,False,0.0
+map,unordered_map: operator[] overwrite,230.0,300.0,-70.0,False,-30.434782608695656
+map,unordered_map: size(),7.0,7.0,0.0,False,0.0
+map,"unordered_map<int, string>: _map m(umap_1.begin(), umap_1.end())",10204.0,2284.0,7920.0,True,77.61662093296746
+map,"unordered_map<int, string>: _map m{umap_1}",8368.0,2261.0,6107.0,True,72.98040152963671
+map,"unordered_map<int, string>: _map m{}",167.0,497.0,-330.0,False,-197.60479041916167
+map,"unordered_map<int, string>: erase(key)",1015.0,185.0,830.0,True,81.77339901477832
+map,"unordered_map<int, string>: find(key)",49.0,43.0,6.0,True,12.244897959183673
+map,"unordered_map<int, string>: insert(begin, end)",4378.0,1160.0,3218.0,True,73.50388305162174
+map,"unordered_map<int, string>: insert(map.begin, std::make_pair)",1514.0,602.0,912.0,True,60.23778071334214
+map,"unordered_map<int, string>: insert(mapElem)",1421.0,480.0,941.0,True,66.22097114707952
+map,"unordered_map<int, string>: insert(std::make_pair)",1513.0,569.0,944.0,True,62.39259748843358
+map,"unordered_map<int, string>: operator[]",64.0,48.0,16.0,True,25.0
+set,"unordered_set<int>: _set_int s(begin, end)",79013.0,10687.0,68326.0,True,86.47437763406022
+set,unordered_set<int>: _set_int s{copy},63679.0,10668.0,53011.0,True,83.24722435967902
+set,unordered_set<int>: _set_int s{},167.0,1376.0,-1209.0,False,-723.9520958083832
+set,unordered_set<int>: operator= constructor,63681.0,10668.0,53013.0,True,83.24775050643048
+set,unordered_set<int>: uset.contains(key),87.0,95.0,-8.0,False,-9.195402298850574
+set,unordered_set<int>: uset.erase(key),999.0,159.0,840.0,True,84.08408408408408
+set,unordered_set<int>: uset.find(key),60.0,59.0,1.0,True,1.6666666666666667
+set,"unordered_set<int>: uset.insert(begin, end)",8129.0,1917.0,6212.0,True,76.41776356255382
+set,"unordered_set<int>: uset.insert(hint, key)",1378.0,214.0,1164.0,True,84.47024673439768
+set,unordered_set<int>: uset.insert(key),1394.0,214.0,1180.0,True,84.64849354375896
+set,"unordered_set<string>: _set_str s(begin, end)",35054.0,8682.0,26372.0,True,75.23249843099218
+set,unordered_set<string>: _set_string s{copy},26738.0,8653.0,18085.0,True,67.6378188346174
+set,unordered_set<string>: _set_string s{},167.0,1376.0,-1209.0,False,-723.9520958083832
+set,unordered_set<string>: operator= constructor,26738.0,8653.0,18085.0,True,67.6378188346174
+set,unordered_set<string>: uset.contains(key),955.0,350.0,605.0,True,63.35078534031413
+set,unordered_set<string>: uset.erase(key),1239.0,514.0,725.0,True,58.51493139628733
+set,unordered_set<string>: uset.find(key),544.0,442.0,102.0,True,18.75
+set,"unordered_set<string>: uset.insert(begin, end)",9325.0,2379.0,6946.0,True,74.48793565683646
+set,"unordered_set<string>: uset.insert(hint, key)",2371.0,635.0,1736.0,True,73.21805145508225
+set,unordered_set<string>: uset.insert(key),2381.0,604.0,1777.0,True,74.632507349853
+string,_str_jumbo += 'a',108.0,122.0,-14.0,False,-12.962962962962962
+string,_str_jumbo.clear(),14.0,39.0,-25.0,False,-178.57142857142858
+string,compare: _str_jumbo == _str_jumbo2,7.0,8.0,-1.0,False,-14.285714285714285
+string,"string: _str_jumbo.replace(middle_pos, ""hello again"")",216.0,721.0,-505.0,False,-233.79629629629628
+string,string: _str_jumbo[888],8.0,7.0,1.0,True,12.5
+string,string: _str_large.at(88),26.0,6.0,20.0,True,76.92307692307693
+string,string: _str_large.back(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.begin(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.capacity(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.data(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.empty(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.end(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.front(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.max_size(),7.0,7.0,0.0,False,0.0
+string,string: _str_large.rbegin(),23.0,7.0,16.0,True,69.56521739130434
+string,string: _str_large.rend(),20.0,7.0,13.0,True,65.0
+string,string: _str_large.size(),7.0,7.0,0.0,False,0.0
+string,string: _str_large[88],7.0,7.0,0.0,False,0.0
+string,"string: _str_medium.erase(3, 5)",370.0,364.0,6.0,True,1.6216216216216217
+string,string: _str_medium.erase(_str_medium.begin() + 3),399.0,378.0,21.0,True,5.263157894736842
+string,"string: _str_medium.insert(3, 'Hello')",490.0,470.0,20.0,True,4.081632653061225
+string,"string: _str_medium.insert(3, 5, 'a')",420.0,399.0,21.0,True,5.0
+string,"string: _str_medium.insert(_str_medium.begin() + 3, 'a')",381.0,330.0,51.0,True,13.385826771653544
+string,string: _str_medium.push_back('a'),37.0,33.0,4.0,True,10.81081081081081
+string,string: _str_medium[11],7.0,7.0,0.0,False,0.0
+string,string: _str_tiny.resize(MAX_STRLN),27.0,50.0,-23.0,False,-85.18518518518519
+string,"string: _str_tiny.resize_and_overwrite(size, operation)",137.0,81.0,56.0,True,40.87591240875913
+string,string: _str_tiny[1],7.0,7.0,0.0,False,0.0
+string,string: append c_str_jumbo,3142.0,26912.0,-23770.0,False,-756.524506683641
+string,string: c_str_jumbo,5083.0,20657.0,-15574.0,False,-306.3938618925831
+string,string: c_str_large,2274.0,2477.0,-203.0,False,-8.927000879507476
+string,string: c_str_medium,2130.0,915.0,1215.0,True,57.04225352112676
+string,string: c_str_tiny,160.0,187.0,-27.0,False,-16.875
+string,string: reverse _str_jumbo,12041.0,6376.0,5665.0,True,47.04758740968359
+string,string: reverse _str_large,811.0,430.0,381.0,True,46.9790382244143
+string,string: reverse _str_medium,300.0,160.0,140.0,True,46.666666666666664
+string,string: reverse _str_tiny,63.0,34.0,29.0,True,46.03174603174603
+string,string: string s(),24.0,61.0,-37.0,False,-154.16666666666669
+string,"string: string s(MAX_STRLN, 'a')",2078.0,244.0,1834.0,True,88.25794032723773
+string,string: string s(c_str_large),2274.0,2477.0,-203.0,False,-8.927000879507476
+string,"string: string s(c_str_large, size)",2109.0,1386.0,723.0,True,34.28165007112376
+string,string: string s(string_view v),2162.0,1385.0,777.0,True,35.93894542090657
+vector,_vector_int erase(0),6194.0,6160.0,34.0,True,0.5489183080400387
+vector,_vector_int erase(middle),3120.0,3086.0,34.0,True,1.0897435897435896
+vector,"_vector_int i(ints.begin(), ints.end())",8162.0,6219.0,1943.0,True,23.805439843175694
+vector,"_vector_int insert(0, 2222)",4642.0,4627.0,15.0,True,0.3231365790607497
+vector,"_vector_int insert(middle, 2222)",2337.0,2323.0,14.0,True,0.599058622165169
+vector,_vector_int pop_back(),8.0,8.0,0.0,False,0.0
+vector,_vector_int push_back(111),39.0,20.0,19.0,True,48.717948717948715
+vector,vector: _vector_int i{ints} (128 members) ,8203.0,6226.0,1977.0,True,24.100938680970376
+vector,vector: _vector_int i{},67.0,11.0,56.0,True,83.5820895522388
+vector,"vector: construct with size and value (256, 7)",3276.0,33.0,3243.0,True,98.992673992674
+vector,vector: i_blank == i_blank2,8.0,7.0,1.0,True,12.5
+vector,vector: i_blank.at(middle),25.0,7.0,18.0,True,72.0
+vector,vector: i_blank.back(),7.0,7.0,0.0,False,0.0
+vector,vector: i_blank.capacity(),7.0,7.0,0.0,False,0.0
+vector,vector: i_blank.clear(),16.0,10.0,6.0,True,37.5
+vector,vector: i_blank.front(),7.0,7.0,0.0,False,0.0
+vector,vector: i_blank.max_size(),7.0,7.0,0.0,False,0.0
+vector,vector: i_blank.rbegin(),20.0,7.0,13.0,True,65.0
+vector,vector: i_blank.rend(),20.0,7.0,13.0,True,65.0
+vector,vector: i_blank.reserve(512),33.0,7.0,26.0,True,78.78787878787878
+vector,vector: i_blank.resize(256),30.0,27.0,3.0,True,10.0
+vector,vector: i_blank.size(),7.0,7.0,0.0,False,0.0
+vector,vector: insert 10 elements at middle,7316.0,2359.0,4957.0,True,67.7556041552761
+vector,vector: insert range at end (append),771.0,694.0,77.0,True,9.987029831387808
+vector,vector: resize and fill,1181.0,1162.0,19.0,True,1.6088060965283657
+vector,vector: reverse i_blank,2094.0,601.0,1493.0,True,71.29894937917861

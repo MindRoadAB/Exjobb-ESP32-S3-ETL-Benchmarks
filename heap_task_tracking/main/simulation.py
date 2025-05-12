@@ -56,8 +56,8 @@ def run_test(use_etl, use_static):
     ], check=True)
 
     # File output setup
-    heap_csv = OUTPUT_DIR / f'heap_data_USE_ETL={use_etl}_USE_STATIC={use_static}-alternate.csv'
-    event_csv = OUTPUT_DIR / f'heap_events_USE_ETL={use_etl}_USE_STATIC={use_static}-alternate.csv'
+    heap_csv = OUTPUT_DIR / f'heap_data_USE_ETL={use_etl}_USE_STATIC={use_static}-vector-60min-noresize.csv'
+    event_csv = OUTPUT_DIR / f'heap_events_USE_ETL={use_etl}_USE_STATIC={use_static}-vector-60min-noresize.csv'
 
     with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser, \
          open(heap_csv, 'w', newline='') as heap_file, \
