@@ -229,8 +229,8 @@ static void
 sensor_task(void* arg)
 { 
     measurement_data_t data{};
-    auto *s = (sensor_context_t *)(arg);
-    run_sensor_task(*(s->sensor), data, s->label); 
+    auto* s = static_cast<sensor_context_t*>(arg);
+    run_sensor_task(*(s->sensor), data, s->label);
 }
 
 /** "Transmits" the data in each sensor's buffer. Clears the buffer and, if using libstdc++, resizes the buffer */
@@ -256,7 +256,7 @@ transmit_task(void* arg)
                 printf("\n");  
             }
             #if !USE_ETL
-                s_buf.buf = buffer_t(); /** force a resize if using libstdc++ */
+                //s_buf.buf = buffer_t(); /** force a resize if using libstdc++ */
             #endif
 
             printf("Buffer %s size: %u\n", label, s_buf.buf.size()); 
@@ -301,7 +301,7 @@ task_overflow_flush(void *arg)
             _buf_overflow.clear();
             
             #if !USE_ETL
-                _buf_overflow = buffer_t(); /** Force a re-size */
+                //_buf_overflow = buffer_t(); /** Force a re-size */
             #endif 
         
             xSemaphoreGive(overflow_lock);
@@ -322,19 +322,18 @@ task_heap_check(void *arg)
 {
     uint32_t free_heap_size{0};
     uint32_t minimum_free_heap_size{0};
-    uint32_t largest_block{0}; 
-    
-    const char *TAG = "task_heap_check";
+    uint32_t largest_block{0};
+
     while (true)
     {
         free_heap_size = heap_caps_get_free_size(MALLOC_CAP_8BIT);
         minimum_free_heap_size = heap_caps_get_minimum_free_size(MALLOC_CAP_8BIT); 
         largest_block = heap_caps_get_largest_free_block(MALLOC_CAP_8BIT);
         printf("\nHEAP\n");
-        ESP_LOGI(TAG, "Free heap size: %lu", free_heap_size);
-        ESP_LOGI(TAG, "Minimum free heap size: %lu", minimum_free_heap_size); 
-        ESP_LOGI(TAG, "Largest free block: %lu", largest_block);
-        ESP_LOGI(TAG, "Ratio: %f\n", (float)largest_block / (float)free_heap_size);
+        ESP_LOGI(TAG_HEAP_CHECK, "Free heap size: %lu", free_heap_size);
+        ESP_LOGI(TAG_HEAP_CHECK, "Minimum free heap size: %lu", minimum_free_heap_size);
+        ESP_LOGI(TAG_HEAP_CHECK, "Largest free block: %lu", largest_block);
+        ESP_LOGI(TAG_HEAP_CHECK, "Ratio: %f\n", (float)largest_block / (float)free_heap_size);
         printf("\n");
         vTaskDelay(pdMS_TO_TICKS(DELAY_MS_HEAP_CHECK));
     }
@@ -369,7 +368,7 @@ setup()
      *  that stores the name "main" for the main task to be overwritten. Fix this here.
      */
     static const char *TAG = "app_main";
-    vTaskSetThreadLocalStoragePointer(nullptr, 0, (void*)TAG);
+    vTaskSetThreadLocalStoragePointer(nullptr, 0, const_cast<char*>(TAG)); //(void*)TAG);
     
     /** Initialize global buffer mutex */
     sema_init(&overflow_lock);
