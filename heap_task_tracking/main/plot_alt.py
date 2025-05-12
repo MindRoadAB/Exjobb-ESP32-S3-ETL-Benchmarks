@@ -13,8 +13,8 @@ event_data = {}
 for i, (etl, static) in enumerate([(0, 0), (0, 1), (1, 0), (1, 1)]):
     key = f'ETL={etl}, STATIC={static}'
     labels.append(key)
-    heap_file = RESULTS_DIR / f'heap_data_USE_ETL={etl}_USE_STATIC={static}.csv'
-    event_file = RESULTS_DIR / f'heap_events_USE_ETL={etl}_USE_STATIC={static}.csv'
+    heap_file = RESULTS_DIR / f'heap_data_USE_ETL={etl}_USE_STATIC={static}-alternate.csv'
+    event_file = RESULTS_DIR / f'heap_events_USE_ETL={etl}_USE_STATIC={static}-alternate.csv'
 
     heap_data[key] = pd.read_csv(heap_file)
     event_data[key] = pd.read_csv(event_file)
@@ -32,7 +32,7 @@ ax.set_ylabel('Ratio (largest / free)')
 ax.legend()
 ax.grid(True)
 fig.tight_layout()
-fig.savefig(RESULTS_DIR / 'heap_ratio_all_configs.png')
+fig.savefig(RESULTS_DIR / 'heap_ratio_all_configs-alternate.png')
 plt.close(fig)
 print("✅ Saved: heap_ratio_all_configs.png")
 
@@ -49,7 +49,7 @@ ax.set_ylabel('Free Heap (bytes)')
 ax.legend()
 ax.grid(True)
 fig.tight_layout()
-fig.savefig(RESULTS_DIR / 'free_heap_all_configs.png')
+fig.savefig(RESULTS_DIR / 'free_heap_all_configs-alternate.png')
 plt.close(fig)
 print("✅ Saved: free_heap_all_configs.png")
 
@@ -66,7 +66,7 @@ ax.set_ylabel('Largest Block (bytes)')
 ax.legend()
 ax.grid(True)
 fig.tight_layout()
-fig.savefig(RESULTS_DIR / 'largest_block_all_configs.png')
+fig.savefig(RESULTS_DIR / 'largest_block_all_configs-alternate.png')
 plt.close(fig)
 print("✅ Saved: largest_block_all_configs.png")
 
@@ -100,6 +100,6 @@ ax.set_ylabel('Fragmentation')
 ax.legend()
 ax.grid(True)
 fig.tight_layout()
-fig.savefig(RESULTS_DIR / 'fragmentation_all_configs.png')
+fig.savefig(RESULTS_DIR / 'fragmentation_all_configs-alternate.png')
 plt.close(fig)
 print("✅ Saved: fragmentation_all_configs.png")

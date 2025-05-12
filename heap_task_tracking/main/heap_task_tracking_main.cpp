@@ -219,7 +219,7 @@ run_sensor_task(sensor_t& s, measurement_data_t& data, const char *label)
         }
 
         /** A foul-weather event triggers 'fast-mode' and determines if data is recieved faster or slower  */
-        vTaskDelay(fast_mode ? pdMS_TO_TICKS(DELAY_MS_SENSOR_FAST) 
+        vTaskDelay(fast_mode ? pdMS_TO_TICKS(DELAY_MS_SENSOR_FAST)
                              : pdMS_TO_TICKS(DELAY_MS_SENSOR_BASE));
     }
 }
