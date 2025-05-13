@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Load JSON
-with open('./results/benchmark_results.json') as f:
+with open('./results/benchmark_results-optimized.json') as f:
     data = json.load(f)
 
 # Flatten into DataFrame
@@ -44,7 +44,7 @@ for t in pivot.index.get_level_values('TYPE').unique():
     plt.xlabel('Relative Change (%)  (negative = ETL faster)')
     plt.tight_layout()
 
-    out_file = f'./results/png/{t}_etl_vs_stl.png'
+    out_file = f'./results/png/{t}_etl_vs_stl-optimized.png'
     plt.savefig(out_file, dpi=200)
     print(f"✅ Saved {out_file}")
     plt.close()

@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-with open('./results/benchmark_results.json') as f:
+with open('./results/benchmark_results-optimized.json') as f:
     data = json.load(f)
 
 # Flatten JSON into a DataFrame
@@ -53,7 +53,7 @@ for target_type in df['TYPE'].unique():
     plt.tight_layout()
 
     # Save plot
-    out_path = output_dir / f'bench_{target_type}.png'
+    out_path = output_dir / f'bench_{target_type}-optimized.png'
     plt.savefig(out_path)
     print(f"✅ Saved: {out_path}")
 
