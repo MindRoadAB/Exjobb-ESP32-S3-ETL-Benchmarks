@@ -1,0 +1,1402 @@
+{
+  "USE_ETL=0,TYPE=string": {
+    "string: string s()": {
+      "non_optimized": 26,
+      "optimized": 0,
+      "reduction": 26,
+      "percent_improvement": 100.0
+    },
+    "string: string s(c_str_large)": {
+      "non_optimized": 2275,
+      "optimized": 1749,
+      "reduction": 526,
+      "percent_improvement": 23.12
+    },
+    "string: string s(c_str_large, size)": {
+      "non_optimized": 2109,
+      "optimized": 1570,
+      "reduction": 539,
+      "percent_improvement": 25.56
+    },
+    "string: string s(MAX_STRLN, 'a')": {
+      "non_optimized": 2080,
+      "optimized": 1978,
+      "reduction": 102,
+      "percent_improvement": 4.9
+    },
+    "string: string s(string_view v)": {
+      "non_optimized": 2164,
+      "optimized": 1573,
+      "reduction": 591,
+      "percent_improvement": 27.31
+    },
+    "string: c_str_tiny": {
+      "non_optimized": 161,
+      "optimized": 115,
+      "reduction": 46,
+      "percent_improvement": 28.57
+    },
+    "string: c_str_medium": {
+      "non_optimized": 2132,
+      "optimized": 1604,
+      "reduction": 528,
+      "percent_improvement": 24.77
+    },
+    "string: c_str_large": {
+      "non_optimized": 2275,
+      "optimized": 1743,
+      "reduction": 532,
+      "percent_improvement": 23.38
+    },
+    "string: c_str_jumbo": {
+      "non_optimized": 5083,
+      "optimized": 4551,
+      "reduction": 532,
+      "percent_improvement": 10.47
+    },
+    "string: _str_tiny.resize(MAX_STRLN)": {
+      "non_optimized": 28,
+      "optimized": 12,
+      "reduction": 16,
+      "percent_improvement": 57.14
+    },
+    "string: _str_tiny.resize_and_overwrite(size, operation)": {
+      "non_optimized": 137,
+      "optimized": 63,
+      "reduction": 74,
+      "percent_improvement": 54.01
+    },
+    "string: reverse _str_tiny": {
+      "non_optimized": 61,
+      "optimized": 24,
+      "reduction": 37,
+      "percent_improvement": 60.66
+    },
+    "string: reverse _str_medium": {
+      "non_optimized": 285,
+      "optimized": 149,
+      "reduction": 136,
+      "percent_improvement": 47.72
+    },
+    "string: reverse _str_large": {
+      "non_optimized": 765,
+      "optimized": 419,
+      "reduction": 346,
+      "percent_improvement": 45.23
+    },
+    "string: reverse _str_jumbo": {
+      "non_optimized": 11336,
+      "optimized": 6364,
+      "reduction": 4972,
+      "percent_improvement": 43.86
+    },
+    "_str_jumbo.clear()": {
+      "non_optimized": 14,
+      "optimized": 3,
+      "reduction": 11,
+      "percent_improvement": 78.57
+    },
+    "_str_jumbo += 'a'": {
+      "non_optimized": 108,
+      "optimized": 25,
+      "reduction": 83,
+      "percent_improvement": 76.85
+    },
+    "string: append c_str_jumbo": {
+      "non_optimized": 3142,
+      "optimized": 3111,
+      "reduction": 31,
+      "percent_improvement": 0.99
+    },
+    "compare: _str_jumbo == _str_jumbo2": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "string: _str_medium.push_back('a')": {
+      "non_optimized": 37,
+      "optimized": 27,
+      "reduction": 10,
+      "percent_improvement": 27.03
+    },
+    "string: _str_medium.insert(3, 'Hello')": {
+      "non_optimized": 490,
+      "optimized": 363,
+      "reduction": 127,
+      "percent_improvement": 25.92
+    },
+    "string: _str_medium.insert(3, 5, 'a')": {
+      "non_optimized": 420,
+      "optimized": 326,
+      "reduction": 94,
+      "percent_improvement": 22.38
+    },
+    "string: _str_medium.insert(_str_medium.begin() + 3, 'a')": {
+      "non_optimized": 381,
+      "optimized": 313,
+      "reduction": 68,
+      "percent_improvement": 17.85
+    },
+    "string: _str_medium.erase(3, 5)": {
+      "non_optimized": 369,
+      "optimized": 313,
+      "reduction": 56,
+      "percent_improvement": 15.18
+    },
+    "string: _str_medium.erase(_str_medium.begin() + 3)": {
+      "non_optimized": 399,
+      "optimized": 352,
+      "reduction": 47,
+      "percent_improvement": 11.78
+    },
+    "string: _str_jumbo.replace(middle_pos, \"hello again\")": {
+      "non_optimized": 215,
+      "optimized": 92,
+      "reduction": 123,
+      "percent_improvement": 57.21
+    }
+  },
+  "USE_ETL=0,TYPE=vector": {
+    "vector: _vector_int i{}": {
+      "non_optimized": 67,
+      "optimized": 0,
+      "reduction": 67,
+      "percent_improvement": 100.0
+    },
+    "vector: construct with size and value (256, 7)": {
+      "non_optimized": 3276,
+      "optimized": 1974,
+      "reduction": 1302,
+      "percent_improvement": 39.74
+    },
+    "vector: _vector_int i{ints} (128 members) ": {
+      "non_optimized": 8204,
+      "optimized": 7656,
+      "reduction": 548,
+      "percent_improvement": 6.68
+    },
+    "_vector_int i(ints.begin(), ints.end())": {
+      "non_optimized": 8163,
+      "optimized": 7645,
+      "reduction": 518,
+      "percent_improvement": 6.35
+    },
+    "_vector_int push_back(111)": {
+      "non_optimized": 39,
+      "optimized": 7,
+      "reduction": 32,
+      "percent_improvement": 82.05
+    },
+    "_vector_int pop_back()": {
+      "non_optimized": 8,
+      "optimized": 2,
+      "reduction": 6,
+      "percent_improvement": 75.0
+    },
+    "_vector_int insert(middle, 2222)": {
+      "non_optimized": 2338,
+      "optimized": 2304,
+      "reduction": 34,
+      "percent_improvement": 1.45
+    },
+    "_vector_int insert(0, 2222)": {
+      "non_optimized": 4642,
+      "optimized": 4610,
+      "reduction": 32,
+      "percent_improvement": 0.69
+    },
+    "_vector_int erase(middle)": {
+      "non_optimized": 3120,
+      "optimized": 3063,
+      "reduction": 57,
+      "percent_improvement": 1.83
+    },
+    "_vector_int erase(0)": {
+      "non_optimized": 6195,
+      "optimized": 6135,
+      "reduction": 60,
+      "percent_improvement": 0.97
+    },
+    "vector: i_blank == i_blank2": {
+      "non_optimized": 8,
+      "optimized": 0,
+      "reduction": 8,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.rbegin()": {
+      "non_optimized": 20,
+      "optimized": 0,
+      "reduction": 20,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.rend()": {
+      "non_optimized": 20,
+      "optimized": 0,
+      "reduction": 20,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.at(middle)": {
+      "non_optimized": 25,
+      "optimized": 0,
+      "reduction": 25,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.front()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.back()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.size()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.capacity()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.max_size()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.reserve(512)": {
+      "non_optimized": 33,
+      "optimized": 13,
+      "reduction": 20,
+      "percent_improvement": 60.61
+    },
+    "vector: i_blank.resize(256)": {
+      "non_optimized": 30,
+      "optimized": 15,
+      "reduction": 15,
+      "percent_improvement": 50.0
+    },
+    "vector: reverse i_blank": {
+      "non_optimized": 2094,
+      "optimized": 1164,
+      "reduction": 930,
+      "percent_improvement": 44.41
+    },
+    "vector: insert 10 elements at middle": {
+      "non_optimized": 7317,
+      "optimized": 6704,
+      "reduction": 613,
+      "percent_improvement": 8.38
+    },
+    "vector: insert range at end (append)": {
+      "non_optimized": 771,
+      "optimized": 552,
+      "reduction": 219,
+      "percent_improvement": 28.4
+    },
+    "vector: i_blank.clear()": {
+      "non_optimized": 16,
+      "optimized": 2,
+      "reduction": 14,
+      "percent_improvement": 87.5
+    },
+    "vector: resize and fill": {
+      "non_optimized": 1180,
+      "optimized": 809,
+      "reduction": 371,
+      "percent_improvement": 31.44
+    }
+  },
+  "USE_ETL=0,TYPE=map": {
+    "unordered_map<int, string>: _map m{}": {
+      "non_optimized": 167,
+      "optimized": 78,
+      "reduction": 89,
+      "percent_improvement": 53.29
+    },
+    "unordered_map<int, string>: _map m{umap_1}": {
+      "non_optimized": 8369,
+      "optimized": 6250,
+      "reduction": 2119,
+      "percent_improvement": 25.32
+    },
+    "unordered_map<int, string>: _map m(umap_1.begin(), umap_1.end())": {
+      "non_optimized": 10206,
+      "optimized": 7608,
+      "reduction": 2598,
+      "percent_improvement": 25.46
+    },
+    "unordered_map<int, string>: operator[]": {
+      "non_optimized": 64,
+      "optimized": 35,
+      "reduction": 29,
+      "percent_improvement": 45.31
+    },
+    "unordered_map<int, string>: insert(map.begin, std::make_pair)": {
+      "non_optimized": 1514,
+      "optimized": 1035,
+      "reduction": 479,
+      "percent_improvement": 31.64
+    },
+    "unordered_map<int, string>: insert(std::make_pair)": {
+      "non_optimized": 1512,
+      "optimized": 1037,
+      "reduction": 475,
+      "percent_improvement": 31.42
+    },
+    "unordered_map<int, string>: insert(mapElem)": {
+      "non_optimized": 1421,
+      "optimized": 991,
+      "reduction": 430,
+      "percent_improvement": 30.26
+    },
+    "unordered_map<int, string>: insert(begin, end)": {
+      "non_optimized": 4379,
+      "optimized": 2990,
+      "reduction": 1389,
+      "percent_improvement": 31.72
+    },
+    "unordered_map<int, string>: erase(key)": {
+      "non_optimized": 1015,
+      "optimized": 753,
+      "reduction": 262,
+      "percent_improvement": 25.81
+    },
+    "unordered_map<int, string>: find(key)": {
+      "non_optimized": 49,
+      "optimized": 0,
+      "reduction": 49,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: size()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: empty()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: at(key)": {
+      "non_optimized": 72,
+      "optimized": 36,
+      "reduction": 36,
+      "percent_improvement": 50.0
+    },
+    "unordered_map: count(key)": {
+      "non_optimized": 73,
+      "optimized": 0,
+      "reduction": 73,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: count(nonexistent key)": {
+      "non_optimized": 65,
+      "optimized": 0,
+      "reduction": 65,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: bucket_count()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: load_factor()": {
+      "non_optimized": 8,
+      "optimized": 0,
+      "reduction": 8,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: equality comparison (==)": {
+      "non_optimized": 424,
+      "optimized": 0,
+      "reduction": 424,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: operator[] overwrite": {
+      "non_optimized": 230,
+      "optimized": 155,
+      "reduction": 75,
+      "percent_improvement": 32.61
+    }
+  },
+  "USE_ETL=0,TYPE=set": {
+    "unordered_set<int>: _set_int s{}": {
+      "non_optimized": 167,
+      "optimized": 0,
+      "reduction": 167,
+      "percent_improvement": 100.0
+    },
+    "unordered_set<int>: _set_int s{copy}": {
+      "non_optimized": 63689,
+      "optimized": 48590,
+      "reduction": 15099,
+      "percent_improvement": 23.71
+    },
+    "unordered_set<int>: _set_int s(begin, end)": {
+      "non_optimized": 79028,
+      "optimized": 59124,
+      "reduction": 19904,
+      "percent_improvement": 25.19
+    },
+    "unordered_set<int>: operator= constructor": {
+      "non_optimized": 63691,
+      "optimized": 48590,
+      "reduction": 15101,
+      "percent_improvement": 23.71
+    },
+    "unordered_set<string>: _set_string s{}": {
+      "non_optimized": 167,
+      "optimized": 78,
+      "reduction": 89,
+      "percent_improvement": 53.29
+    },
+    "unordered_set<string>: _set_string s{copy}": {
+      "non_optimized": 26743,
+      "optimized": 20684,
+      "reduction": 6059,
+      "percent_improvement": 22.66
+    },
+    "unordered_set<string>: _set_str s(begin, end)": {
+      "non_optimized": 35058,
+      "optimized": 26185,
+      "reduction": 8873,
+      "percent_improvement": 25.31
+    },
+    "unordered_set<string>: operator= constructor": {
+      "non_optimized": 26743,
+      "optimized": 20684,
+      "reduction": 6059,
+      "percent_improvement": 22.66
+    },
+    "unordered_set<int>: uset.find(key)": {
+      "non_optimized": 60,
+      "optimized": 5,
+      "reduction": 55,
+      "percent_improvement": 91.67
+    },
+    "unordered_set<string>: uset.find(key)": {
+      "non_optimized": 544,
+      "optimized": 319,
+      "reduction": 225,
+      "percent_improvement": 41.36
+    },
+    "unordered_set<string>: uset.contains(key)": {
+      "non_optimized": 956,
+      "optimized": 29,
+      "reduction": 927,
+      "percent_improvement": 96.97
+    },
+    "unordered_set<int>: uset.contains(key)": {
+      "non_optimized": 87,
+      "optimized": 0,
+      "reduction": 87,
+      "percent_improvement": 100.0
+    },
+    "unordered_set<int>: uset.insert(key)": {
+      "non_optimized": 1394,
+      "optimized": 938,
+      "reduction": 456,
+      "percent_improvement": 32.71
+    },
+    "unordered_set<int>: uset.insert(begin, end)": {
+      "non_optimized": 8129,
+      "optimized": 5644,
+      "reduction": 2485,
+      "percent_improvement": 30.57
+    },
+    "unordered_set<int>: uset.insert(hint, key)": {
+      "non_optimized": 1379,
+      "optimized": 932,
+      "reduction": 447,
+      "percent_improvement": 32.41
+    },
+    "unordered_set<string>: uset.insert(key)": {
+      "non_optimized": 2381,
+      "optimized": 1597,
+      "reduction": 784,
+      "percent_improvement": 32.93
+    },
+    "unordered_set<string>: uset.insert(begin, end)": {
+      "non_optimized": 9325,
+      "optimized": 6658,
+      "reduction": 2667,
+      "percent_improvement": 28.6
+    },
+    "unordered_set<string>: uset.insert(hint, key)": {
+      "non_optimized": 2373,
+      "optimized": 1588,
+      "reduction": 785,
+      "percent_improvement": 33.08
+    },
+    "unordered_set<int>: uset.erase(key)": {
+      "non_optimized": 999,
+      "optimized": 740,
+      "reduction": 259,
+      "percent_improvement": 25.93
+    },
+    "unordered_set<string>: uset.erase(key)": {
+      "non_optimized": 1239,
+      "optimized": 826,
+      "reduction": 413,
+      "percent_improvement": 33.33
+    }
+  },
+  "USE_ETL=0,TYPE=deque": {
+    "deque<int>: deque_int{}": {
+      "non_optimized": 3969,
+      "optimized": 2995,
+      "reduction": 974,
+      "percent_improvement": 24.54
+    },
+    "deque<int>: deque_int{empty copy}": {
+      "non_optimized": 4378,
+      "optimized": 3096,
+      "reduction": 1282,
+      "percent_improvement": 29.28
+    },
+    "deque<int>: deque_int{copy}": {
+      "non_optimized": 5776,
+      "optimized": 4394,
+      "reduction": 1382,
+      "percent_improvement": 23.93
+    },
+    "deque<int>: deque_int(begin, end)": {
+      "non_optimized": 5684,
+      "optimized": 4404,
+      "reduction": 1280,
+      "percent_improvement": 22.52
+    },
+    "deque<string>: deque_string{}": {
+      "non_optimized": 4051,
+      "optimized": 3052,
+      "reduction": 999,
+      "percent_improvement": 24.66
+    },
+    "deque<string>: deque_string{empty copy}": {
+      "non_optimized": 4238,
+      "optimized": 3136,
+      "reduction": 1102,
+      "percent_improvement": 26.0
+    },
+    "deque<string>: deque_string{copy}": {
+      "non_optimized": 10017,
+      "optimized": 6611,
+      "reduction": 3406,
+      "percent_improvement": 34.0
+    },
+    "deque<string>: deque_string(begin, end)": {
+      "non_optimized": 9936,
+      "optimized": 6532,
+      "reduction": 3404,
+      "percent_improvement": 34.26
+    },
+    "deque<int>: operator[middle]": {
+      "non_optimized": 49,
+      "optimized": 0,
+      "reduction": 49,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: front()": {
+      "non_optimized": 11,
+      "optimized": 0,
+      "reduction": 11,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: back()": {
+      "non_optimized": 43,
+      "optimized": 0,
+      "reduction": 43,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: operator[middle]": {
+      "non_optimized": 57,
+      "optimized": 0,
+      "reduction": 57,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: front()": {
+      "non_optimized": 11,
+      "optimized": 0,
+      "reduction": 11,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: back()": {
+      "non_optimized": 44,
+      "optimized": 0,
+      "reduction": 44,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: push_front(val)": {
+      "non_optimized": 1225,
+      "optimized": 902,
+      "reduction": 323,
+      "percent_improvement": 26.37
+    },
+    "deque<int>: push_back(val)": {
+      "non_optimized": 68,
+      "optimized": 22,
+      "reduction": 46,
+      "percent_improvement": 67.65
+    },
+    "deque<int>: insert(middle, val)": {
+      "non_optimized": 1247,
+      "optimized": 724,
+      "reduction": 523,
+      "percent_improvement": 41.94
+    },
+    "deque<int>: insert(pos, begin, end)": {
+      "non_optimized": 2520,
+      "optimized": 1241,
+      "reduction": 1279,
+      "percent_improvement": 50.75
+    },
+    "deque<int>: erase(pos)": {
+      "non_optimized": 860,
+      "optimized": 455,
+      "reduction": 405,
+      "percent_improvement": 47.09
+    },
+    "deque<string>: push_front(val)": {
+      "non_optimized": 1452,
+      "optimized": 973,
+      "reduction": 479,
+      "percent_improvement": 32.99
+    },
+    "deque<string>: push_back(val)": {
+      "non_optimized": 285,
+      "optimized": 90,
+      "reduction": 195,
+      "percent_improvement": 68.42
+    },
+    "deque<string>: insert(middle, val)": {
+      "non_optimized": 2685,
+      "optimized": 1671,
+      "reduction": 1014,
+      "percent_improvement": 37.77
+    },
+    "deque<string>: insert(pos, begin, end)": {
+      "non_optimized": 2959,
+      "optimized": 1523,
+      "reduction": 1436,
+      "percent_improvement": 48.53
+    },
+    "deque<string>: erase(pos)": {
+      "non_optimized": 1239,
+      "optimized": 667,
+      "reduction": 572,
+      "percent_improvement": 46.17
+    }
+  },
+  "USE_ETL=1,TYPE=string": {
+    "string: string s()": {
+      "non_optimized": 61,
+      "optimized": 0,
+      "reduction": 61,
+      "percent_improvement": 100.0
+    },
+    "string: string s(c_str_large)": {
+      "non_optimized": 2477,
+      "optimized": 1658,
+      "reduction": 819,
+      "percent_improvement": 33.06
+    },
+    "string: string s(c_str_large, size)": {
+      "non_optimized": 1386,
+      "optimized": 1482,
+      "reduction": -96,
+      "percent_improvement": -6.93
+    },
+    "string: string s(MAX_STRLN, 'a')": {
+      "non_optimized": 244,
+      "optimized": 0,
+      "reduction": 244,
+      "percent_improvement": 100.0
+    },
+    "string: string s(string_view v)": {
+      "non_optimized": 1385,
+      "optimized": 1475,
+      "reduction": -90,
+      "percent_improvement": -6.5
+    },
+    "string: c_str_tiny": {
+      "non_optimized": 187,
+      "optimized": 111,
+      "reduction": 76,
+      "percent_improvement": 40.64
+    },
+    "string: c_str_medium": {
+      "non_optimized": 915,
+      "optimized": 606,
+      "reduction": 309,
+      "percent_improvement": 33.77
+    },
+    "string: c_str_large": {
+      "non_optimized": 2477,
+      "optimized": 1657,
+      "reduction": 820,
+      "percent_improvement": 33.1
+    },
+    "string: c_str_jumbo": {
+      "non_optimized": 20660,
+      "optimized": 6303,
+      "reduction": 14357,
+      "percent_improvement": 69.49
+    },
+    "string: _str_tiny.resize(MAX_STRLN)": {
+      "non_optimized": 50,
+      "optimized": 27,
+      "reduction": 23,
+      "percent_improvement": 46.0
+    },
+    "string: _str_tiny.resize_and_overwrite(size, operation)": {
+      "non_optimized": 81,
+      "optimized": 57,
+      "reduction": 24,
+      "percent_improvement": 29.63
+    },
+    "string: reverse _str_tiny": {
+      "non_optimized": 34,
+      "optimized": 25,
+      "reduction": 9,
+      "percent_improvement": 26.47
+    },
+    "string: reverse _str_medium": {
+      "non_optimized": 160,
+      "optimized": 153,
+      "reduction": 7,
+      "percent_improvement": 4.38
+    },
+    "string: reverse _str_large": {
+      "non_optimized": 429,
+      "optimized": 421,
+      "reduction": 8,
+      "percent_improvement": 1.86
+    },
+    "string: reverse _str_jumbo": {
+      "non_optimized": 6376,
+      "optimized": 6367,
+      "reduction": 9,
+      "percent_improvement": 0.14
+    },
+    "_str_jumbo.clear()": {
+      "non_optimized": 39,
+      "optimized": 14,
+      "reduction": 25,
+      "percent_improvement": 64.1
+    },
+    "_str_jumbo += 'a'": {
+      "non_optimized": 122,
+      "optimized": 20,
+      "reduction": 102,
+      "percent_improvement": 83.61
+    },
+    "string: append c_str_jumbo": {
+      "non_optimized": 26917,
+      "optimized": 7854,
+      "reduction": 19063,
+      "percent_improvement": 70.82
+    },
+    "compare: _str_jumbo == _str_jumbo2": {
+      "non_optimized": 8,
+      "optimized": 0,
+      "reduction": 8,
+      "percent_improvement": 100.0
+    },
+    "string: _str_medium.push_back('a')": {
+      "non_optimized": 33,
+      "optimized": 17,
+      "reduction": 16,
+      "percent_improvement": 48.48
+    },
+    "string: _str_medium.insert(3, 'Hello')": {
+      "non_optimized": 470,
+      "optimized": 388,
+      "reduction": 82,
+      "percent_improvement": 17.45
+    },
+    "string: _str_medium.insert(3, 5, 'a')": {
+      "non_optimized": 399,
+      "optimized": 319,
+      "reduction": 80,
+      "percent_improvement": 20.05
+    },
+    "string: _str_medium.insert(_str_medium.begin() + 3, 'a')": {
+      "non_optimized": 329,
+      "optimized": 304,
+      "reduction": 25,
+      "percent_improvement": 7.6
+    },
+    "string: _str_medium.erase(3, 5)": {
+      "non_optimized": 364,
+      "optimized": 321,
+      "reduction": 43,
+      "percent_improvement": 11.81
+    },
+    "string: _str_medium.erase(_str_medium.begin() + 3)": {
+      "non_optimized": 378,
+      "optimized": 348,
+      "reduction": 30,
+      "percent_improvement": 7.94
+    },
+    "string: _str_jumbo.replace(middle_pos, \"hello again\")": {
+      "non_optimized": 722,
+      "optimized": 464,
+      "reduction": 258,
+      "percent_improvement": 35.73
+    }
+  },
+  "USE_ETL=1,TYPE=vector": {
+    "vector: _vector_int i{}": {
+      "non_optimized": 11,
+      "optimized": 0,
+      "reduction": 11,
+      "percent_improvement": 100.0
+    },
+    "vector: construct with size and value (256, 7)": {
+      "non_optimized": 33,
+      "optimized": 0,
+      "reduction": 33,
+      "percent_improvement": 100.0
+    },
+    "vector: _vector_int i{ints} (128 members) ": {
+      "non_optimized": 6228,
+      "optimized": 356,
+      "reduction": 5872,
+      "percent_improvement": 94.28
+    },
+    "_vector_int i(ints.begin(), ints.end())": {
+      "non_optimized": 6219,
+      "optimized": 356,
+      "reduction": 5863,
+      "percent_improvement": 94.28
+    },
+    "_vector_int push_back(111)": {
+      "non_optimized": 20,
+      "optimized": 1,
+      "reduction": 19,
+      "percent_improvement": 95.0
+    },
+    "_vector_int pop_back()": {
+      "non_optimized": 8,
+      "optimized": 1,
+      "reduction": 7,
+      "percent_improvement": 87.5
+    },
+    "_vector_int insert(middle, 2222)": {
+      "non_optimized": 2324,
+      "optimized": 2292,
+      "reduction": 32,
+      "percent_improvement": 1.38
+    },
+    "_vector_int insert(0, 2222)": {
+      "non_optimized": 4627,
+      "optimized": 4589,
+      "reduction": 38,
+      "percent_improvement": 0.82
+    },
+    "_vector_int erase(middle)": {
+      "non_optimized": 3086,
+      "optimized": 3058,
+      "reduction": 28,
+      "percent_improvement": 0.91
+    },
+    "_vector_int erase(0)": {
+      "non_optimized": 6161,
+      "optimized": 6133,
+      "reduction": 28,
+      "percent_improvement": 0.45
+    },
+    "vector: i_blank == i_blank2": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.rbegin()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.rend()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.at(middle)": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.front()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.back()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.size()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.capacity()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.max_size()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.reserve(512)": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "vector: i_blank.resize(256)": {
+      "non_optimized": 27,
+      "optimized": 9,
+      "reduction": 18,
+      "percent_improvement": 66.67
+    },
+    "vector: reverse i_blank": {
+      "non_optimized": 601,
+      "optimized": 587,
+      "reduction": 14,
+      "percent_improvement": 2.33
+    },
+    "vector: insert 10 elements at middle": {
+      "non_optimized": 2360,
+      "optimized": 1766,
+      "reduction": 594,
+      "percent_improvement": 25.17
+    },
+    "vector: insert range at end (append)": {
+      "non_optimized": 694,
+      "optimized": 517,
+      "reduction": 177,
+      "percent_improvement": 25.5
+    },
+    "vector: i_blank.clear()": {
+      "non_optimized": 10,
+      "optimized": 0,
+      "reduction": 10,
+      "percent_improvement": 100.0
+    },
+    "vector: resize and fill": {
+      "non_optimized": 1162,
+      "optimized": 1418,
+      "reduction": -256,
+      "percent_improvement": -22.03
+    }
+  },
+  "USE_ETL=1,TYPE=map": {
+    "unordered_map<int, string>: _map m{}": {
+      "non_optimized": 497,
+      "optimized": 183,
+      "reduction": 314,
+      "percent_improvement": 63.18
+    },
+    "unordered_map<int, string>: _map m{umap_1}": {
+      "non_optimized": 2262,
+      "optimized": 1204,
+      "reduction": 1058,
+      "percent_improvement": 46.77
+    },
+    "unordered_map<int, string>: _map m(umap_1.begin(), umap_1.end())": {
+      "non_optimized": 2284,
+      "optimized": 1203,
+      "reduction": 1081,
+      "percent_improvement": 47.33
+    },
+    "unordered_map<int, string>: operator[]": {
+      "non_optimized": 48,
+      "optimized": 36,
+      "reduction": 12,
+      "percent_improvement": 25.0
+    },
+    "unordered_map<int, string>: insert(map.begin, std::make_pair)": {
+      "non_optimized": 602,
+      "optimized": 265,
+      "reduction": 337,
+      "percent_improvement": 55.98
+    },
+    "unordered_map<int, string>: insert(std::make_pair)": {
+      "non_optimized": 569,
+      "optimized": 264,
+      "reduction": 305,
+      "percent_improvement": 53.6
+    },
+    "unordered_map<int, string>: insert(mapElem)": {
+      "non_optimized": 480,
+      "optimized": 275,
+      "reduction": 205,
+      "percent_improvement": 42.71
+    },
+    "unordered_map<int, string>: insert(begin, end)": {
+      "non_optimized": 1160,
+      "optimized": 643,
+      "reduction": 517,
+      "percent_improvement": 44.57
+    },
+    "unordered_map<int, string>: erase(key)": {
+      "non_optimized": 185,
+      "optimized": 82,
+      "reduction": 103,
+      "percent_improvement": 55.68
+    },
+    "unordered_map<int, string>: find(key)": {
+      "non_optimized": 43,
+      "optimized": 0,
+      "reduction": 43,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: size()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: empty()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: at(key)": {
+      "non_optimized": 45,
+      "optimized": 0,
+      "reduction": 45,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: count(key)": {
+      "non_optimized": 87,
+      "optimized": 0,
+      "reduction": 87,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: count(nonexistent key)": {
+      "non_optimized": 72,
+      "optimized": 0,
+      "reduction": 72,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: bucket_count()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: load_factor()": {
+      "non_optimized": 8,
+      "optimized": 0,
+      "reduction": 8,
+      "percent_improvement": 100.0
+    },
+    "unordered_map: equality comparison (==)": {
+      "non_optimized": 2188,
+      "optimized": 1041,
+      "reduction": 1147,
+      "percent_improvement": 52.42
+    },
+    "unordered_map: operator[] overwrite": {
+      "non_optimized": 300,
+      "optimized": 127,
+      "reduction": 173,
+      "percent_improvement": 57.67
+    }
+  },
+  "USE_ETL=1,TYPE=set": {
+    "unordered_set<int>: _set_int s{}": {
+      "non_optimized": 1376,
+      "optimized": 503,
+      "reduction": 873,
+      "percent_improvement": 63.44
+    },
+    "unordered_set<int>: _set_int s{copy}": {
+      "non_optimized": 10670,
+      "optimized": 4855,
+      "reduction": 5815,
+      "percent_improvement": 54.5
+    },
+    "unordered_set<int>: _set_int s(begin, end)": {
+      "non_optimized": 10689,
+      "optimized": 4859,
+      "reduction": 5830,
+      "percent_improvement": 54.54
+    },
+    "unordered_set<int>: operator= constructor": {
+      "non_optimized": 10670,
+      "optimized": 4855,
+      "reduction": 5815,
+      "percent_improvement": 54.5
+    },
+    "unordered_set<string>: _set_string s{}": {
+      "non_optimized": 1376,
+      "optimized": 511,
+      "reduction": 865,
+      "percent_improvement": 62.86
+    },
+    "unordered_set<string>: _set_string s{copy}": {
+      "non_optimized": 8654,
+      "optimized": 4735,
+      "reduction": 3919,
+      "percent_improvement": 45.29
+    },
+    "unordered_set<string>: _set_str s(begin, end)": {
+      "non_optimized": 8683,
+      "optimized": 4737,
+      "reduction": 3946,
+      "percent_improvement": 45.45
+    },
+    "unordered_set<string>: operator= constructor": {
+      "non_optimized": 8654,
+      "optimized": 4810,
+      "reduction": 3844,
+      "percent_improvement": 44.42
+    },
+    "unordered_set<int>: uset.find(key)": {
+      "non_optimized": 59,
+      "optimized": 0,
+      "reduction": 59,
+      "percent_improvement": 100.0
+    },
+    "unordered_set<string>: uset.find(key)": {
+      "non_optimized": 442,
+      "optimized": 84,
+      "reduction": 358,
+      "percent_improvement": 81.0
+    },
+    "unordered_set<string>: uset.contains(key)": {
+      "non_optimized": 350,
+      "optimized": 84,
+      "reduction": 266,
+      "percent_improvement": 76.0
+    },
+    "unordered_set<int>: uset.contains(key)": {
+      "non_optimized": 95,
+      "optimized": 0,
+      "reduction": 95,
+      "percent_improvement": 100.0
+    },
+    "unordered_set<int>: uset.insert(key)": {
+      "non_optimized": 214,
+      "optimized": 101,
+      "reduction": 113,
+      "percent_improvement": 52.8
+    },
+    "unordered_set<int>: uset.insert(begin, end)": {
+      "non_optimized": 1919,
+      "optimized": 925,
+      "reduction": 994,
+      "percent_improvement": 51.8
+    },
+    "unordered_set<int>: uset.insert(hint, key)": {
+      "non_optimized": 214,
+      "optimized": 91,
+      "reduction": 123,
+      "percent_improvement": 57.48
+    },
+    "unordered_set<string>: uset.insert(key)": {
+      "non_optimized": 604,
+      "optimized": 313,
+      "reduction": 291,
+      "percent_improvement": 48.18
+    },
+    "unordered_set<string>: uset.insert(begin, end)": {
+      "non_optimized": 2379,
+      "optimized": 1344,
+      "reduction": 1035,
+      "percent_improvement": 43.51
+    },
+    "unordered_set<string>: uset.insert(hint, key)": {
+      "non_optimized": 635,
+      "optimized": 321,
+      "reduction": 314,
+      "percent_improvement": 49.45
+    },
+    "unordered_set<int>: uset.erase(key)": {
+      "non_optimized": 159,
+      "optimized": 74,
+      "reduction": 85,
+      "percent_improvement": 53.46
+    },
+    "unordered_set<string>: uset.erase(key)": {
+      "non_optimized": 514,
+      "optimized": 226,
+      "reduction": 288,
+      "percent_improvement": 56.03
+    }
+  },
+  "USE_ETL=1,TYPE=deque": {
+    "deque<int>: deque_int{}": {
+      "non_optimized": 77,
+      "optimized": 0,
+      "reduction": 77,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: deque_int{empty copy}": {
+      "non_optimized": 112,
+      "optimized": 20,
+      "reduction": 92,
+      "percent_improvement": 82.14
+    },
+    "deque<int>: deque_int{copy}": {
+      "non_optimized": 1465,
+      "optimized": 573,
+      "reduction": 892,
+      "percent_improvement": 60.89
+    },
+    "deque<int>: deque_int(begin, end)": {
+      "non_optimized": 1481,
+      "optimized": 573,
+      "reduction": 908,
+      "percent_improvement": 61.31
+    },
+    "deque<string>: deque_string{}": {
+      "non_optimized": 87,
+      "optimized": 0,
+      "reduction": 87,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: deque_string{empty copy}": {
+      "non_optimized": 122,
+      "optimized": 35,
+      "reduction": 87,
+      "percent_improvement": 71.31
+    },
+    "deque<string>: deque_string{copy}": {
+      "non_optimized": 6141,
+      "optimized": 4009,
+      "reduction": 2132,
+      "percent_improvement": 34.72
+    },
+    "deque<string>: deque_string(begin, end)": {
+      "non_optimized": 6154,
+      "optimized": 3989,
+      "reduction": 2165,
+      "percent_improvement": 35.18
+    },
+    "deque<int>: operator[middle]": {
+      "non_optimized": 54,
+      "optimized": 0,
+      "reduction": 54,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: front()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: back()": {
+      "non_optimized": 47,
+      "optimized": 0,
+      "reduction": 47,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: operator[middle]": {
+      "non_optimized": 56,
+      "optimized": 0,
+      "reduction": 56,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: front()": {
+      "non_optimized": 7,
+      "optimized": 0,
+      "reduction": 7,
+      "percent_improvement": 100.0
+    },
+    "deque<string>: back()": {
+      "non_optimized": 50,
+      "optimized": 0,
+      "reduction": 50,
+      "percent_improvement": 100.0
+    },
+    "deque<int>: push_front(val)": {
+      "non_optimized": 36,
+      "optimized": 11,
+      "reduction": 25,
+      "percent_improvement": 69.44
+    },
+    "deque<int>: push_back(val)": {
+      "non_optimized": 39,
+      "optimized": 11,
+      "reduction": 28,
+      "percent_improvement": 71.79
+    },
+    "deque<int>: insert(middle, val)": {
+      "non_optimized": 979,
+      "optimized": 280,
+      "reduction": 699,
+      "percent_improvement": 71.4
+    },
+    "deque<int>: insert(pos, begin, end)": {
+      "non_optimized": 1671,
+      "optimized": 524,
+      "reduction": 1147,
+      "percent_improvement": 68.64
+    },
+    "deque<int>: erase(pos)": {
+      "non_optimized": 664,
+      "optimized": 213,
+      "reduction": 451,
+      "percent_improvement": 67.92
+    },
+    "deque<string>: push_front(val)": {
+      "non_optimized": 382,
+      "optimized": 211,
+      "reduction": 171,
+      "percent_improvement": 44.76
+    },
+    "deque<string>: push_back(val)": {
+      "non_optimized": 385,
+      "optimized": 201,
+      "reduction": 184,
+      "percent_improvement": 47.79
+    },
+    "deque<string>: insert(middle, val)": {
+      "non_optimized": 3151,
+      "optimized": 1886,
+      "reduction": 1265,
+      "percent_improvement": 40.15
+    },
+    "deque<string>: insert(pos, begin, end)": {
+      "non_optimized": 3594,
+      "optimized": 1898,
+      "reduction": 1696,
+      "percent_improvement": 47.19
+    },
+    "deque<string>: erase(pos)": {
+      "non_optimized": 1526,
+      "optimized": 823,
+      "reduction": 703,
+      "percent_improvement": 46.07
+    }
+  }
+}
