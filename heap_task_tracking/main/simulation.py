@@ -18,7 +18,7 @@ SYSTEM = platform.system()
 if SYSTEM == 'Linux':
     SERIAL_PORT = '/dev/ttyUSB0'
 elif SYSTEM == 'Darwin':
-    SERIAL_PORT = '/dev/cu.usbserial-110'  
+    SERIAL_PORT = '/dev/cu.usbserial-0001'       #/dev/cu.usbserial-110'
 else:
     raise RuntimeError(f"Unsupported OS: {SYSTEM}")
 

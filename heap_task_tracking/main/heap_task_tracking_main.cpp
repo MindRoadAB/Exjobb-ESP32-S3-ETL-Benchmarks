@@ -253,8 +253,9 @@ transmit_task(void* arg)
                     printf("%s\n", s.payload.c_str());  
                 }
                 s_buf.buf.clear();
-                printf("\n");  
+                printf("\n%s buffer size, capacity: %u, %u\n", label, s_buf.buf.size(), s_buf.buf.capacity());
             }
+
             #if !USE_ETL
                 //s_buf.buf = buffer_t(); /** force a resize if using libstdc++ */
             #endif
@@ -299,11 +300,11 @@ task_overflow_flush(void *arg)
                 printf("%u\n", x); 
             
             _buf_overflow.clear();
-            
+            printf("overflow size, capcity: %u, %u\n", x, _buf_overflow.capacity());
             #if !USE_ETL
                 //_buf_overflow = buffer_t(); /** Force a re-size */
             #endif 
-        
+
             xSemaphoreGive(overflow_lock);
         }
 

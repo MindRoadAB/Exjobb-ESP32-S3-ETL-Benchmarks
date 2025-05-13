@@ -1,0 +1,247 @@
+********** STD **************************
+
+  _string _str_jumbo{c_str_jumbo};
+42007fb9:	01cd      	mov.n	a12, a1
+42007fbb:	e25c81        	l32r	a8, 4200092c <_stext+0x90c> (3fc922c8 <c_str_jumbo>)
+42007fbe:	08b8      	l32i.n	a11, a8, 0
+42007fc0:	e25ca1        	l32r	a10, 42000930 <_stext+0x910> (3fc95060 <_Z10_str_jumboB5cxx11>)
+42007fc3:	fff6e5        	call8	42007f30 <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_>
+
+42007f30 <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_>:
+      basic_string(const _CharT* __s, const _Alloc& __a = _Alloc())
+42007f30:	004136        	entry	a1, 32
+	return std::pointer_traits<pointer>::pointer_to(*_M_local_buf);
+42007f33:	08c282        	addi	a8, a2, 8
+	: allocator_type(__a), _M_p(__dat) { }
+42007f36:	006282        	s32i	a8, a2, 0
+	if (__s == 0)
+42007f39:	43cc      	bnez.n	a3, 42007f41 <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_+0x11>
+	  std::__throw_logic_error(__N("basic_string: "
+42007f3b:	e272a1        	l32r	a10, 42000904 <_stext+0x8e4> (3c02518c <_flash_rodata_start+0x506c>)
+42007f3e:	02c2e5        	call8	4200ab6c <_ZSt19__throw_logic_errorPKc>
+	return __builtin_strlen(__s);
+42007f41:	03ad      	mov.n	a10, a3
+42007f43:	e0d681        	l32r	a8, 4200029c <_stext+0x27c> (40001248 <strlen>)
+42007f46:	0008e0        	callx8	a8
+	_M_construct(__s, __end, forward_iterator_tag());
+42007f49:	0d0c      	movi.n	a13, 0
+42007f4b:	c3aa      	add.n	a12, a3, a10
+42007f4d:	03bd      	mov.n	a11, a3
+42007f4f:	02ad      	mov.n	a10, a2
+42007f51:	fff4a5        	call8	42007e9c <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructIPKcEEvT_S8_St20forward_iterator_tag>
+      }
+42007f54:	f01d      	retw.n
+
+42007e9c <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructIPKcEEvT_S8_St20forward_iterator_tag>:
+      basic_string<_CharT, _Traits, _Alloc>::
+42007e9c:	006136        	entry	a1, 48
+               random_access_iterator_tag)
+    {
+      // concept requirements
+      __glibcxx_function_requires(_RandomAccessIteratorConcept<
+				  _RandomAccessIterator>)
+      return __last - __first;
+42007e9f:	c04430        	sub	a4, a4, a3
+	size_type __dnew = static_cast<size_type>(std::distance(__beg, __end));
+42007ea2:	006142        	s32i	a4, a1, 0
+	if (__dnew > size_type(_S_local_capacity))
+42007ea5:	0fa082        	movi	a8, 15
+42007ea8:	0fb847        	bgeu	a8, a4, 42007ebb <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructIPKcEEvT_S8_St20forward_iterator_tag+0x1f>
+	    _M_data(_M_create(__dnew, size_type(0)));
+42007eab:	0c0c      	movi.n	a12, 0
+42007ead:	01bd      	mov.n	a11, a1
+42007eaf:	20a220        	or	a10, a2, a2
+42007eb2:	ffd0e5        	call8	42007bc0 <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_createERjj>
+      { _M_dataplus._M_p = __p; }
+42007eb5:	02a9      	s32i.n	a10, a2, 0
+	    _M_capacity(__dnew);
+42007eb7:	0188      	l32i.n	a8, a1, 0
+      { _M_allocated_capacity = __capacity; }
+42007eb9:	2289      	s32i.n	a8, a2, 8
+	  explicit _Guard(basic_string* __s) : _M_guarded(__s) { }
+42007ebb:	1129      	s32i.n	a2, a1, 4
+      { _S_copy(__p, __k1, __k2 - __k1); }
+42007ebd:	04cd      	mov.n	a12, a4
+42007ebf:	03bd      	mov.n	a11, a3
+42007ec1:	02a8      	l32i.n	a10, a2, 0
+42007ec3:	ffdea5        	call8	42007cac <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_copyEPcPKcj>
+	__guard._M_guarded = 0;
+42007ec6:	090c      	movi.n	a9, 0
+42007ec8:	1199      	s32i.n	a9, a1, 4
+	_M_set_length(__dnew);
+42007eca:	01a8      	l32i.n	a10, a1, 0
+      { _M_string_length = __length; }
+42007ecc:	12a9      	s32i.n	a10, a2, 4
+      { return _M_dataplus._M_p; }
+42007ece:	0288      	l32i.n	a8, a2, 0
+	traits_type::assign(_M_data()[__n], _CharT());
+42007ed0:	88aa      	add.n	a8, a8, a10
+42007ed2:	004892        	s8i	a9, a8, 0
+      }
+42007ed5:	f01d      	retw.n
+
+42007cac <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_copyEPcPKcj>:
+      _S_copy(_CharT* __d, const _CharT* __s, size_type __n)
+42007cac:	004136        	entry	a1, 32
+	if (__n == 1)
+42007caf:	081466        	bnei	a4, 1, 42007cbb <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_copyEPcPKcj+0xf>
+42007cb2:	000382        	l8ui	a8, a3, 0
+42007cb5:	004282        	s8i	a8, a2, 0
+      }
+42007cb8:	000346        	j	42007cc9 <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_copyEPcPKcj+0x1d>
+	if (__n == 0)
+42007cbb:	a48c      	beqz.n	a4, 42007cc9 <_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_copyEPcPKcj+0x1d>
+	return static_cast<char_type*>(__builtin_memcpy(__s1, __s2, __n));
+42007cbd:	04cd      	mov.n	a12, a4
+42007cbf:	03bd      	mov.n	a11, a3
+42007cc1:	02ad      	mov.n	a10, a2
+42007cc3:	e0d981        	l32r	a8, 42000028 <_stext+0x8> (400011f4 <memcpy>)
+42007cc6:	0008e0        	callx8	a8
+      }
+42007cc9:	f01d      	retw.n
+	...
+
+********************************************
+
+*************** ETL ************************
+
+    etl::string<6*MAX_STRLN> _str_jumbo{c_str_jumbo};
+42007a30:	e3a971        	l32r	a7, 420008d4 <_stext+0x8b4> (3fc95554 <_str_jumbo>)
+42007a33:	e3a781        	l32r	a8, 420008d0 <_stext+0x8b0> (3fc921a8 <c_str_jumbo>)
+42007a36:	08b8      	l32i.n	a11, a8, 0
+42007a38:	07ad      	mov.n	a10, a7
+42007a3a:	fff425        	call8	4200797c <_ZN3etl6stringILj1536EEC1EPKc>
+
+
+    ETL_EXPLICIT_STRING_FROM_CHAR string(const value_type* text)
+4200797c:	004136        	entry	a1, 32
+4200797f:	02ad      	mov.n	a10, a2
+42007981:	03bd      	mov.n	a11, a3
+      : istring(reinterpret_cast<value_type*>(&buffer), MAX_SIZE)
+42007983:	10c292        	addi	a9, a2, 16
+      : current_size(0)
+42007986:	080c      	movi.n	a8, 0
+42007988:	0289      	s32i.n	a8, a2, 0
+      , CAPACITY(max_size_)
+4200798a:	00a6c2        	movi	a12, 0x600
+4200798d:	12c9      	s32i.n	a12, a2, 4
+4200798f:	084282        	s8i	a8, a2, 8
+        p_buffer(p_buffer_)
+42007992:	3299      	s32i.n	a9, a2, 12
+      if (str != 0)
+42007994:	a3cc      	bnez.n	a3, 420079a2 <_ZN3etl6stringILj1536EEC1EPKc+0x26>
+      size_t count = 0UL;
+42007996:	08cd      	mov.n	a12, a8
+42007998:	000546        	j	420079b1 <_ZN3etl6stringILj1536EEC1EPKc+0x35>
+          ++count;
+4200799b:	cc1b      	addi.n	a12, a12, 1
+        while (*str++ != 0)
+4200799d:	098d      	mov.n	a8, a9
+4200799f:	000146        	j	420079a8 <_ZN3etl6stringILj1536EEC1EPKc+0x2c>
+420079a2:	208330        	or	a8, a3, a3
+      size_t count = 0UL;
+420079a5:	00a0c2        	movi	a12, 0
+        while (*str++ != 0)
+420079a8:	01c892        	addi	a9, a8, 1
+420079ab:	000882        	l8ui	a8, a8, 0
+420079ae:	fe9856        	bnez	a8, 4200799b <_ZN3etl6stringILj1536EEC1EPKc+0x1f>
+      assign_impl(first, last, false, false);
+420079b1:	0e0c      	movi.n	a14, 0
+420079b3:	0edd      	mov.n	a13, a14
+420079b5:	cbca      	add.n	a12, a11, a12
+420079b7:	ffe865        	call8	4200783c <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb>
+    }
+
+4200783c <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb>:
+
+    //*********************************************************************
+    /// Common implementation for 'assign'.
+    //*********************************************************************
+    template <typename TIterator>
+    void assign_impl(TIterator first, TIterator last, bool truncated, bool secure)
+4200783c:	004136        	entry	a1, 32
+4200783f:	745050        	extui	a5, a5, 0, 8
+42007842:	746060        	extui	a6, a6, 0, 8
+#if ETL_IS_DEBUG_BUILD
+      difference_type d = etl::distance(first, last);
+      ETL_ASSERT(d >= 0, ETL_ERROR(string_iterator));
+#endif
+
+      initialise();
+42007845:	02ad      	mov.n	a10, a2
+42007847:	fffae5        	call8	420077f4 <_ZN3etl13ibasic_stringIcE10initialiseEv>
+
+      while ((first != last) && (current_size != CAPACITY))
+4200784a:	000486        	j	42007860 <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb+0x24>
+4200784d:	00          	.byte	00
+4200784e:	00          	.byte	00
+4200784f:	00          	.byte	00
+      {
+        p_buffer[current_size++] = *first++;
+42007850:	0003a2        	l8ui	a10, a3, 0
+42007853:	3298      	l32i.n	a9, a2, 12
+42007855:	b81b      	addi.n	a11, a8, 1
+42007857:	02b9      	s32i.n	a11, a2, 0
+42007859:	898a      	add.n	a8, a9, a8
+4200785b:	0048a2        	s8i	a10, a8, 0
+4200785e:	331b      	addi.n	a3, a3, 1
+      while ((first != last) && (current_size != CAPACITY))
+42007860:	061347        	beq	a3, a4, 4200786a <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb+0x2e>
+42007863:	0288      	l32i.n	a8, a2, 0
+42007865:	1298      	l32i.n	a9, a2, 4
+42007867:	e59897        	bne	a8, a9, 42007850 <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb+0x14>
+      }
+
+      p_buffer[current_size] = 0;
+4200786a:	3288      	l32i.n	a8, a2, 12
+4200786c:	0298      	l32i.n	a9, a2, 0
+4200786e:	889a      	add.n	a8, a8, a9
+42007870:	090c      	movi.n	a9, 0
+42007872:	004892        	s8i	a9, a8, 0
+
+#if ETL_HAS_STRING_TRUNCATION_CHECKS
+      set_truncated((first != last) || truncated);
+42007875:	c03340        	sub	a3, a3, a4
+42007878:	180c      	movi.n	a8, 1
+4200787a:	838330        	moveqz	a8, a3, a3
+4200787d:	208850        	or	a8, a8, a5
+      value ? data |= (pattern & MASK) : data &= (~pattern & MASK);
+42007880:	c88c      	beqz.n	a8, 42007890 <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb+0x54>
+42007882:	080282        	l8ui	a8, a2, 8
+42007885:	190c      	movi.n	a9, 1
+42007887:	208890        	or	a8, a8, a9
+4200788a:	084282        	s8i	a8, a2, 8
+4200788d:	0002c6        	j	4200789c <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb+0x60>
+42007890:	080282        	l8ui	a8, a2, 8
+42007893:	feaf92        	movi	a9, -2
+42007896:	108890        	and	a8, a8, a9
+42007899:	084282        	s8i	a8, a2, 8
+      ETL_ASSERT(flags.test<IS_TRUNCATED>() == false, ETL_ERROR(string_truncation));
+#endif
+#endif
+
+#if ETL_HAS_STRING_CLEAR_AFTER_USE
+      if (secure)
+4200789c:	00b616        	beqz	a6, 420078ab <_ZN3etl13ibasic_stringIcE11assign_implIPKcEEvT_S5_bb+0x6f>
+
+    //*******************************************
+    template <value_type pattern>
+    ETL_CONSTEXPR14 flags<T, MASK>& set() ETL_NOEXCEPT
+    {
+      data |= (pattern & MASK);
+4200789f:	080282        	l8ui	a8, a2, 8
+420078a2:	02a092        	movi	a9, 2
+420078a5:	208890        	or	a8, a8, a9
+420078a8:	084282        	s8i	a8, a2, 8
+      {
+        set_secure();
+      }
+#endif
+
+      cleanup();
+420078ab:	02ad      	mov.n	a10, a2
+420078ad:	fff2a5        	call8	420077d8 <_ZN3etl13ibasic_stringIcE7cleanupEv>
+    }
+420078b0:	f01d      	retw.n
+	...
+

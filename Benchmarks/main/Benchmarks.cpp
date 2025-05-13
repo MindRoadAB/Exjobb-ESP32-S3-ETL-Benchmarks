@@ -15,6 +15,7 @@ int32_t cycles{0};
 
 extern "C" void app_main(void)
 {
+    ESP_LOGI("BOOT", "Benchmark starting");
     #if USE_ETL
         printf("Using ETL...\n");
     #else
