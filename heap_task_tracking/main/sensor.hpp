@@ -14,13 +14,11 @@
 
 #if USE_ETL
     #include <etl/vector.h>
-    //#include <etl/deque.h>
     #include <etl/string.h> 
     typedef etl::string<MAX_PAYLOAD_LENGTH> string_t;  
 #else
     #include <string>
     #include <vector>
-    //#include <deque>
     #include <vector>
     typedef std::string string_t;
 #endif
@@ -48,13 +46,11 @@ typedef struct
 }measurement_data_t;
 
 #if USE_ETL
-    typedef etl::vector<measurement_data_t, MAX_BUFFER_ENTRIES> buffer_t; //etl::deque<measurement_data_t, MAX_BUFFER_ENTRIES> buffer_t;
+    typedef etl::vector<measurement_data_t, MAX_BUFFER_ENTRIES> buffer_t; 
     #define OVERFLOW_ENTRIES 4*MAX_BUFFER_ENTRIES
     etl::vector<measurement_data_t, OVERFLOW_ENTRIES> _buf_overflow;
-    //etl::deque<measurement_data_t, OVERFLOW_ENTRIES> _buf_overflow;
 #else
     typedef std::vector<measurement_data_t> buffer_t;
-    //typedef std::deque<measurement_data_t> buffer_t;
     buffer_t _buf_overflow;
 #endif
 
