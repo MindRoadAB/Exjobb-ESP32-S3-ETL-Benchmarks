@@ -16,6 +16,7 @@
 
 /** Sizes for task stacks */
 #define SENSOR_TASK_STACK_SIZE 2560
+#define SENSOR_TASK_STACK_SIZE_LG 3072
 #define BASE_TASK_STACK_SIZE 2048 
 
 /** Delays for sensors and other tasks */
@@ -415,38 +416,34 @@ app_main(void)
     /** Launch tasks */
     #if USE_STATIC
         /** Sensor tasks */ 
-        /**                           TASK         LABEL         STACK SIZE              HANDLE FOR ARGS        PRIO  STACK                       TASK HANDLE         CPU CORE */
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_TEMP,     SENSOR_TASK_STACK_SIZE, &sensor_context_temp,     5, stack_sensor_task_temp,     &tcb_sensor_temp,     0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_PRECIP,   SENSOR_TASK_STACK_SIZE, &sensor_context_precip,   5, stack_sensor_task_precip,   &tcb_sensor_precip,   0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_LIGHT,    SENSOR_TASK_STACK_SIZE, &sensor_context_light,    5, stack_sensor_task_light,    &tcb_sensor_light,    0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_AIRQ,     SENSOR_TASK_STACK_SIZE, &sensor_context_airq,     5, stack_sensor_task_airq,     &tcb_sensor_airq,     0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_BAROMP,   SENSOR_TASK_STACK_SIZE, &sensor_context_baromp,   5, stack_sensor_task_baromp,   &tcb_sensor_baromp,   0);
-        xTaskCreateStaticPinnedToCore(sensor_task, TAG_WIND,     SENSOR_TASK_STACK_SIZE, &sensor_context_wind,     5, stack_sensor_task_wind,     &tcb_sensor_wind,     0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, stack_sensor_task_temp, &tcb_sensor_temp, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, stack_sensor_task_precip, &tcb_sensor_precip, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, stack_sensor_task_light, &tcb_sensor_light, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, stack_sensor_task_airq, &tcb_sensor_airq, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, stack_sensor_task_baromp, &tcb_sensor_baromp, 0);
+        xTaskCreateStaticPinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, stack_sensor_task_wind, &tcb_sensor_wind, 0);
         xTaskCreateStaticPinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, stack_sensor_task_humidity, &tcb_sensor_humidity, 0);
         
         /** Other tasks */
-        /**                           TASK                 LABEL               STACK SIZE                    HANDLE  PRIO  STACK                    TASK HANDLE        CPU CORE */
-        xTaskCreateStaticPinnedToCore(transmit_task,       TAG_TRANSMIT,       SENSOR_TASK_STACK_SIZE + 512, nullptr, 7, stack_task_transmit,       &tcb_transmit,       1);
-        xTaskCreateStaticPinnedToCore(task_heap_check,     TAG_HEAP_CHECK,     SENSOR_TASK_STACK_SIZE,       nullptr, 5, stack_task_heap_check,     &tcb_heap_check,     1);
-        xTaskCreateStaticPinnedToCore(task_weather_event,  TAG_WEATHER_EVENT,  BASE_TASK_STACK_SIZE + 512,   nullptr, 5, stack_task_weather_event,  &tcb_weather_event,  1);
-        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE,         nullptr, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
+        xTaskCreateStaticPinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE_LG, nullptr, 7, stack_task_transmit, &tcb_transmit, 1);
+        xTaskCreateStaticPinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, nullptr, 5, stack_task_heap_check, &tcb_heap_check, 1);
+        xTaskCreateStaticPinnedToCore(task_weather_event, TAG_WEATHER_EVENT, SENSOR_TASK_STACK_SIZE, nullptr, 5, stack_task_weather_event, &tcb_weather_event, 1);
+        xTaskCreateStaticPinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE, nullptr, 7, stack_task_overflow_flush, &tcb_overflow_flush, 1);
     #else
         /** Sensor tasks */ 
-        /**                     TASK         LABEL         STACK SIZE              HANDLE FOR ARGS         PRIO HANDLE  CPU CORE */
-        xTaskCreatePinnedToCore(sensor_task, TAG_TEMP,     SENSOR_TASK_STACK_SIZE, &sensor_context_temp,     5, nullptr, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_PRECIP,   SENSOR_TASK_STACK_SIZE, &sensor_context_precip,   5, nullptr, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_LIGHT,    SENSOR_TASK_STACK_SIZE, &sensor_context_light,    5, nullptr, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_AIRQ,     SENSOR_TASK_STACK_SIZE, &sensor_context_airq,     5, nullptr, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_BAROMP,   SENSOR_TASK_STACK_SIZE, &sensor_context_baromp,   5, nullptr, 0);
-        xTaskCreatePinnedToCore(sensor_task, TAG_WIND,     SENSOR_TASK_STACK_SIZE, &sensor_context_wind,     5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_TEMP, SENSOR_TASK_STACK_SIZE, &sensor_context_temp, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_PRECIP, SENSOR_TASK_STACK_SIZE, &sensor_context_precip, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_LIGHT, SENSOR_TASK_STACK_SIZE, &sensor_context_light, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_AIRQ, SENSOR_TASK_STACK_SIZE, &sensor_context_airq, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_BAROMP, SENSOR_TASK_STACK_SIZE, &sensor_context_baromp, 5, nullptr, 0);
+        xTaskCreatePinnedToCore(sensor_task, TAG_WIND, SENSOR_TASK_STACK_SIZE, &sensor_context_wind, 5, nullptr, 0);
         xTaskCreatePinnedToCore(sensor_task, TAG_HUMIDITY, SENSOR_TASK_STACK_SIZE, &sensor_context_humidity, 5, nullptr, 0);
         
         /** Other tasks */
-        /**                     TASK                 LABEL               STACK SIZE           HANDLE FOR ARGS PRIO HANDLE CPU CORE */
-        xTaskCreatePinnedToCore(transmit_task,       TAG_TRANSMIT,       SENSOR_TASK_STACK_SIZE + 512, nullptr, 7, nullptr, 1);
-        xTaskCreatePinnedToCore(task_heap_check,     TAG_HEAP_CHECK,     SENSOR_TASK_STACK_SIZE,       nullptr, 5, nullptr, 1);
-        xTaskCreatePinnedToCore(task_weather_event,  TAG_WEATHER_EVENT,  BASE_TASK_STACK_SIZE + 512,   nullptr, 5, nullptr, 1);
-        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE,         nullptr, 7, nullptr, 1);
+        xTaskCreatePinnedToCore(transmit_task, TAG_TRANSMIT, SENSOR_TASK_STACK_SIZE_LG, nullptr, 7, nullptr, 1);
+        xTaskCreatePinnedToCore(task_heap_check, TAG_HEAP_CHECK, SENSOR_TASK_STACK_SIZE, nullptr, 5, nullptr, 1);
+        xTaskCreatePinnedToCore(task_weather_event, TAG_WEATHER_EVENT, SENSOR_TASK_STACK_SIZE, nullptr, 5, nullptr, 1);
+        xTaskCreatePinnedToCore(task_overflow_flush, TAG_OVERFLOW_FLUSH, BASE_TASK_STACK_SIZE, nullptr, 7, nullptr, 1);
     #endif
 }
 
