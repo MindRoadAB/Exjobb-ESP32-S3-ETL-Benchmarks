@@ -30,7 +30,6 @@ BAUD_RATE = 115200
 OUTPUT_DIR = Path('results')
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-# Heap regex
 re_free = re.compile(r'Free heap size:\s+(\d+)')
 re_min = re.compile(r'Minimum free heap size:\s+(\d+)')
 re_block = re.compile(r'Largest free block:\s+(\d+)')

@@ -54,7 +54,7 @@ def read_serial_output():
     return lines
 
 def parse_output(lines):
-    pattern = re.compile(r'TEST:\s+(.*?):\s+(\d+)\s+cycles/iteration$') # Change printtf's in tests to use ESP_LOGI(TAG, RESULT) t
+    pattern = re.compile(r'TEST:\s+(.*?):\s+(\d+)\s+cycles/iteration$')
     # to make parsing easier...
     results = {}
     for line in lines:

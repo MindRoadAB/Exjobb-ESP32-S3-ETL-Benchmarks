@@ -20,7 +20,6 @@ for context, operations in data.items():
 
 df = pd.DataFrame(rows)
 
-# Output directory 
 output_dir = Path('./results/plots')
 output_dir.mkdir(exist_ok=True)
 
@@ -28,7 +27,6 @@ output_dir.mkdir(exist_ok=True)
 for target_type in df['TYPE'].unique():
     subset = df[df['TYPE'] == target_type]
 
-    # Pivot: rows=operation, cols=USE_ETL, values=cycles
     pivot = subset.pivot(index='OPERATION', columns='USE_ETL', values='CYCLES')
 
     # Keep only operations that exist in both ETL modes
@@ -52,7 +50,6 @@ for target_type in df['TYPE'].unique():
     plt.legend(title='USE_ETL', labels=['STL', 'ETL'])
     plt.tight_layout()
 
-    # Save plot
     out_path = output_dir / f'bench_{target_type}.png'
     plt.savefig(out_path)
     print(f"✅ Saved: {out_path}")

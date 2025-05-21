@@ -80,7 +80,6 @@ for i, key in enumerate(heap_data.keys()):
     frag = 1.0 - (df['largest_block'] / df['free_heap'].replace(0, 1))
     ax.plot(df['timestamp'], frag, label=labels[i], color=colors[i], linewidth=1.5)
 
-    # Highlight high fragmentation zones
     high_frag = frag > threshold
     start = None
     for j in range(1, len(high_frag)):

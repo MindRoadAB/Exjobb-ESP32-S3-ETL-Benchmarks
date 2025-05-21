@@ -1,7 +1,6 @@
 import json
 import os
 
-# === HARD CODED FILE PATHS ===
 PROJECT_DIR = os.path.expanduser('./results')
 NON_OPTIMIZED_JSON = os.path.join(PROJECT_DIR, 'benchmark_results.json')
 OPTIMIZED_JSON     = os.path.join(PROJECT_DIR, 'benchmark_results-optimized.json')
